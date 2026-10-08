@@ -21,6 +21,22 @@ Run `node engine/run-audit.js --url <url> --month <YYYY-MM> --dry-run` (add `--s
 
 Ask the user only for inputs the dry run reports as missing. Number of pages and viewports varies by project and by month; never assume a fixed set and never invent scores. If scores are missing for a scored project, say so; the engine falls back to measured PageSpeed values and records a warning.
 
+## Integrity Reforestation: the monthly text block
+The Integrity client deck is built from `config/monthly-monitoring-input-<month>.json`. Most of its content comes from a text block the user pastes into the prompt every month (dev team server and incident notes). Sections of that text, and where they go in the JSON (`opsMonitoringSection`):
+- A. Build cache maintenance, with Before/After evidence links per environment -> `buildCacheAnalysis`
+- B. Server performance metrics and 24-hour usage (response time, memory, throughput, Heroku metrics URL, usage screencast) -> `performanceMetrics`, `last24HoursUsage`
+- C. Resolved incident (what happened, affected endpoint, root cause, resolution steps, status) -> `incidents`
+- D. SSL certificate (domain, issuer, issued and expiry dates, screenshot name) -> `sslSecurity`
+Also derived: `overview`, `overallSummary`, `finalAssessment`, and the executive summary.
+
+When the prompt contains this block:
+1. Read the previous month's input file to learn the exact JSON shape and wording style. Use it as the template, not as content.
+2. Write `config/monthly-monitoring-input-<month>.json` for the new month from the pasted text ONLY. Copy every number, URL, date and name exactly as given. Never invent or reuse evidence links, metrics or incident text from a previous month. Narrative bullets (assessments, findings, conclusions) may be written, but only from facts in the text.
+3. Anything the text does not cover (theme update versions, widget screenshot links under `themeUpdateLog` and `qaTestingSection`) must come from the user in the prompt. If it is missing, ask for it; do not carry it forward silently.
+4. Run `node scripts/validate-integrity-input.mjs --month <month>`. Fix every error. Show the user any stale-carry-over warnings.
+5. Then run the engine with `--outputs client` (and `technical`). The engine validates again before building the deck.
+Do not ask for PageSpeed scores for this project.
+
 ## Step 2 - run
 ```
 node engine/run-audit.js --url <url> --month <YYYY-MM> --scores "<text>" --outputs technical,client

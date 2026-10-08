@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { repoRoot, getSiteConfig } from '../lib/config.js';
@@ -60,6 +61,11 @@ async function integrityReports({ project, hostname, month, want }) {
     const input = resolve(repoRoot(), (project.reportMeta?.monthlyInputPattern ?? 'config/monthly-monitoring-input-{month}.json').replace('{month}', month));
     if (!existsSync(input)) {
       throw new Error(`The client deck needs ${input}. It holds the theme update log, widget screenshot links and dev-team notes for the month. Copy the previous month's file and update it, then re-run with --reports-only.`);
+    }
+    try {
+      execFileSync(process.execPath, [join(repoRoot(), 'scripts', 'validate-integrity-input.mjs'), '--month', month], { encoding: 'utf8' });
+    } catch (e) {
+      throw new Error(`The Integrity input file failed validation:\n${e.stdout ?? e.message}`);
     }
     const { generateTreeWidgetReport } = await import('../generate_tree_widget_report.js');
     const r = await generateTreeWidgetReport(input, 'both');
