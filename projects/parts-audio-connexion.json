@@ -182,5 +182,11 @@
       "partsconnexion.com": "PartsConnexion",
       "audio-connexion.com": "AudioConnexion"
     }
-  }
+  },
+  "inputs": {
+    "performanceScores": "required",
+    "scoresPerSite": true,
+    "notes": "The URL selects PartsConnexion or AudioConnexion; use --all-sites to run both. Scores are Before/After per page and viewport and differ per site."
+  },
+  "context": "Two BigCommerce storefronts (partsconnexion.com and audio-connexion.com) managed as one project. Performance Before/After scores are supplied manually in every prompt (any number of pages, mobile and desktop). PartsConnexion has a Heroku companion app and USD/CAD multi-currency. AudioConnexion has no companion app."
 }

@@ -87,5 +87,11 @@
     "technical": "site-pdf",
     "client": "site-pptx"
   },
-  "reportMeta": {}
+  "reportMeta": {},
+  "inputs": {
+    "performanceScores": "required",
+    "scoresPerSite": false,
+    "notes": "Legacy project kept for archived history."
+  },
+  "context": "Legacy Magento storefront. Kept so existing archives and reports keep working."
 }

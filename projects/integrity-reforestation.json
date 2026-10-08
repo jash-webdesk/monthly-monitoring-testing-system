@@ -99,5 +99,14 @@
   },
   "reportMeta": {
     "monthlyInputPattern": "config/monthly-monitoring-input-{month}.json"
-  }
+  },
+  "inputs": {
+    "performanceScores": "not-applicable",
+    "scoresPerSite": false,
+    "optional": [
+      "config/monthly-monitoring-input-<month>.json for the client deck (theme update log, widget screenshot links, dev-team notes)"
+    ],
+    "notes": "There is no scored storefront. Do NOT ask for PageSpeed Before/After scores for this project."
+  },
+  "context": "Shopify public app (Tree Contribution widget) plus a Heroku admin dashboard. The monthly audit is the read-only dashboard QA, security checks of the dashboard login page, and the widget audit on the Horizon theme. No PageSpeed scores are used. The test store is storefront-password protected, so the widget capture cannot run unattended."
 }

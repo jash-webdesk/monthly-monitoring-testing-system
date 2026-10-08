@@ -148,5 +148,11 @@
     "technical": "site-pdf",
     "client": "site-pptx"
   },
-  "reportMeta": {}
+  "reportMeta": {},
+  "inputs": {
+    "performanceScores": "required",
+    "scoresPerSite": false,
+    "notes": "Scores are Before/After per page and viewport, for example Homepage and About Us."
+  },
+  "context": "Single BigCommerce storefront (genpet.org) with the app.genpet.org companion dashboard (authenticated, read-only). Performance Before/After scores are supplied manually in every prompt."
 }

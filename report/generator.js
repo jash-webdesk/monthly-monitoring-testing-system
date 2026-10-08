@@ -1401,6 +1401,7 @@ export async function generateClientReport(hostname, month, options = {}) {
 
     // Dynamically compile PowerPoint presentation report from raw runner JSON data
     try {
+      if (options.skipPpt) return pdfPath;
       await generatePptReport(hostname, month, options);
     } catch (pptErr) {
       logger.warn(`PPT report generation warning: ${pptErr.message}`);
