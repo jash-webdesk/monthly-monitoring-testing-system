@@ -16,6 +16,71 @@ function escapeHtml(str) {
 
 const SEVERITY_RANK = { critical: 4, high: 3, medium: 2, low: 1, info: 0 };
 
+/** SSL trust verdicts under which the certificate cannot be attributed to the site. */
+const SSL_UNDETERMINED_TRUST = new Set(['intercepted', 'unknown']);
+
+const SSL_NOT_DETERMINED_REASON = {
+  intercepted:   'The certificate seen from this environment belongs to a TLS-inspecting proxy, not the site.',
+  indeterminate: 'The site certificate could not be verified independently from this environment.',
+  unknown:       'The site certificate could not be verified: the TLS handshake did not complete.'
+};
+
+/**
+ * Derives the SSL certificate values shown in the client report from the ssl runner result.
+ * Never invents a value: when the certificate cannot be attributed to the site, expiry and day count
+ * are reported as not determined. Public and legacy results with certificate metrics keep the real values.
+ *
+ * @param {Object|null|undefined} sslResult - ssl runner result envelope (metrics.trust / metrics.verdict set by the runner)
+ * @param {Date} [now=new Date()]
+ * @returns {{ determined: boolean, reason: string|null, issuer: string|null, validTo: string|null, expiryText: string,
+ *            days: number|null, daysText: string, expiryBadge: string, daysBadge: string, issuerBadge: string }}
+ */
+export function describeSslCertificate(sslResult, now = new Date()) {
+  const metrics = sslResult?.metrics ?? {};
+  const trust = metrics.verdict === 'indeterminate' ? 'indeterminate' : (metrics.trust ?? null);
+  const undetermined = Boolean(sslResult) && (metrics.verdict === 'indeterminate' || SSL_UNDETERMINED_TRUST.has(metrics.trust));
+  const cert = metrics.certificate ?? null;
+  const validTo = cert?.validTo ?? metrics.validTo ?? metrics.expiryDate ?? null;
+  const validToDate = validTo ? new Date(validTo) : null;
+  const hasValidTo = validToDate !== null && !Number.isNaN(validToDate.getTime());
+
+  if (!sslResult || undetermined || !hasValidTo) {
+    const reason = !sslResult
+      ? 'No SSL check was run for this site.'
+      : (SSL_NOT_DETERMINED_REASON[metrics.trust] ?? SSL_NOT_DETERMINED_REASON[trust] ?? 'The site certificate could not be verified.');
+    return {
+      determined: false,
+      reason,
+      issuer: null,
+      validTo: null,
+      expiryText: 'Could not be determined',
+      days: null,
+      daysText: 'Could not be determined',
+      expiryBadge: 'NOT DETERMINED',
+      daysBadge: 'NOT DETERMINED',
+      issuerBadge: sslResult ? 'NOT DETERMINED' : 'NOT CHECKED'
+    };
+  }
+
+  const days = typeof metrics.daysUntilExpiry === 'number'
+    ? metrics.daysUntilExpiry
+    : typeof metrics.daysRemaining === 'number'
+      ? metrics.daysRemaining
+      : Math.floor((validToDate - now) / 86_400_000);
+  return {
+    determined: true,
+    reason: null,
+    issuer: cert?.issuer ?? metrics.issuer ?? 'Unknown',
+    validTo,
+    expiryText: validToDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+    days,
+    daysText: `<strong>${days} days remaining</strong> before renewal`,
+    expiryBadge: days > 14 ? 'SECURE' : 'ACTION REQUIRED',
+    daysBadge: days > 30 ? 'HEALTHY' : days > 7 ? 'MONITOR' : 'URGENT',
+    issuerBadge: 'VALID'
+  };
+}
+
 // Custom App Health page is temporarily suppressed from client reports on request
 // Re-enabled for sites with configured customApp (e.g. genpet.org app.genpet.org)
 const INCLUDE_CUSTOM_APP_SECTION = true;
@@ -256,12 +321,7 @@ export async function generateClientReport(hostname, month, options = {}) {
   const prevMobileFcpVal = isFirstRun ? 'N/A' : prevMobileFcp;
 
   // SSL and DNS Metrics — sourced directly from ssl_result.json / dns_result.json
-  const sslDays = sslResult?.metrics?.daysUntilExpiry ?? sslResult?.metrics?.daysRemaining ?? 30;
-  const expiryDateRaw = sslResult?.metrics?.certificate?.validTo ?? sslResult?.metrics?.expiryDate ?? sslResult?.metrics?.validTo;
-  const sslExpiry = expiryDateRaw
-    ? new Date(expiryDateRaw).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-    : 'Pending Renewal';
-  const sslIssuer = sslResult?.metrics?.certificate?.issuer ?? sslResult?.metrics?.issuer ?? 'Unknown';
+  const sslCert = describeSslCertificate(sslResult);
   const sslSubjectAltNames = sslResult?.metrics?.certificate?.subjectAltNames ?? sslResult?.metrics?.subjectAltNames ?? [];
   const rootDomain = hostname.replace(/^www\./, '');
   const sanCoversHost = sslSubjectAltNames.length === 0
@@ -1138,18 +1198,18 @@ export async function generateClientReport(hostname, month, options = {}) {
         <tbody>
           <tr>
             <td><strong>SSL Certificate Issuer</strong></td>
-            <td>${escapeHtml(sslIssuer)}</td>
-            <td><span class="status-badge">${sslResult ? 'VALID' : 'NOT CHECKED'}</span></td>
+            <td>${sslCert.determined ? escapeHtml(sslCert.issuer) : escapeHtml(sslCert.reason)}</td>
+            <td><span class="status-badge">${sslCert.issuerBadge}</span></td>
           </tr>
           <tr>
             <td><strong>Certificate Validity Period</strong></td>
-            <td>Expires: ${sslExpiry}</td>
-            <td><span class="status-badge">${sslDays > 14 ? 'SECURE' : 'ACTION REQUIRED'}</span></td>
+            <td>Expires: ${escapeHtml(sslCert.expiryText)}</td>
+            <td><span class="status-badge">${sslCert.expiryBadge}</span></td>
           </tr>
           <tr>
             <td><strong>Verification Window</strong></td>
-            <td><strong>${sslDays} days remaining</strong> before renewal</td>
-            <td><span class="status-badge">${sslDays > 30 ? 'HEALTHY' : sslDays > 7 ? 'MONITOR' : 'URGENT'}</span></td>
+            <td>${sslCert.determined ? sslCert.daysText : escapeHtml(sslCert.daysText)}</td>
+            <td><span class="status-badge">${sslCert.daysBadge}</span></td>
           </tr>
           <tr>
             <td><strong>Common Name Matches Domain</strong></td>
