@@ -21,7 +21,12 @@
         "homepage": "https://www.lidstyles.com/",
         "product": "https://www.lidstyles.com/blue-dell-e6400-laptop-skin.html"
       },
-      "archiveKey": "www.lidstyles.com"
+      "archiveKey": "www.lidstyles.com",
+      "storefrontLogin": {
+        "usernameEnv": "LIDSTYLES_STOREFRONT_USERNAME",
+        "passwordEnv": "LIDSTYLES_STOREFRONT_PASSWORD",
+        "loginPath": "login.php"
+      }
     }
   ],
   "audits": {
@@ -34,7 +39,7 @@
       "enabled": true,
       "pages": "all",
       "authenticatedPass": true,
-      "note": "Chrome DevTools/CDP: security headers, cookies, SRI, console errors, vulnerable libraries. The authenticated pass runs only when STOREFRONT_USERNAME/STOREFRONT_PASSWORD are set."
+      "note": "Chrome DevTools/CDP: security headers, cookies, SRI, console errors, vulnerable libraries. The authenticated pass runs only when the site-specific *_STOREFRONT_USERNAME/PASSWORD variables are set."
     },
     "dns": {
       "enabled": true
@@ -79,6 +84,18 @@
     {
       "env": "UPTIMEROBOT_API_KEY",
       "purpose": "UptimeRobot read-only API key (30-day availability); optional - a live probe is used without it",
+      "required": false,
+      "scope": "environment"
+    },
+    {
+      "env": "LIDSTYLES_STOREFRONT_USERNAME",
+      "purpose": "Optional storefront customer login for www.lidstyles.com (authenticated security pass). If unset, the pass is skipped and the audit runs as a guest.",
+      "required": false,
+      "scope": "environment"
+    },
+    {
+      "env": "LIDSTYLES_STOREFRONT_PASSWORD",
+      "purpose": "Password for LIDSTYLES_STOREFRONT_USERNAME",
       "required": false,
       "scope": "environment"
     }

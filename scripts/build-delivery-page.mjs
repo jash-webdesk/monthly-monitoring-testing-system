@@ -26,7 +26,7 @@ const embedded = files.map((f) => {
   const mime = f.endsWith('.pdf') ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
   const fits = used + size <= BUDGET;
   if (fits) used += size;
-  return { name: f, size, mime, kind: f.endsWith('.pdf') ? 'Technical report (PDF)' : 'Client report (PowerPoint)', b64: fits ? readFileSync(join(dir, f)).toString('base64') : null };
+  return { name: f, size, mime, kind: /\.pdf$/i.test(f) ? (/Monthly_Optimization_Report/i.test(f) ? 'Client report (PDF)' : 'Technical report (PDF)') : 'Client report (PowerPoint)', b64: fits ? readFileSync(join(dir, f)).toString('base64') : null };
 });
 
 const readJson = (p) => { try { return JSON.parse(readFileSync(p, 'utf8')); } catch { return null; } };

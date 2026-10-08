@@ -4,6 +4,7 @@ import { join, resolve } from 'node:path';
 import { repoRoot, getSiteConfig } from '../lib/config.js';
 import { getArchivePath, loadResults, getPreviousMonthStr } from '../lib/archive.js';
 import { logger } from '../lib/logger.js';
+import { convertPptxToPdf } from '../lib/pptxToPdf.js';
 
 /** Output vocabulary accepted by --outputs. */
 export const OUTPUT_TYPES = ['technical', 'client', 'deck'];
@@ -38,7 +39,7 @@ function legacyScoresFromMeasured(hostname, month) {
 export function hasScores(hostname) { return Boolean(getSiteConfig(hostname).scores); }
 export { legacyScoresFromMeasured };
 
-async function siteReports({ hostname, month, want }) {
+async function siteReports({ hostname, month, want, notes }) {
   const made = [];
   if (want.includes('technical')) {
     const { generateClientReport } = await import('../report/generator.js');
@@ -46,7 +47,9 @@ async function siteReports({ hostname, month, want }) {
   }
   if (want.includes('client')) {
     const { generatePptReport } = await import('../generate_ppt_report.js');
-    made.push(await generatePptReport(hostname, month, {}));
+    const pptx = await generatePptReport(hostname, month, {});
+    made.push(pptx);
+    if (!convertPptxToPdf(pptx)) notes.push('The client deck was created as PowerPoint only: no PPTX-to-PDF converter is available (install LibreOffice, or run where PowerPoint is installed).');
   }
   return made;
 }
@@ -82,10 +85,11 @@ export async function generateReports({ project, hostname, month, outputs }) {
   const want = normalizeOutputs(outputs);
   const startedAt = Date.now() - 2000;
   const errors = [];
+  const notes = [];
   const isIntegrity = project.reports?.client === 'integrity-deck';
   try {
     if (isIntegrity) await integrityReports({ project, hostname, month, want });
-    else await siteReports({ hostname, month, want });
+    else await siteReports({ hostname, month, want, notes });
   } catch (err) {
     errors.push(err.message);
     logger.error(`Report generation failed for ${hostname}: ${err.message}`);
@@ -106,5 +110,5 @@ export async function generateReports({ project, hostname, month, outputs }) {
       copied.push(join('reports', project.id, month, f).replace(/\\/g, '/'));
     }
   }
-  return { outputs: want, copied, errors };
+  return { outputs: want, copied, errors, notes };
 }

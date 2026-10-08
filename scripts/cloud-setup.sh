@@ -5,5 +5,7 @@
 set -u
 cd "$(dirname "$0")/.." || exit 0
 npm ci --no-audit --no-fund || npm install --no-audit --no-fund || echo "WARN: npm install failed"
+# LibreOffice converts the client PowerPoint to PDF; without it the deck is delivered as PPTX only.
+(apt-get install -y --no-install-recommends libreoffice-impress fonts-liberation >/dev/null 2>&1 || echo "WARN: LibreOffice not installed; client deck PDF will be skipped") 
 node scripts/ensure-browser.mjs || echo "WARN: no browser available yet; see docs/LIMITATIONS.md"
 exit 0

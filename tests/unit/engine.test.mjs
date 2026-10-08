@@ -75,3 +75,21 @@ test('outputs: aliases normalise and unknown types fail', () => {
   assert.deepEqual(normalizeOutputs(['Client PPTX']), ['client']);
   assert.throws(() => normalizeOutputs(['spreadsheet']), /Unknown output type/);
 });
+
+test('scores: prompt-builder text with per-site lines gives each site its own scores', async () => {
+  const { siteAliases } = await import('../../engine/scores.js');
+  const parts = loadProjects().find((p) => p.id === 'parts-audio-connexion');
+  const aliases = siteAliases(parts.sites, parts.reportMeta.clientDisplayNames);
+  const text = 'PartsConnexion: Homepage Mobile Before 36 -> After 54, Desktop Before 88 -> After 89\nAudioConnexion: Homepage Mobile Before 56 -> After 56, Desktop Before 63 -> After 71; Shop Desktop Before 50 -> After 55';
+  const p = parseScores(text, { aliases });
+  assert.deepEqual(Object.keys(p.byHost).sort(), ['audio-connexion.com', 'partsconnexion.com']);
+  assert.deepEqual(p.byHost['partsconnexion.com'].homepage.mobile, { before: 36, after: 54 });
+  assert.deepEqual(p.byHost['audio-connexion.com'].homepage.desktop, { before: 63, after: 71 });
+  assert.deepEqual(Object.keys(p.byHost['audio-connexion.com']), ['homepage', 'shop']);
+  assert.equal(p.shared, null);
+});
+
+test('scores: "Before 68 -> After 74" wording parses without a site label', () => {
+  const p = parseScores('Homepage Mobile Before 68 -> After 74, Desktop Before 79 -> After 83');
+  assert.deepEqual(p.shared.homepage.desktop, { before: 79, after: 83 });
+});

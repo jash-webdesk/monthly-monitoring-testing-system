@@ -54,7 +54,12 @@
         "discoveryApprovedBy": "client (chat approval)",
         "discoveryApprovedAt": "2026-08-11"
       },
-      "archiveKey": "genpet.org"
+      "archiveKey": "genpet.org",
+      "storefrontLogin": {
+        "usernameEnv": "GENPET_STOREFRONT_USERNAME",
+        "passwordEnv": "GENPET_STOREFRONT_PASSWORD",
+        "loginPath": "login.php"
+      }
     }
   ],
   "audits": {
@@ -67,7 +72,7 @@
       "enabled": true,
       "pages": "all",
       "authenticatedPass": true,
-      "note": "Chrome DevTools/CDP: security headers, cookies, SRI, console errors, vulnerable libraries. The authenticated pass runs only when STOREFRONT_USERNAME/STOREFRONT_PASSWORD are set."
+      "note": "Chrome DevTools/CDP: security headers, cookies, SRI, console errors, vulnerable libraries. The authenticated pass runs only when the site-specific *_STOREFRONT_USERNAME/PASSWORD variables are set."
     },
     "dns": {
       "enabled": true
@@ -120,18 +125,6 @@
       "scope": "environment"
     },
     {
-      "env": "STOREFRONT_USERNAME",
-      "purpose": "Storefront customer login for the authenticated security pass; optional",
-      "required": false,
-      "scope": "environment"
-    },
-    {
-      "env": "STOREFRONT_PASSWORD",
-      "purpose": "Storefront customer password for the authenticated security pass; optional",
-      "required": false,
-      "scope": "environment"
-    },
-    {
       "env": "GENPET_CUSTOMAPP_USERNAME",
       "purpose": "Genpet custom app login",
       "required": true,
@@ -141,6 +134,18 @@
       "env": "GENPET_CUSTOMAPP_PASSWORD",
       "purpose": "Genpet custom app password",
       "required": true,
+      "scope": "environment"
+    },
+    {
+      "env": "GENPET_STOREFRONT_USERNAME",
+      "purpose": "Optional storefront customer login for genpet.org (authenticated security pass). If unset, the pass is skipped and the audit runs as a guest.",
+      "required": false,
+      "scope": "environment"
+    },
+    {
+      "env": "GENPET_STOREFRONT_PASSWORD",
+      "purpose": "Password for GENPET_STOREFRONT_USERNAME",
+      "required": false,
       "scope": "environment"
     }
   ],

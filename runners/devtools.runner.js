@@ -112,7 +112,7 @@ const SENSITIVE_COOKIE_PATTERNS = [
  * @param {string|null} authFile   - Path to auth credentials JSON (optional)
  * @returns {Promise<Object>} Runner result envelope
  */
-export async function runDevtools(url, hostname, month = null, authFile = null) {
+export async function runDevtools(url, hostname, month = null, authFile = null, credentials = null) {
   logger.runnerStart(RUNNER_NAME);
 
   if (!url || !hostname) {
@@ -149,14 +149,14 @@ export async function runDevtools(url, hostname, month = null, authFile = null) 
     let authConfig = null;
     if (authFile) {
       authConfig = loadAuthConfig(authFile);
-    } else if ((process.env.STOREFRONT_USERNAME ?? process.env.USERNAME) && (process.env.STOREFRONT_PASSWORD ?? process.env.PASSWORD)) {
-      // STOREFRONT_* is preferred; bare USERNAME/PASSWORD remain supported for older .env files.
+    } else if (credentials?.username && credentials?.password) {
+      // Site-specific login supplied by the caller (see storefrontLogin in the project config). No shared fallback.
       authConfig = {
-        username: process.env.STOREFRONT_USERNAME ?? process.env.USERNAME,
-        password: process.env.STOREFRONT_PASSWORD ?? process.env.PASSWORD,
-        loginUrl: `${url.endsWith('/') ? url : url + '/'}login.php`
+        username: credentials.username,
+        password: credentials.password,
+        loginUrl: `${url.endsWith('/') ? url : url + '/'}${credentials.loginPath ?? 'login.php'}`
       };
-      logger.info('  Found credentials in .env file. Enabling Authenticated mode...');
+      logger.info('  Site-specific storefront credentials found. Enabling Authenticated mode...');
     }
 
     if (authConfig) {

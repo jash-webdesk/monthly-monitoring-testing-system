@@ -8,6 +8,7 @@
  *   - page value with objects:  { "Homepage": { "mobile": { "before": 68, "after": 74 } } }
  *   - per-site wrapper:         { "genpet.org": { "Homepage": { ... } } }  (keys that look like hostnames)
  *   - compact text:             "Homepage Mobile 68>74, Desktop 79>83; About Us Mobile 71>77, Desktop 82>87"
+ *   - prompt-builder text:      "PartsConnexion: Homepage Mobile Before 68 -> After 74, Desktop Before 79 -> After 83"
  * Any number of pages and either viewport may be omitted.
  */
 
@@ -42,32 +43,68 @@ function normalizePages(obj, where = 'scores') {
   return out;
 }
 
-/** Parses the compact text form into the object form. */
-export function parseScoreText(text) {
-  const pages = {};
-  for (const chunk of text.split(/[;\n]+/).map((s) => s.trim()).filter(Boolean)) {
-    const m = chunk.match(/^(.*?)\s+(mobile|desktop)\b/i);
+const norm = (x) => String(x).toLowerCase().replace(/[^a-z0-9]/g, '');
+
+/** Builds the label -> hostname lookup used to read "PartsConnexion: Homepage ..." style lines. */
+export function siteAliases(sites, displayNames = {}) {
+  const map = new Map();
+  for (const s of sites) {
+    const host = s.hostname;
+    const bare = host.replace(/^www\./, '');
+    for (const k of [host, bare, bare.split('.')[0], s.name, displayNames[host]]) if (k) map.set(norm(k), host);
+  }
+  return map;
+}
+
+const SEGMENT_SPLIT = /[;\n]+/;
+const HEAD = /^([^:]{2,40}):\s*(.*)$/;
+const PAGE_LABEL = /^(.*?)\s+(mobile|desktop)\b/i;
+const PAIR = /(mobile|desktop)\s*:?\s*(?:before\s*)?(\d+)\s*(?:>|->|→|to)\s*(?:after\s*)?(\d+)/gi;
+
+/**
+ * Parses the compact text form. Accepts "Mobile 68>74", "Mobile 68 -> 74" and "Mobile Before 68 -> After 74".
+ * A line or segment starting with a known site label and a colon ("AudioConnexion: Homepage ...") switches the
+ * site; the pages that follow belong to it until the next site label.
+ * @returns {{ byHost: Object, shared: Object|null }} raw page objects (arrays of [before, after])
+ */
+export function parseScoreText(text, aliases = new Map()) {
+  const byHost = {};
+  const shared = {};
+  let current = null;
+  for (let chunk of text.split(SEGMENT_SPLIT).map((x) => x.trim()).filter(Boolean)) {
+    const head = chunk.match(HEAD);
+    if (head && aliases.has(norm(head[1]))) {
+      current = aliases.get(norm(head[1]));
+      chunk = head[2].trim();
+      if (!chunk) continue;
+    }
+    const m = chunk.match(PAGE_LABEL);
     if (!m) throw new Error(`Cannot read page name in score text: "${chunk}"`);
     const label = m[1].replace(/[:,-]\s*$/, '').trim();
-    const rest = chunk.slice(m[1].length);
-    const page = (pages[label] ??= {});
-    for (const mm of rest.matchAll(/(mobile|desktop)\s*:?\s*(\d+)\s*(?:>|->|→|to)\s*(\d+)/gi)) {
-      page[mm[1].toLowerCase()] = [Number(mm[2]), Number(mm[3])];
-    }
+    const target = current ? (byHost[current] ??= {}) : shared;
+    const page = (target[label] ??= {});
+    for (const mm of chunk.slice(m[1].length).matchAll(PAIR)) page[mm[1].toLowerCase()] = [Number(mm[2]), Number(mm[3])];
+    if (!Object.keys(page).length) throw new Error(`No scores found for page "${label}" in: "${chunk}"`);
   }
-  return pages;
+  return { byHost, shared: Object.keys(shared).length ? shared : null };
 }
 
 /**
  * @param {string|Object|null} input JSON string, compact text, or object
+ * @param {{ aliases?: Map<string,string> }} [opts] site label lookup (see siteAliases) for per-site text lines
  * @returns {{ byHost: Object<string,Object>, shared: Object|null }} scores keyed by hostname, plus un-keyed scores
  */
-export function parseScores(input) {
+export function parseScores(input, opts = {}) {
   if (input == null || input === '') return { byHost: {}, shared: null };
   let obj = input;
   if (typeof input === 'string') {
     const t = input.trim();
-    obj = t.startsWith('{') ? JSON.parse(t) : parseScoreText(t);
+    if (!t.startsWith('{')) {
+      const raw = parseScoreText(t, opts.aliases);
+      const byHost = Object.fromEntries(Object.entries(raw.byHost).map(([h, pages]) => [h, normalizePages(pages, h)]));
+      return { byHost, shared: raw.shared ? normalizePages(raw.shared) : null };
+    }
+    obj = JSON.parse(t);
   }
   const byHost = {};
   const rest = {};

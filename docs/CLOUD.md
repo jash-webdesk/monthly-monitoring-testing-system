@@ -9,7 +9,8 @@ The audit runs on Anthropic's cloud VM, not on your laptop. The repository is th
    - Network access: **Full** (or Custom with the allowlist printed by `node scripts/print-allowed-domains.mjs`). The default "Trusted" level does not reach client websites.
    - Setup script: `bash scripts/cloud-setup.sh`
    - Environment variables (names are in `.env.example`; values are plain text visible to anyone who can edit the environment, so use dedicated low-privilege or read-only monitoring accounts):
-     `PAGESPEED_API_KEY`, `UPTIMEROBOT_API_KEY`, `GENPET_CUSTOMAPP_USERNAME/PASSWORD`, `PARTSCONNEXION_CUSTOMAPP_USERNAME/PASSWORD`, `INTEGRITY_CUSTOMAPP_USERNAME/PASSWORD`, optional `STOREFRONT_USERNAME/PASSWORD`.
+     `PAGESPEED_API_KEY`, `UPTIMEROBOT_API_KEY`, `GENPET_CUSTOMAPP_USERNAME/PASSWORD`, `PARTSCONNEXION_CUSTOMAPP_USERNAME/PASSWORD`, `INTEGRITY_CUSTOMAPP_USERNAME/PASSWORD`.
+     Every login is optional, and each belongs to one site only (storefront logins: `PARTSCONNEXION_STOREFRONT_*`, `AUDIOCONNEXION_STOREFRONT_*`, `GENPET_STOREFRONT_*`). Leave a pair out and that step runs without logging in: the security audit runs as a guest, a companion app gets only its unauthenticated health check, and the Integrity dashboard audit is skipped because everything in it is behind the login. Only `PAGESPEED_API_KEY` is needed for the performance audit.
 3. **Merge `setup/cloud-engine` into `main`** (or select that branch when starting the session) so the engine is in the repo the session clones.
 
 ## Every month
