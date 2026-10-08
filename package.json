@@ -8,8 +8,8 @@
     "audit": "node engine/run-audit.js",
     "preflight": "node scripts/cloud-preflight.mjs",
     "ensure-browser": "node scripts/ensure-browser.mjs",
-    "test": "node --test tests/unit",
-    "test:integration": "node --test tests/integration",
+    "test": "node --test tests/unit/*.test.mjs",
+    "test:integration": "node --test tests/integration/*.test.mjs",
     "monitor": "node monitor.js",
     "test:dns": "node monitor.js --url https://partsconnexion.com/ --phase dns",
     "test:ssl": "node monitor.js --url https://partsconnexion.com/ --phase ssl"
