@@ -9,6 +9,15 @@ A short prompt: website URL, month, Before/After performance scores (only for pr
 Example:
 "Run the October 2026 monthly monitoring audit for Genpet. Performance: Homepage Mobile Before 68 -> After 74, Desktop 79 -> 83; About Us Mobile 71 -> 77, Desktop 82 -> 87. Generate: Technical Report, Client Report"
 
+## Spreadsheet mode (preferred for several sites at once)
+If the prompt contains a pasted spreadsheet (tab separated, header row first), do not retype its data. Save it exactly as given to `inputs/<month>/sheet-paste.tsv` and use the batch runner:
+```
+node engine/run-sheet.js --file inputs/<month>/sheet-paste.tsv --dry-run   # parse and validate, runs nothing
+node engine/run-sheet.js --file inputs/<month>/sheet-paste.tsv             # one audit per site, in order
+```
+Columns: `Project | URL | Month | Page | Mobile Before | Mobile After | Desktop Before | Desktop After | Outputs | Dev Team Notes` (see `engine/sheet.js`). URL, Month and Outputs fill down; a new URL starts a new run. The dry run lists every problem (missing scores, unknown site, bad month); report them to the user and stop, do not guess values. Each run is the normal engine, so mandatory scores, per-site logins and guest fallback all still apply.
+For an Integrity row, the Dev Team Notes cell is saved to `config/dev-notes/<project>-<month>.txt`. Build the monthly input JSON from it as described below, validate it, then re-run that site with `--reports-only`. The batch summary flags this under `action`.
+
 ## Step 1 - identify the project and ask only for what that project needs
 Run `node engine/run-audit.js --url <url> --month <YYYY-MM> --dry-run` (add `--scores` if given). The output lists the project, its audits, required environment variables (present or not), and `performanceScores`:
 
@@ -50,7 +59,10 @@ node engine/run-audit.js --url <url> --month <YYYY-MM> --scores "<text>" --outpu
 
 ## Step 3 - deliver
 1. Reports are copied to `reports/<project>/<YYYY-MM>/`; the normalized record is `history/<project>/<YYYY-MM>.json` (includes new/persisting/resolved findings and metric changes vs the previous month).
-2. Commit `reports/` and `history/` to a `claude/...` branch and push (never force-push, never push to main without being asked). End the session by giving the user direct GitHub links to each report file and a short summary: audits run and their status, finding counts, month-over-month changes, regressions, warnings.
+2. Commit `reports/`, `history/`, `inputs/` and `config/dev-notes/` to a `claude/...` branch and push (never force-push, never push to main without being asked).
+3. Report delivery page: if the Artifact tool is available in this session, build and publish one page per project run:
+   `node scripts/build-delivery-page.mjs --project <id> --month <YYYY-MM> --out <file.html>` then publish it with the Artifact tool and `capabilities: {downloads: true}`. The page embeds the finished files and gives a Save button for each (technical PDF, client deck PDF, client deck PowerPoint). Give the user the artifact URL. If the Artifact tool is not available or publishing fails, say so plainly and rely on the GitHub links; never claim a link works that you could not create.
+4. End the session with: the delivery page URL if one exists, direct GitHub links to each report file, and a short summary: audits run and their status (failed, skipped, disabled, not_implemented), finding counts, month-over-month changes, regressions, warnings.
 
 ## Architecture
 ```
