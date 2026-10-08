@@ -22,7 +22,7 @@ import { AUDITS, CATEGORIES } from '../audits/index.js';
 import { identifyProject } from './identify.js';
 import { parseScores, scoresForHost, toLegacyScores } from './scores.js';
 import { buildRecord, saveHistory, historyPath } from './history.js';
-import { generateReports, normalizeOutputs, legacyScoresFromMeasured } from './reports.js';
+import { generateReports, normalizeOutputs } from './reports.js';
 
 function loadDotEnv() {
   const p = resolve(repoRoot(), '.env');
@@ -154,10 +154,17 @@ async function main() {
     }
   }
 
+  // Before/After scores are mandatory for scored projects whenever reports are requested or the performance audit runs.
+  const perfRuns = targets.some((t) => auditEnabled(project, AUDITS.find((x) => x.category === 'performance'), t.site.hostname, only, skip).run);
+  const scoresRequired = scoresRule === 'required' && stage !== 'before' && !args['reports-only'] ? (outputs.length > 0 || perfRuns) : scoresRule === 'required' && outputs.length > 0;
+  if (scoresRequired && missingScores.length && !args['dry-run']) {
+    throw new Error(`Before/After performance scores are required for ${project.name} and were not supplied for: ${missingScores.join(', ')}. Provide them for every page and viewport you tested, for example --scores "Homepage Mobile 68>74, Desktop 79>83; About Us Mobile 71>77, Desktop 82>87". Nothing was run.`);
+  }
+
   if (args['dry-run']) {
     const plan = {
       project: project.id, month, stage, sites: targets.map((t) => t.site.hostname), outputs,
-      performanceScores: scoresRule, scoresMissingFor: missingScores,
+      performanceScores: scoresRule, scoresMissingFor: missingScores, scoresRequired,
       audits: Object.fromEntries(AUDITS.map((a) => [a.category, targets.map((t) => { const g = auditEnabled(project, a, t.site.hostname, only, skip); return g.run ? 'run' : `${g.status}: ${g.reason}`; })[0]])),
       requiredEnv: (project.secrets ?? []).map((s) => ({ env: s.env, required: s.required, present: Boolean(process.env[s.env]) })),
       inputs: project.inputs
@@ -175,17 +182,6 @@ async function main() {
     for (const t of targets) {
       logger.section(`Auditing ${t.site.hostname}`);
       siteRuns[t.site.hostname] = await runSite({ project, site: t.site, url: t.url, month, stage, only, skip, timeoutMs });
-    }
-  }
-
-  // 3. Scores fallback: if the prompt had no scores for a scored project, use measured PageSpeed values (and say so).
-  for (const host of missingScores) {
-    const legacy = legacyScoresFromMeasured(host, month);
-    if (legacy) {
-      setRuntimeOverrides(host, { scores: legacy });
-      summary.warnings.push(`No Before/After scores were supplied for ${host}; reports use measured PageSpeed values (Before = same-month "before" capture or last month).`);
-    } else if (outputs.length) {
-      summary.warnings.push(`No Before/After scores were supplied for ${host} and no measured PageSpeed result exists; reports for this site may show placeholder values. Supply scores with --scores.`);
     }
   }
 
