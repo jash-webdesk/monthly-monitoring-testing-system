@@ -3,6 +3,14 @@
 One reusable audit engine, one config file per project. Do not create separate apps per client.
 Read this file first in every session (local or Claude Code cloud).
 
+## Read first: project context
+A new session has no memory of earlier conversations. Read `docs/PROJECT_CONTEXT.md` before doing anything: it holds the client background, user preferences, safety boundaries, per-project facts and the current state of the build. In short:
+- Reports go to clients: accurate, plain language, never invent a number, state failed or skipped audits honestly.
+- Performance Before/After scores always come from the user's prompt and are never replaced by measurements.
+- Companion apps are read-only; never whitelist a write request without explicit sign-off; never type passwords into a browser.
+- Integrity Reforestation has no PageSpeed scores. Genpet and PartsConnexion/AudioConnexion require them.
+- When you learn something durable, add it to `docs/PROJECT_CONTEXT.md` and commit it, so the next session has it.
+
 ## What the user types each month
 A short prompt: website URL, month, Before/After performance scores (only for projects that use them), and which outputs to generate. Everything else is collected automatically. The user never supplies audit findings.
 
