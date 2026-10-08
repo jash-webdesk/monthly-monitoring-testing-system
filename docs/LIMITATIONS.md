@@ -23,3 +23,9 @@ Honest list of what the system does not do yet, and what has not been proven in 
 - Performance Before/After scores come from the prompt. PageSpeed measurements are stored for trending but never override supplied scores.
 - Companion-app runners abort every write request after login. Genpet has a known unresolved guardrail trip (POST /api/users/singleUser); do not whitelist it without sign-off.
 - LidStyles is kept as a legacy project only so archived data keeps working.
+
+## Running without secrets (tested locally with `--no-env`)
+`node engine/run-audit.js ... --no-env` (or `MM_NO_DOTENV=1`) ignores `.env`, which rehearses a cloud session with no variables set. Result on Genpet: network used the live probe instead of UptimeRobot, performance fell back to the local Lighthouse CLI instead of the PageSpeed API, security ran the guest pass only, and the companion app ran its unauthenticated health check with an info finding. All completed.
+- The Lighthouse fallback is slow (about 3 to 4 minutes per page) and its numbers differ from PageSpeed. Reports still show the scores from the prompt. Set `PAGESPEED_API_KEY` for quick runs.
+- In the cloud the fallback uses the engine's Playwright Chromium (`CHROME_PATH` is set for it). This has not been run in a real cloud session.
+- When variables are set in the cloud environment, every runner reads them directly from the process environment; no `.env` file is needed.

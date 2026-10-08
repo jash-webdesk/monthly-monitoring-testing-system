@@ -5,10 +5,12 @@ import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { createFinding, createErrorFinding, createRunnerResult, SEVERITY, CATEGORY } from '../lib/result.js';
 import { logger } from '../lib/logger.js';
+import { chromeForTools } from '../lib/browser.js';
 
 // Load .env file manually if it exists
 const envPath = resolve(process.cwd(), '.env');
-if (existsSync(envPath)) {
+const skipDotenv = process.env.MM_NO_DOTENV === '1' || process.argv.includes('--no-env');
+if (!skipDotenv && existsSync(envPath)) {
   const envContent = readFileSync(envPath, 'utf8');
   for (const line of envContent.split('\n')) {
     const trimmed = line.trim();
@@ -195,7 +197,9 @@ async function runPreset(url, preset, outputFile) {
   logger.debug(`CMD: ${cmd}`);
 
   try {
-    await execAsync(cmd, { timeout: EXEC_TIMEOUT_MS });
+    // Point the Lighthouse CLI at the engine's browser: a cloud VM has no system Chrome for it to find.
+    const chrome = process.env.CHROME_PATH || chromeForTools();
+    await execAsync(cmd, { timeout: EXEC_TIMEOUT_MS, env: { ...process.env, ...(chrome ? { CHROME_PATH: chrome } : {}) } });
   } catch (err) {
     // Lighthouse exits non-zero for some audit warnings — still check for output
     if (!existsSync(outputFile)) {

@@ -25,6 +25,8 @@ import { buildRecord, saveHistory, historyPath } from './history.js';
 import { generateReports, normalizeOutputs } from './reports.js';
 
 function loadDotEnv() {
+  // MM_NO_DOTENV=1 or --no-env: ignore .env entirely, to rehearse a cloud run that has no secrets.
+  if (process.env.MM_NO_DOTENV === '1' || process.argv.includes('--no-env')) return;
   const p = resolve(repoRoot(), '.env');
   if (!existsSync(p)) return;
   for (const line of readFileSync(p, 'utf8').split('\n')) {

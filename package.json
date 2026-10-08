@@ -21,6 +21,7 @@
     "@axe-core/playwright": "latest",
     "docx": "^9.7.1",
     "https-proxy-agent": "^9.1.0",
+    "lighthouse": "12.8.2",
     "playwright": "latest",
     "pptxgenjs": "^4.0.1",
     "retire": "latest",
