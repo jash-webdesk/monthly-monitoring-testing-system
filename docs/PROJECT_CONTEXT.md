@@ -15,6 +15,7 @@ WebDesk Solution's monthly monitoring service for client websites and apps. Each
 - Technical report = PDF (`report/generator.js`, or the Integrity technical report). Client report = PowerPoint deck (`generate_ppt_report.js`, or the Integrity deck) plus a PDF copy of the deck.
 - Performance Before/After scores are the user's own hand-run PageSpeed numbers, supplied in every prompt. Reports must show those numbers. Measured PageSpeed values are stored for trending only and never replace supplied scores. Before = the day the month's audit starts, before that month's fixes; After = once the month's fixes are done (not last month versus this month).
 - Plain-language rule for client material: say what was fixed and what it means for the business. Avoid raw technical ids, jargon and negative-only "0 of 6" framing. Unmeasured items say "Not measured"; never invent a number or a clean bill of health.
+- Client deck checkmarks use U+2713 (check mark), not U+2714 (heavy check mark). U+2714 has an emoji form, and the PDF copy (LibreOffice, no Plus Jakarta Sans or Outfit installed here) rendered it as a colour emoji. U+2713 renders as plain text in the PDF and in PowerPoint.
 - Before trusting a `something?.metrics?.key ?? true` pattern in a report generator, confirm the runner actually fills that key. A silent fallback once made reports claim a clean security audit while real headers were missing.
 
 ## Safety boundaries (client production sites)

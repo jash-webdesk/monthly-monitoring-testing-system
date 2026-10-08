@@ -424,10 +424,10 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   });
 
   slide2.addText(
-    "✔ Database Backup:\n" +
+    "✓ Database Backup:\n" +
     "   - Compressed SQL database tables archived\n" +
     "   - Customer accounts & order records secured\n\n" +
-    "✔ Source Code & Theme Backup:\n" +
+    "✓ Source Code & Theme Backup:\n" +
     "   - Active storefront theme & code cloned\n" +
     "   - Product catalog media & config assets cached",
     {
@@ -809,7 +809,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Plus Jakarta Sans'
   });
 
-  slide5.addText(`✔ Accessibility: ${desktopA11yBefore === desktopA11yAfter ? `${desktopA11yAfter} / 100` : `${desktopA11yBefore} → ${desktopA11yAfter} / 100`}`, {
+  slide5.addText(`✓ Accessibility: ${desktopA11yBefore === desktopA11yAfter ? `${desktopA11yAfter} / 100` : `${desktopA11yBefore} → ${desktopA11yAfter} / 100`}`, {
     x: 7.1,
     y: 2.7,
     w: 5.0,
@@ -820,7 +820,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Outfit'
   });
 
-  slide5.addText(`✔ Best Practices: ${desktopBpBefore === desktopBpAfter ? `${desktopBpAfter} / 100` : `${desktopBpBefore} → ${desktopBpAfter} / 100`}`, {
+  slide5.addText(`✓ Best Practices: ${desktopBpBefore === desktopBpAfter ? `${desktopBpAfter} / 100` : `${desktopBpBefore} → ${desktopBpAfter} / 100`}`, {
     x: 7.1,
     y: 3.3,
     w: 5.0,
@@ -831,7 +831,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Outfit'
   });
 
-  slide5.addText(`✔ SEO Rating: ${desktopSeoBefore === desktopSeoAfter ? `${desktopSeoAfter} / 100` : `${desktopSeoBefore} → ${desktopSeoAfter} / 100`}`, {
+  slide5.addText(`✓ SEO Rating: ${desktopSeoBefore === desktopSeoAfter ? `${desktopSeoAfter} / 100` : `${desktopSeoBefore} → ${desktopSeoAfter} / 100`}`, {
     x: 7.1,
     y: 3.9,
     w: 5.0,
@@ -842,7 +842,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Outfit'
   });
 
-  slide5.addText("✔ Google Agentic Browsing: Pass (2/2)", {
+  slide5.addText("✓ Google Agentic Browsing: Pass (2/2)", {
     x: 7.1,
     y: 4.5,
     w: 5.0,
@@ -970,7 +970,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Plus Jakarta Sans'
   });
 
-  slide6.addText(`✔ Accessibility: ${mobileA11yBefore === mobileA11yAfter ? `${mobileA11yAfter} / 100` : `${mobileA11yBefore} → ${mobileA11yAfter} / 100`}`, {
+  slide6.addText(`✓ Accessibility: ${mobileA11yBefore === mobileA11yAfter ? `${mobileA11yAfter} / 100` : `${mobileA11yBefore} → ${mobileA11yAfter} / 100`}`, {
     x: 7.1,
     y: 2.7,
     w: 5.0,
@@ -981,7 +981,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Outfit'
   });
 
-  slide6.addText(`✔ Best Practices: ${mobileBpBefore === mobileBpAfter ? `${mobileBpAfter} / 100` : `${mobileBpBefore} → ${mobileBpAfter} / 100`}`, {
+  slide6.addText(`✓ Best Practices: ${mobileBpBefore === mobileBpAfter ? `${mobileBpAfter} / 100` : `${mobileBpBefore} → ${mobileBpAfter} / 100`}`, {
     x: 7.1,
     y: 3.3,
     w: 5.0,
@@ -992,7 +992,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Outfit'
   });
 
-  slide6.addText(`✔ SEO Rating: ${mobileSeoBefore === mobileSeoAfter ? `${mobileSeoAfter} / 100` : `${mobileSeoBefore} → ${mobileSeoAfter} / 100`}`, {
+  slide6.addText(`✓ SEO Rating: ${mobileSeoBefore === mobileSeoAfter ? `${mobileSeoAfter} / 100` : `${mobileSeoBefore} → ${mobileSeoAfter} / 100`}`, {
     x: 7.1,
     y: 3.9,
     w: 5.0,
@@ -1133,7 +1133,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
       fontFace: 'Outfit'
     });
 
-    slideAboutUs.addText(`✔ Accessibility: ${siteScores.aboutUs.desktop.accessibility ?? 96} / 100\n✔ Best Practices: ${siteScores.aboutUs.desktop.bestPractices ?? 100} / 100\n✔ SEO Rating: ${siteScores.aboutUs.desktop.seo ?? 100} / 100`, {
+    slideAboutUs.addText(`✓ Accessibility: ${siteScores.aboutUs.desktop.accessibility ?? 96} / 100\n✓ Best Practices: ${siteScores.aboutUs.desktop.bestPractices ?? 100} / 100\n✓ SEO Rating: ${siteScores.aboutUs.desktop.seo ?? 100} / 100`, {
       x: 7.1,
       y: 4.1,
       w: 5.0,
@@ -1208,10 +1208,10 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   });
 
   slide7.addText(
-    "✔ Title Tags: Present across all template layouts\n" +
-    "✔ Meta Descriptions: Unique descriptions configured\n" +
-    "✔ Canonical Tags: Valid canonical URLs set without loops\n" +
-    "✔ Heading Hierarchy: Single clean <h1> per page layout",
+    "✓ Title Tags: Present across all template layouts\n" +
+    "✓ Meta Descriptions: Unique descriptions configured\n" +
+    "✓ Canonical Tags: Valid canonical URLs set without loops\n" +
+    "✓ Heading Hierarchy: Single clean <h1> per page layout",
     {
       x: 1.1,
       y: 3.2,
@@ -1257,10 +1257,10 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   });
 
   slide7.addText(
-    "✔ Schema.org Microdata: JSON-LD Product & FAQ Schema valid\n" +
-    "✔ Sitemap.xml: Fully accessible & formatted XML index\n" +
-    "✔ Robots.txt: Googlebot & Bingbot crawling enabled\n" +
-    "✔ OpenGraph Tags: Social sharing preview metadata verified",
+    "✓ Schema.org Microdata: JSON-LD Product & FAQ Schema valid\n" +
+    "✓ Sitemap.xml: Fully accessible & formatted XML index\n" +
+    "✓ Robots.txt: Googlebot & Bingbot crawling enabled\n" +
+    "✓ OpenGraph Tags: Social sharing preview metadata verified",
     {
       x: 7.1,
       y: 3.2,
@@ -1335,10 +1335,10 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   });
 
   slide8.addText(
-    "✔ GPTBot (OpenAI/SearchGPT): Access permitted in robots.txt\n" +
-    "✔ Gemini-Exchange (Google AI): Unblocked for citation indexing\n" +
-    "✔ PerplexityBot & ClaudeBot: Catalog scanning allowed\n" +
-    "✔ Product Facts: Clean HTML data tables ready for LLM extraction",
+    "✓ GPTBot (OpenAI/SearchGPT): Access permitted in robots.txt\n" +
+    "✓ Gemini-Exchange (Google AI): Unblocked for citation indexing\n" +
+    "✓ PerplexityBot & ClaudeBot: Catalog scanning allowed\n" +
+    "✓ Product Facts: Clean HTML data tables ready for LLM extraction",
     {
       x: 1.1,
       y: 3.2,
@@ -1384,10 +1384,10 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   });
 
   slide8.addText(
-    "✔ Conversational Tone: Standard English score (Easy for Voice/Siri)\n" +
-    "✔ Direct Answer Q&A: FAQ structures optimized for answer snippets\n" +
-    "✔ JSON-LD Product Attributes: Instant price/spec extraction for AI\n" +
-    "✔ High Tier Feature: Enterprise AI visibility monitoring enabled",
+    "✓ Conversational Tone: Standard English score (Easy for Voice/Siri)\n" +
+    "✓ Direct Answer Q&A: FAQ structures optimized for answer snippets\n" +
+    "✓ JSON-LD Product Attributes: Instant price/spec extraction for AI\n" +
+    "✓ High Tier Feature: Enterprise AI visibility monitoring enabled",
     {
       x: 7.1,
       y: 3.2,
@@ -1453,7 +1453,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
         slide9.addShape(pptx.shapes.OVAL, { x: iconX + 0.26, y: iconY + 0.13, w: 0.28, h: 0.3, fill: { type: 'none' }, line: { color: 'FFFFFF', width: 3 } });
         slide9.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: iconX + 0.2, y: iconY + 0.34, w: 0.4, h: 0.3, fill: { color: 'FFFFFF' }, line: { color: 'FFFFFF', width: 0 }, rectRadius: 0.05 });
       } else {
-        slide9.addText('✔', { x: iconX, y: iconY, w: 0.8, h: 0.8, fontSize: 32, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: 'Plus Jakarta Sans' });
+        slide9.addText('✓', { x: iconX, y: iconY, w: 0.8, h: 0.8, fontSize: 32, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: 'Plus Jakarta Sans' });
       }
       slide9.addText(st.head, { x: cx, y: cardY + 1.1, w: cardW, h: 0.3, fontSize: 11, bold: true, color: st.tone, align: 'center', fontFace: 'Plus Jakarta Sans' });
       slide9.addText(st.text, { x: cx + 0.25, y: cardY + 1.4, w: cardW - 0.5, h: 1.05, fontSize: 12, color: COLOR_TEXT_DARK, align: 'center', valign: 'top', fontFace: 'Plus Jakarta Sans', lineSpacingMultiple: 1.15 });
@@ -1465,7 +1465,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     // ── Tools now protected ──
     slide9.addText('NOW PROTECTED', { x: 0.8, y: 4.72, w: 3.0, h: 0.28, fontSize: 9, bold: true, color: COLOR_MUTED, fontFace: 'Plus Jakarta Sans' });
     const shownTools = n > 4 ? fixedTools.slice(0, 3) : fixedTools;
-    const pills = n > 4 ? [...shownTools.map(t => `✔  ${t}`), `+ ${n - 3} more`] : shownTools.map(t => `✔  ${t}`);
+    const pills = n > 4 ? [...shownTools.map(t => `✓  ${t}`), `+ ${n - 3} more`] : shownTools.map(t => `✓  ${t}`);
     pills.forEach((label, i) => {
       const px = 0.8 + i * 2.95;
       slide9.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: px, y: 5.02, w: 2.8, h: 0.4, fill: { color: 'ECFDF5' }, line: { color: '10B981', width: 1 }, rectRadius: 0.2 });
@@ -1482,7 +1482,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     impacts.forEach(([h, t], i) => {
       const ix = 0.8 + i * 4.04;
       slide9.addShape(pptx.shapes.OVAL, { x: ix, y: 5.98, w: 0.34, h: 0.34, fill: { color: '10B981' }, line: { color: '10B981', width: 0 } });
-      slide9.addText('✔', { x: ix, y: 5.98, w: 0.34, h: 0.34, fontSize: 11, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: 'Plus Jakarta Sans' });
+      slide9.addText('✓', { x: ix, y: 5.98, w: 0.34, h: 0.34, fontSize: 11, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: 'Plus Jakarta Sans' });
       slide9.addText(h, { x: ix + 0.45, y: 5.94, w: 3.3, h: 0.3, fontSize: 12, bold: true, color: COLOR_TEXT_DARK, fontFace: 'Outfit' });
       slide9.addText(t, { x: ix + 0.45, y: 6.22, w: 3.3, h: 0.55, fontSize: 10, color: COLOR_MUTED, valign: 'top', fontFace: 'Plus Jakarta Sans', lineSpacing: 13 });
     });
@@ -1564,7 +1564,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
       });
     } else {
       slide9.addShape(pptx.shapes.OVAL, { x: 10.0, y: 2.6, w: 1.8, h: 1.8, fill: { color: 'ECFDF5' }, line: { color: '10B981', width: 6 } });
-      slide9.addText('✔', { x: 10.0, y: 2.85, w: 1.8, h: 1.3, fontSize: 60, bold: true, color: '10B981', align: 'center', valign: 'middle', fontFace: 'Plus Jakarta Sans' });
+      slide9.addText('✓', { x: 10.0, y: 2.85, w: 1.8, h: 1.3, fontSize: 60, bold: true, color: '10B981', align: 'center', valign: 'middle', fontFace: 'Plus Jakarta Sans' });
       slide9.addText('All clear', { x: 9.0, y: 4.5, w: 3.8, h: 0.4, fontSize: 16, bold: true, color: '047857', align: 'center', fontFace: 'Outfit' });
     }
 
@@ -1937,9 +1937,9 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
 
   slide12.addText(
     "We audited active templates (Homepage, Product details, Category grids, and static info pages) for scroll sizing.\n\n" +
-    "✔ Zero horizontal document overflows (`scrollWidth > innerWidth`)\n" +
-    "✔ No content clipping or overlapping components\n" +
-    "✔ Fluid layout scaling across all viewports",
+    "✓ Zero horizontal document overflows (`scrollWidth > innerWidth`)\n" +
+    "✓ No content clipping or overlapping components\n" +
+    "✓ Fluid layout scaling across all viewports",
     {
       x: 7.1,
       y: 3.1,
@@ -2087,7 +2087,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
       const tone = t.on ? '10B981' : 'F59E0B';
       slide14.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: 1.1, y, w: 6.1, h: rowH, fill: { color: 'FFFFFF' }, line: { color: COLOR_BORDER, width: 1 }, rectRadius: 0.08 });
       slide14.addShape(pptx.shapes.OVAL, { x: 1.3, y: mid - 0.28, w: 0.56, h: 0.56, fill: { color: tone }, line: { color: tone, width: 0 } });
-      slide14.addText(t.on ? '✔' : '!', { x: 1.3, y: mid - 0.28, w: 0.56, h: 0.56, fontSize: 18, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: 'Plus Jakarta Sans' });
+      slide14.addText(t.on ? '✓' : '!', { x: 1.3, y: mid - 0.28, w: 0.56, h: 0.56, fontSize: 18, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: 'Plus Jakarta Sans' });
       slide14.addText(t.name, { x: 2.05, y: mid - 0.45, w: 3.2, h: 0.36, fontSize: 15, bold: true, color: COLOR_TEXT_DARK, fontFace: 'Outfit' });
       slide14.addText(t.why, { x: 2.05, y: mid - 0.06, w: 3.3, h: 0.5, fontSize: 10, color: COLOR_MUTED, valign: 'top', fontFace: 'Plus Jakarta Sans', lineSpacingMultiple: 1.1 });
       // status pill
