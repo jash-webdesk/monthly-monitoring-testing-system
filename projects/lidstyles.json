@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "id": "lidstyles",
+  "name": "LidStyles",
+  "client": "LidStyles",
+  "status": "legacy",
+  "platform": "magento",
+  "domains": [
+    "lidstyles.com",
+    "www.lidstyles.com"
+  ],
+  "sites": [
+    {
+      "hostname": "www.lidstyles.com",
+      "name": "LidStyles",
+      "platform": "magento",
+      "timeout": 30000,
+      "retries": 2,
+      "notes": "Magento-based laptop and device skin eCommerce store. Built by WebDesk Solution.",
+      "pages": {
+        "homepage": "https://www.lidstyles.com/",
+        "product": "https://www.lidstyles.com/blue-dell-e6400-laptop-skin.html"
+      },
+      "archiveKey": "www.lidstyles.com"
+    }
+  ],
+  "audits": {
+    "performance": {
+      "enabled": true,
+      "pages": "all",
+      "note": "PageSpeed Insights, median of 3. Measurements are stored for trend analysis; reports show the Before/After scores supplied in the prompt."
+    },
+    "security": {
+      "enabled": true,
+      "pages": "all",
+      "authenticatedPass": true,
+      "note": "Chrome DevTools/CDP: security headers, cookies, SRI, console errors, vulnerable libraries. The authenticated pass runs only when STOREFRONT_USERNAME/STOREFRONT_PASSWORD are set."
+    },
+    "dns": {
+      "enabled": true
+    },
+    "ssl": {
+      "enabled": true
+    },
+    "seo": {
+      "enabled": true,
+      "note": "Sitemap + crawl, canonical/robots/structured data, GEO/AEO readiness, multi-viewport layout."
+    },
+    "ai-crawlers": {
+      "enabled": true,
+      "note": "Derived from the seo crawl (robots.txt rules for GPTBot, Gemini, Claude, Perplexity ...)."
+    },
+    "network": {
+      "enabled": true,
+      "note": "Availability + response time (UptimeRobot when UPTIMEROBOT_API_KEY is set, live probe otherwise)."
+    },
+    "functional": {
+      "enabled": false,
+      "reason": "No generic storefront-journey runner exists yet (see docs/LIMITATIONS.md)."
+    },
+    "companion-app": {
+      "enabled": false
+    },
+    "cache": {
+      "enabled": false,
+      "reason": "Server/build-cache metrics are captured manually from the hosting dashboard; no API runner exists yet."
+    },
+    "currency": {
+      "enabled": false
+    }
+  },
+  "secrets": [
+    {
+      "env": "PAGESPEED_API_KEY",
+      "purpose": "Google PageSpeed Insights API (performance audit)",
+      "required": true,
+      "scope": "environment"
+    },
+    {
+      "env": "UPTIMEROBOT_API_KEY",
+      "purpose": "UptimeRobot read-only API key (30-day availability); optional - a live probe is used without it",
+      "required": false,
+      "scope": "environment"
+    }
+  ],
+  "reports": {
+    "technical": "site-pdf",
+    "client": "site-pptx"
+  },
+  "reportMeta": {}
+}

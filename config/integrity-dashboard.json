@@ -1,0 +1,37 @@
+{
+  "_readme": "Read-only QA coverage for the Integrity Reforestation admin dashboard (custom app). Every check is page.goto()/filter/pagination/View only. Any non-GET request after login is blocked in the browser AND reported as CRITICAL. Edit/Delete/Send test mail/ADD NEW on Email Templates are intentionally never touched.",
+  "hostname": "integrity-reforestation",
+  "baseUrl": "https://integrity-dashboard-bf73ab673f4c.herokuapp.com",
+  "auth": {
+    "usernameEnvVar": "INTEGRITY_CUSTOMAPP_USERNAME",
+    "passwordEnvVar": "INTEGRITY_CUSTOMAPP_PASSWORD",
+    "loginPath": "/login",
+    "usernameSelector": "input[type=\"email\"]",
+    "passwordSelector": "input[type=\"password\"]",
+    "submitSelector": "button[type=\"submit\"]"
+  },
+  "discoveryApprovedBy": "WebDesk team (chat approval)",
+  "discoveryApprovedAt": "2026-10-06",
+  "pages": {
+    "dashboard": { "path": "/dashboard", "heading": "Dashboard" },
+    "stores": { "path": "/dashboard/stores", "heading": "Stores" },
+    "emails": { "path": "/dashboard/emails", "heading": "Email Templates" },
+    "emailLogs": { "path": "/dashboard/email-logs", "heading": "Email Activity Logs" }
+  },
+  "expect": {
+    "nav": ["Dashboard", "Stores Listing", "Email Templates", "Email Logs"],
+    "kpis": ["Total Stores", "Active Stores", "Total Trees Funded", "Total Contributions", "Customer Contributions", "Merchant Contributions"],
+    "storeColumns": ["NO.", "STORE NAME", "STORE URL", "PLAN", "TOTAL TREES", "CONTRIBUTION", "SPENDING LIMIT", "INSTALLED", "UNINSTALLED", "STATUS", "ACTIONS"],
+    "templateColumns": ["NO.", "TITLE", "CODE", "STATUS", "ACTION"],
+    "logColumns": ["#", "EMAIL TYPE", "RECIPIENT", "STORE", "STATUS", "SENT AT", "ACTION"],
+    "templateCodes": ["install", "active", "assets", "new_donation", "self_contribution", "limit_overflow", "limit_exact", "limit_early", "limit_updated", "password_reset"],
+    "logStatuses": ["Sent", "Failed"],
+    "templateStatuses": ["Enabled", "Disabled"],
+    "storeDetailSections": ["Store Information", "App & System Status", "Install History", "Financial Breakdown", "Contribution Log"],
+    "emptyStates": { "stores": "No stores found", "templates": "No templates match your search", "logs": "No email logs found" }
+  },
+  "thresholds": {
+    "maxStoreDetailPages": 25,
+    "failedEmailRecentDays": 14
+  }
+}

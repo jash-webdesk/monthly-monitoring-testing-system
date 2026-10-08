@@ -1,0 +1,424 @@
+{
+  "reportTitle": "Monthly Storefront Monitoring & Maintenance Report",
+  "clientName": "Integrity Reforestation",
+  "storeUrl": "https://test-demo-store-801srwej.myshopify.com",
+  "month": "2026-09",
+  "preparedBy": "WebDesk Solution Maintenance & QA Team",
+  "executiveSummary": "During this monthly monitoring cycle, we reviewed App and Dashboard server performance, cleared stale build cache on both environments, and identified and resolved an SMTP email delivery issue on the Dashboard. Both servers remained stable throughout the monitoring period.",
+  "themeUpdateLog": {
+    "sectionTitle": "Shopify Theme Updates",
+    "summary": "Shopify pushed platform updates to its free theme library this cycle. We tracked every release that touched a theme in scope for this store.",
+    "updateGroups": [
+      {
+        "version": "16.0.0",
+        "date": "2026-08-10",
+        "whatChanged": "Customer account experience changes",
+        "themes": [
+          "Dawn",
+          "Craft",
+          "Crave",
+          "Origin",
+          "Publisher",
+          "Refresh",
+          "Ride",
+          "Sense",
+          "Taste",
+          "Rise"
+        ],
+        "fromVersion": "15.5.0"
+      },
+      {
+        "version": "4.2.0",
+        "date": "2026-09-18",
+        "whatChanged": "RTL improvements + cart drawer/cart-page fixes",
+        "themes": [
+          "Horizon",
+          "Dwell",
+          "Heritage",
+          "Vessel",
+          "Fabric"
+        ],
+        "fromVersion": "4.1.0"
+      }
+    ],
+    "testedThemes": [
+      "Dawn",
+      "Crave"
+    ],
+    "testedNote": "Dawn and Crave (v16.0.0) are the two themes this store actually uses, so we selected them for full Tree Contribution Widget compatibility and multi-device responsive testing — results on the following pages."
+  },
+  "opsMonitoringSection": {
+    "sectionTitle": "Monthly App & Server Monitoring",
+    "overview": {
+      "optimizationsReviewed": [
+        "Build cache removal and reset for the App and Dashboard environments",
+        "Server resource utilization and performance monitoring",
+        "Last 24-hour application usage review",
+        "SMTP configuration and email delivery verification"
+      ],
+      "objectives": [
+        "Remove stale build cache data and ensure clean build execution",
+        "Monitor application and server resource utilization",
+        "Verify overall system stability and performance",
+        "Restore and validate email delivery functionality",
+        "Identify any errors or operational issues requiring follow-up"
+      ]
+    },
+    "performanceMetrics": {
+      "app": {
+        "label": "App Server",
+        "responseTime": "7 ms",
+        "throughput": "< 1 RPS",
+        "memoryUsage": "17%",
+        "referenceUrl": "https://dashboard.heroku.com/apps/integrity-app/metrics/web?ending=0-hours-ago&starting=24-hours-ago",
+        "assessment": [
+          "The App server recorded a 7 ms response time, indicating fast application response during the monitoring period.",
+          "Throughput remained below 1 RPS, which is consistent with the currently observed traffic level.",
+          "Memory utilization remained low at approximately 17%.",
+          "No resource-related performance degradation was observed during the monitoring period."
+        ]
+      },
+      "dashboard": {
+        "label": "Dashboard Server",
+        "responseTime": "127 ms",
+        "throughput": "< 1 RPS",
+        "memoryUsage": "20%",
+        "referenceUrl": "https://dashboard.heroku.com/apps/integrity-dashboard/metrics/web?ending=0-hours-ago&starting=24-hours-ago",
+        "assessment": [
+          "The Dashboard server recorded a 127 ms response time during the monitoring period.",
+          "Throughput remained below 1 RPS, reflecting the currently observed traffic level.",
+          "Memory utilization remained stable at approximately 20%.",
+          "No significant resource exhaustion or performance degradation was observed."
+        ]
+      },
+      "conclusion": "Both App and Dashboard servers remained stable during the monitoring period, with low memory utilization and no significant resource-related issues observed."
+    },
+    "sslSecurity": {
+      "commonName": "*.herokuapp.com",
+      "issuer": "Amazon RSA 2048 M01",
+      "issuedOn": "2025-12-31",
+      "expiresOn": "2027-01-29",
+      "screenshot": "ssl-certificate.png",
+      "coverageNote": "Wildcard certificate covers both the App and Dashboard environments on the herokuapp.com domain."
+    },
+    "buildCacheAnalysis": {
+      "app": {
+        "label": "App Server",
+        "beforeUrl": "https://app.screencast.com/xelSf4JEHgSoP",
+        "afterUrl": "https://app.screencast.com/8SlB79zdk3YxG"
+      },
+      "dashboard": {
+        "label": "Dashboard Server",
+        "beforeUrl": "https://app.screencast.com/WFVKktKqYoxU1",
+        "afterUrl": "https://app.screencast.com/udEMEdH9w1Dos"
+      },
+      "findings": [
+        "Build cache maintenance was performed on both the App and Dashboard environments.",
+        "The existing build cache was cleared to ensure subsequent builds use a clean build state.",
+        "Post-maintenance verification confirmed that the applications continued to operate normally.",
+        "No new build-related issues or dependency conflicts were observed after the cache reset."
+      ],
+      "conclusion": "Build cache was successfully cleared on both App and Dashboard environments, with no operational issues observed after the maintenance."
+    },
+    "last24HoursUsage": {
+      "app": {
+        "label": "App Server",
+        "evidenceUrl": "https://app.screencast.com/P6QAgI3ogiGKO"
+      },
+      "dashboard": {
+        "label": "Dashboard Server",
+        "evidenceUrl": "https://app.screencast.com/8kfjdWBhcjdZ8"
+      },
+      "findings": [
+        "The App server maintained a 7 ms response time during the reviewed period.",
+        "The Dashboard server maintained a 127 ms response time during the reviewed period.",
+        "Throughput remained below 1 RPS for the monitored environments.",
+        "Memory utilization remained stable at 17% for the App and 20% for the Dashboard.",
+        "No significant traffic spikes or resource exhaustion were observed.",
+        "Application availability and operational behavior remained stable during monitoring."
+      ],
+      "conclusion": "Both environments operated within the observed resource and performance parameters during the last 24 hours."
+    },
+    "incidents": [
+      {
+        "title": "SMTP Email Delivery Issue — Dashboard",
+        "issue": "During the monitoring period, the Dashboard server reported an HTTP 500 error on the email template test endpoint.",
+        "rootCause": "Gmail SMTP authentication rejected the previously configured credentials with the error: EAUTH 535 — Username and Password not accepted.",
+        "affectedEndpoint": "POST /api/email-templates/{id}/send-test",
+        "resolutionSteps": [
+          "The client provided the correct SMTP credentials, which were updated in the Heroku configuration.",
+          "Email test requests returned HTTP 200.",
+          "Test emails were sent successfully.",
+          "SMTP authentication completed successfully with no further errors observed during verification."
+        ],
+        "conclusion": "SMTP configuration was successfully updated and email delivery functionality was restored and verified."
+      }
+    ],
+    "overallSummary": [
+      {
+        "area": "App Build Cache",
+        "status": "Resolved",
+        "remarks": "Build cache successfully cleared and application verified"
+      },
+      {
+        "area": "Dashboard Build Cache",
+        "status": "Resolved",
+        "remarks": "Build cache successfully cleared and application verified"
+      },
+      {
+        "area": "Memory Usage — App",
+        "status": "Healthy",
+        "remarks": "17%"
+      },
+      {
+        "area": "Memory Usage — Dashboard",
+        "status": "Healthy",
+        "remarks": "20%"
+      },
+      {
+        "area": "Response Time — App",
+        "status": "Healthy",
+        "remarks": "7 ms"
+      },
+      {
+        "area": "Response Time — Dashboard",
+        "status": "Healthy",
+        "remarks": "127 ms"
+      },
+      {
+        "area": "Throughput",
+        "status": "Stable",
+        "remarks": "< 1 RPS"
+      },
+      {
+        "area": "SMTP Email Delivery",
+        "status": "Restored",
+        "remarks": "Correct SMTP credentials configured and verified"
+      },
+      {
+        "area": "System Stability",
+        "status": "Stable",
+        "remarks": "No significant operational regressions observed"
+      }
+    ],
+    "finalAssessment": {
+      "successfulOutcomes": [
+        "Build cache was cleared on both App and Dashboard environments.",
+        "Application operation remained stable after cache maintenance.",
+        "App server recorded 7 ms response time with 17% memory utilization.",
+        "Dashboard server recorded 127 ms response time with 20% memory utilization.",
+        "Throughput remained below 1 RPS during the monitoring period.",
+        "SMTP authentication issue was identified, corrected, and successfully verified.",
+        "Email template test functionality is now operating successfully."
+      ],
+      "continuedMonitoring": [
+        "Continue monitoring the App and Dashboard response-time and throughput metrics during future monthly cycles.",
+        "Continue monitoring SMTP email delivery for recurring authentication or delivery issues.",
+        "Continue reviewing build behavior after future deployments to identify any recurrence of stale-cache-related issues."
+      ]
+    }
+  },
+  "devTeamSection": {
+    "sectionTitle": "Development & Storefront Maintenance Updates",
+    "summary": "",
+    "categories": []
+  },
+  "qaTestingSection": {
+    "sectionTitle": "Multi-Device Storefront & Widget Audit",
+    "widgetName": "Integrity Reforestation Tree Contribution Widget (.tdw-card)",
+    "functionalStatus": "100% Passed (Pricing, Line Items, Cart Recalculation)",
+    "functionalChecks": [
+      {
+        "label": "Dropdown selection (1 Tree / $1.45, 2 Trees / $2.90, 5 Trees / $7.25)",
+        "passed": true
+      },
+      {
+        "label": "Dynamic CTA button calculation and labeling",
+        "passed": true
+      },
+      {
+        "label": "Seamless cart line item addition and subtotal/tax recalculation",
+        "passed": true
+      },
+      {
+        "label": "Automatic suppression when contribution item is active in cart",
+        "passed": true
+      }
+    ],
+    "touchpoints": [
+      {
+        "name": "Product Page (PDP)",
+        "note": "Widget renders below the Add to Cart button."
+      },
+      {
+        "name": "Cart Page",
+        "note": "Line item and subtotal recalculation verified."
+      },
+      {
+        "name": "Cart Drawer",
+        "note": "Widget state stays in sync with the drawer."
+      },
+      {
+        "name": "Add-to-Cart Popup",
+        "note": "Contribution reflected immediately on popup open."
+      }
+    ],
+    "themes": {
+      "dawn": {
+        "name": "Dawn",
+        "version": "16.0.0",
+        "notes": "Crisp contrast on white background; fluid responsive scaling across all devices.",
+        "screenshots": {
+          "mobile": {
+            "galaxy_s24_360x780": {
+              "device": "Samsung Galaxy S24",
+              "dimensions": "360 x 780",
+              "pdp": "https://prnt.sc/VtzRa7M-OTzQ",
+              "cart": "https://prnt.sc/0oPA0tWmOITd",
+              "cartPopup": "https://prnt.sc/ucLY6HzFa65v",
+              "drawer": "https://prnt.sc/iqBrJbRLpsdg"
+            },
+            "iphone_13_14_15_390x844": {
+              "device": "iPhone 13 / 14 / 15",
+              "dimensions": "390 x 844",
+              "pdp": "https://prnt.sc/Hr8BaquUwZv_",
+              "cart": "https://prnt.sc/7Vr04sB9wkt1",
+              "cartPopup": "https://prnt.sc/PAxKnlvkoKSq",
+              "drawer": "https://prnt.sc/f20wP_HGmY9C"
+            },
+            "iphone_11_414x896": {
+              "device": "iPhone 11",
+              "dimensions": "414 x 896",
+              "pdp": "https://prnt.sc/gjVtRLa4l78v",
+              "cart": "https://prnt.sc/Zgg5NmWuL_w8",
+              "cartPopup": "https://prnt.sc/ymJNzU51F2uR",
+              "drawer": "https://prnt.sc/D3tQg0AYZapc"
+            },
+            "iphone_15_pro_max_430x932": {
+              "device": "iPhone 15 Pro Max",
+              "dimensions": "430 x 932",
+              "pdp": "https://prnt.sc/O2cn0DKYn-2x",
+              "cart": "https://prnt.sc/jBSg-3KwkjxA",
+              "cartPopup": "https://prnt.sc/niQZKbA2r-OU",
+              "drawer": "https://prnt.sc/lV4dlTA7WTJl"
+            }
+          },
+          "tablet": {
+            "ipad_portrait_768x1024": {
+              "device": "iPad Portrait",
+              "dimensions": "768 x 1024",
+              "pdp": "https://prnt.sc/aEwz8R5jxGZf",
+              "cart": "https://prnt.sc/vM11x-leRKI3",
+              "cartPopup": "https://prnt.sc/BZ60TpK48xCZ",
+              "drawer": "https://prnt.sc/GHYAjj6SeuxT"
+            },
+            "ipad_air_820x1180": {
+              "device": "iPad Air / Pro",
+              "dimensions": "820 x 1180",
+              "pdp": "https://prnt.sc/N8G51frRbRh6",
+              "cart": "https://prnt.sc/zl6BCpJfBlMh",
+              "cartPopup": "https://prnt.sc/74KCVEXy4tje",
+              "drawer": "https://prnt.sc/u3WlYffV9rG8"
+            },
+            "ipad_landscape_1024x768": {
+              "device": "iPad Landscape",
+              "dimensions": "1024 x 768",
+              "pdp": "https://prnt.sc/ZP1r3l_VPYyU",
+              "cart": "https://prnt.sc/jO1TGWnkX5QT",
+              "cartPopup": "https://prnt.sc/1QEgJ22Ard9F",
+              "drawer": "https://prnt.sc/9WzfyDVEQH4s"
+            }
+          },
+          "desktop": {
+            "desktop_1280x800": {
+              "device": "Desktop Display",
+              "dimensions": "1280 x 800",
+              "pdp": "https://prnt.sc/ZDAnm1K4rZW_",
+              "cart": "https://prnt.sc/oPn1S8ap3sQT",
+              "cartPopup": "https://prnt.sc/ucLY6HzFa65v",
+              "drawer": "https://prnt.sc/efYBwEdLGGBX"
+            }
+          }
+        }
+      },
+      "crave": {
+        "name": "Crave",
+        "version": "16.0.0",
+        "notes": "Cream/burgundy scheme; verified header stability and touch target sizing.",
+        "screenshots": {
+          "mobile": {
+            "galaxy_s24_360x780": {
+              "device": "Samsung Galaxy S24",
+              "dimensions": "360 x 780",
+              "pdp": "https://prnt.sc/g5xOhtqcEbxZ",
+              "cart": "https://prnt.sc/SOFtpYcLOZsz",
+              "cartPopup": "https://prnt.sc/dyJNOooReIvx",
+              "drawer": "https://prnt.sc/4uUgtAMbIiD6"
+            },
+            "iphone_13_14_15_390x844": {
+              "device": "iPhone 13 / 14 / 15",
+              "dimensions": "390 x 844",
+              "pdp": "https://prnt.sc/0z59_5doYcnl",
+              "cart": "https://prnt.sc/G-JOrKNgdtlM",
+              "cartPopup": "https://prnt.sc/HYizxWtCGBpE",
+              "drawer": "https://prnt.sc/1cAtaJSG5s8z"
+            },
+            "iphone_11_414x896": {
+              "device": "iPhone 11",
+              "dimensions": "414 x 896",
+              "pdp": "https://prnt.sc/TpifHXObha2n",
+              "cart": "https://prnt.sc/X3NC5PffZstu",
+              "cartPopup": "https://prnt.sc/7Fcebl_DhKT2",
+              "drawer": "https://prnt.sc/wBiw9DbWLc33"
+            },
+            "iphone_15_pro_max_430x932": {
+              "device": "iPhone 15 Pro Max",
+              "dimensions": "430 x 932",
+              "pdp": "https://prnt.sc/ggKURl4rDwQz",
+              "cart": "https://prnt.sc/q8oMjszV14VF",
+              "cartPopup": "https://prnt.sc/uQDenYxRX0AR",
+              "drawer": "https://prnt.sc/F7rEK5_CoJ9u"
+            }
+          },
+          "tablet": {
+            "ipad_portrait_768x1024": {
+              "device": "iPad Portrait",
+              "dimensions": "768 x 1024",
+              "pdp": "https://prnt.sc/HKjfszw_-Qa4",
+              "cart": "https://prnt.sc/u0UXvHuc9uFw",
+              "cartPopup": "https://prnt.sc/fbcivozZGUUj",
+              "drawer": "https://prnt.sc/69I9wWxkKYF9"
+            },
+            "ipad_air_820x1180": {
+              "device": "iPad Air / Pro",
+              "dimensions": "820 x 1180",
+              "pdp": "https://prnt.sc/j68CD50WxzuH",
+              "cart": "https://prnt.sc/MxaEhI0PyEkD",
+              "cartPopup": "https://prnt.sc/JktvcoqCK703",
+              "drawer": "https://prnt.sc/DLciIbUmloJJ"
+            },
+            "ipad_landscape_1024x768": {
+              "device": "iPad Landscape",
+              "dimensions": "1024 x 768",
+              "pdp": "https://prnt.sc/4H5GCAQN1LCM",
+              "cart": "https://prnt.sc/JIeiKIYKagsn",
+              "cartPopup": "https://prnt.sc/JNZHhWLkFZvQ",
+              "drawer": "https://prnt.sc/YMFxvGa6P95s"
+            }
+          },
+          "desktop": {
+            "desktop_1280x800": {
+              "device": "Desktop Display",
+              "dimensions": "1280 x 800",
+              "pdp": "https://prnt.sc/PtOgNG2Jw8dC",
+              "cart": "https://prnt.sc/ujIGWku5cVEe",
+              "cartPopup": "https://prnt.sc/FjLprMfyOnTB",
+              "drawer": "https://prnt.sc/zACgjEgB5qr1"
+            }
+          }
+        }
+      }
+    }
+  },
+  "recommendations": []
+}

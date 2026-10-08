@@ -1,0 +1,52 @@
+# Secrets and sessions
+.env
+.env.*
+!.env.example
+*auth*.json
+*storage-state*.json
+*.pem
+*.key
+
+# Dependencies and caches
+node_modules/
+.cache/
+scratch/
+*.log
+
+# Raw audit output (reports are copied to reports/<project>/<month>/ instead)
+results/
+
+# Archives, binaries and working documents that the engine does not need
+*.rar
+*.zip
+*.docx
+*.pdf
+*.csv
+*.xlsx
+*.html
+!report/**/*.html
+!templates/**/*.html
+*.png
+!white-logo.png
+performance scores/
+blueprint/
+blueprint_styles.xml
+AI WebOps Platform PRD.txt
+
+# Office / editor temp files
+~$*
+~WRL*.tmp
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# One-off helper holding a storefront-password flow
+_capture_store_session.mjs
+
+# Generated deliverables are allowed only under reports/
+!reports/
+!reports/**
+
+# Local Claude Code permissions
+.claude/settings.local.json

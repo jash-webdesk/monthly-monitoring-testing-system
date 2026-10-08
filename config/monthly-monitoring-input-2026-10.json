@@ -1,0 +1,145 @@
+{
+  "reportTitle": "Monthly Storefront Monitoring & Maintenance Report",
+  "clientName": "Integrity Reforestation",
+  "storeUrl": "https://test-demo-store-801srwej.myshopify.com",
+  "month": "2026-10",
+  "preparedBy": "WebDesk Solution Maintenance & QA Team",
+  "executiveSummary": "During the October 2026 monthly monitoring cycle, we conducted comprehensive storefront testing for the Integrity Reforestation Tree Contribution Widget on the newly activated Horizon theme (v4.2.0). Testing covered product pages, native dialog cart drawers, and cart pages across desktop, tablet, and mobile viewports. In addition, we executed end-to-end read-only regression testing on the Integrity Custom Admin Dashboard.",
+  "themeUpdateLog": {
+    "sectionTitle": "Shopify Theme Updates",
+    "summary": "Shopify released maintenance updates for its modern theme collection. We audited Horizon (v4.2.0), which is currently active on this store.",
+    "updateGroups": [
+      {
+        "version": "4.2.0",
+        "date": "2026-09-18",
+        "whatChanged": "RTL improvements, native dialog cart drawer stability, and cart-page layout fixes",
+        "themes": [
+          "Horizon",
+          "Dwell",
+          "Heritage",
+          "Vessel",
+          "Fabric"
+        ],
+        "fromVersion": "4.1.0"
+      }
+    ],
+    "testedThemes": [
+      "Horizon"
+    ],
+    "testedNote": "Horizon (v4.2.0) is actively published on this store. Full Tree Contribution Widget compatibility, dynamic cart math, and multi-device responsive testing were executed — visual evidence and results on the following pages."
+  },
+  "devTeamSection": {
+    "sectionTitle": "Development & Storefront Maintenance Updates",
+    "summary": "",
+    "categories": []
+  },
+  "qaTestingSection": {
+    "sectionTitle": "Multi-Device Storefront & Widget Audit",
+    "widgetName": "Integrity Reforestation Tree Contribution Widget (.tdw-card)",
+    "functionalStatus": "100% Passed (Pricing, Line Items, Cart Recalculation)",
+    "functionalChecks": [
+      {
+        "label": "Dropdown selection (1 Tree / $1.43, 2 Trees / $2.86, 5 Trees / $7.15)",
+        "passed": true
+      },
+      {
+        "label": "Dynamic CTA button calculation and labeling",
+        "passed": true
+      },
+      {
+        "label": "Seamless cart line item addition and subtotal/tax recalculation",
+        "passed": true
+      },
+      {
+        "label": "Native OS 2.0 cart drawer (<dialog>) and cart page integration",
+        "passed": true
+      }
+    ],
+    "touchpoints": [
+      {
+        "name": "Product Page (PDP)",
+        "note": "Widget renders cleanly below the Buy it now button."
+      },
+      {
+        "name": "Cart Drawer",
+        "note": "Native dialog slide-out drawer with tree widget rendered above checkout."
+      },
+      {
+        "name": "Cart Page",
+        "note": "Line item and tree contribution widget verified below order summary."
+      }
+    ],
+    "themes": {
+      "horizon": {
+        "name": "Horizon",
+        "version": "4.2.0",
+        "notes": "Modern OS 2.0 theme; verified native dialog drawer and clean responsive scaling.",
+        "screenshots": {
+          "mobile": {
+            "galaxy_s24_360x780": {
+              "device": "Samsung Galaxy S24",
+              "dimensions": "360 x 780",
+              "pdp": "screenshots/horizon/horizon_pdp_fullpage_mobile_360x780.png",
+              "cart": "screenshots/horizon/horizon_cart_fullpage_mobile_360x780.png",
+              "drawer": "screenshots/horizon/horizon_drawer_viewport_mobile_360x780.png"
+            },
+            "iphone_13_14_15_390x844": {
+              "device": "iPhone 13 / 14 / 15",
+              "dimensions": "390 x 844",
+              "pdp": "screenshots/horizon/horizon_pdp_fullpage_mobile_390x844.png",
+              "cart": "screenshots/horizon/horizon_cart_fullpage_mobile_390x844.png",
+              "drawer": "screenshots/horizon/horizon_drawer_viewport_mobile_390x844.png"
+            },
+            "iphone_11_414x896": {
+              "device": "iPhone 11",
+              "dimensions": "414 x 896",
+              "pdp": "screenshots/horizon/horizon_pdp_fullpage_mobile_414x896.png",
+              "cart": "screenshots/horizon/horizon_cart_fullpage_mobile_414x896.png",
+              "drawer": "screenshots/horizon/horizon_drawer_viewport_mobile_414x896.png"
+            },
+            "iphone_15_pro_max_430x932": {
+              "device": "iPhone 15 Pro Max",
+              "dimensions": "430 x 932",
+              "pdp": "screenshots/horizon/horizon_pdp_fullpage_mobile_430x932.png",
+              "cart": "screenshots/horizon/horizon_cart_fullpage_mobile_430x932.png",
+              "drawer": "screenshots/horizon/horizon_drawer_viewport_mobile_430x932.png"
+            }
+          },
+          "tablet": {
+            "ipad_portrait_768x1024": {
+              "device": "iPad Portrait",
+              "dimensions": "768 x 1024",
+              "pdp": "screenshots/horizon/horizon_pdp_fullpage_tablet_768x1024.png",
+              "cart": "screenshots/horizon/horizon_cart_fullpage_tablet_768x1024.png",
+              "drawer": "screenshots/horizon/horizon_drawer_viewport_tablet_768x1024.png"
+            },
+            "ipad_air_820x1180": {
+              "device": "iPad Air / Pro",
+              "dimensions": "820 x 1180",
+              "pdp": "screenshots/horizon/horizon_pdp_fullpage_tablet_820x1180.png",
+              "cart": "screenshots/horizon/horizon_cart_fullpage_tablet_820x1180.png",
+              "drawer": "screenshots/horizon/horizon_drawer_viewport_tablet_820x1180.png"
+            },
+            "ipad_landscape_1024x768": {
+              "device": "iPad Landscape",
+              "dimensions": "1024 x 768",
+              "pdp": "screenshots/horizon/horizon_pdp_fullpage_tablet_1024x768.png",
+              "cart": "screenshots/horizon/horizon_cart_fullpage_tablet_1024x768.png",
+              "drawer": "screenshots/horizon/horizon_drawer_viewport_tablet_1024x768.png"
+            }
+          },
+          "desktop": {
+            "desktop_1280x800": {
+              "device": "Desktop Display",
+              "dimensions": "1280 x 800",
+              "pdp": "screenshots/horizon/horizon_pdp_fullpage_desktop_1280x800.png",
+              "cart": "screenshots/horizon/horizon_cart_fullpage_desktop_1280x800.png",
+              "drawer": "screenshots/horizon/horizon_drawer_viewport_desktop_1280x800.png"
+            }
+          }
+        }
+      }
+    }
+  },
+  "recommendations": []
+}

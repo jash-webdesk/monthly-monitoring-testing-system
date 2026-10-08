@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "id": "integrity-reforestation",
+  "name": "Integrity Reforestation",
+  "client": "Integrity Reforestation",
+  "platform": "shopify-app",
+  "domains": [
+    "integrity-dashboard-bf73ab673f4c.herokuapp.com",
+    "test-demo-store-801srwej.myshopify.com"
+  ],
+  "sites": [
+    {
+      "hostname": "integrity-dashboard-bf73ab673f4c.herokuapp.com",
+      "archiveKey": "integrity-reforestation",
+      "name": "Integrity Reforestation",
+      "platform": "shopify-app",
+      "timeout": 30000,
+      "retries": 2,
+      "notes": "Shopify public app (Tree Contribution widget) + Heroku admin dashboard. The test store is storefront-password protected.",
+      "pages": {
+        "dashboard": "https://integrity-dashboard-bf73ab673f4c.herokuapp.com/login"
+      },
+      "storeUrl": "https://test-demo-store-801srwej.myshopify.com",
+      "companionApp": {
+        "kind": "integrity-dashboard",
+        "configFile": "config/integrity-dashboard.json"
+      }
+    }
+  ],
+  "audits": {
+    "performance": {
+      "enabled": false,
+      "reason": "No scored storefront pages for this project."
+    },
+    "security": {
+      "enabled": true,
+      "pages": "all",
+      "authenticatedPass": false,
+      "note": "Unauthenticated login page of the admin dashboard only."
+    },
+    "dns": {
+      "enabled": false,
+      "reason": "Dashboard is on a shared herokuapp.com domain; DNS findings would not be actionable."
+    },
+    "ssl": {
+      "enabled": true
+    },
+    "seo": {
+      "enabled": false,
+      "reason": "Admin dashboard is not a public site."
+    },
+    "ai-crawlers": {
+      "enabled": false,
+      "reason": "Admin dashboard is not a public site."
+    },
+    "network": {
+      "enabled": true,
+      "note": "Availability + response time (UptimeRobot when UPTIMEROBOT_API_KEY is set, live probe otherwise)."
+    },
+    "functional": {
+      "enabled": false,
+      "reason": "Shopify widget capture (Product page / cart drawer / cart page, 8 device sizes) needs the storefront password and has no runner in the repo yet (see docs/LIMITATIONS.md)."
+    },
+    "companion-app": {
+      "enabled": true,
+      "note": "Read-only dashboard QA (83+ checks); every non-GET request is aborted in the browser and reported critical."
+    },
+    "cache": {
+      "enabled": false,
+      "reason": "Server/build-cache metrics are captured manually from the hosting dashboard; no API runner exists yet."
+    },
+    "currency": {
+      "enabled": false
+    }
+  },
+  "secrets": [
+    {
+      "env": "INTEGRITY_CUSTOMAPP_USERNAME",
+      "purpose": "Admin dashboard login (use a dedicated read-only monitoring user)",
+      "required": true,
+      "scope": "environment"
+    },
+    {
+      "env": "INTEGRITY_CUSTOMAPP_PASSWORD",
+      "purpose": "Admin dashboard password",
+      "required": true,
+      "scope": "environment"
+    },
+    {
+      "env": "INTEGRITY_STORE_PASSWORD",
+      "purpose": "Shopify storefront password for the widget capture (not used by any runner yet)",
+      "required": false,
+      "scope": "environment"
+    }
+  ],
+  "reports": {
+    "technical": "integrity-technical-pdf",
+    "client": "integrity-deck"
+  },
+  "reportMeta": {
+    "monthlyInputPattern": "config/monthly-monitoring-input-{month}.json"
+  }
+}

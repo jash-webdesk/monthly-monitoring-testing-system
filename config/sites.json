@@ -1,0 +1,144 @@
+{
+  "sites": [
+    {
+      "hostname": "partsconnexion.com",
+      "name": "PartsConnexion",
+      "platform": "bigcommerce",
+      "timeout": 30000,
+      "retries": 2,
+      "notes": "Audio/electronics components eCommerce. Built by WebDesk Solution. BigCommerce Stencil theme + Heroku Custom App.",
+      "customApp": {
+        "enabled": true,
+        "hostname": "pcx-72af9e2f5ce4.herokuapp.com",
+        "url": "https://pcx-72af9e2f5ce4.herokuapp.com/",
+        "auth": {
+          "usernameEnvVar": "PARTSCONNEXION_CUSTOMAPP_USERNAME",
+          "passwordEnvVar": "PARTSCONNEXION_CUSTOMAPP_PASSWORD",
+          "loginUrl": "https://pcx-72af9e2f5ce4.herokuapp.com/new/login/",
+          "usernameSelector": "input[type=\"text\"]",
+          "passwordSelector": "#auth-login-v2-password",
+          "submitSelector": "button[type=\"submit\"]"
+        },
+        "safeNavTargets": [
+          { "label": "Dashboard", "url": "https://pcx-72af9e2f5ce4.herokuapp.com/dashboards/ecommerce/" },
+          { "label": "Cron Status", "url": "https://pcx-72af9e2f5ce4.herokuapp.com/new/cron-status/" },
+          { "label": "Activity Logs", "url": "https://pcx-72af9e2f5ce4.herokuapp.com/new/logs/" },
+          { "label": "Automatic Discount", "url": "https://pcx-72af9e2f5ce4.herokuapp.com/new/auto-discount/list/" }
+        ],
+        "discoveryApprovedBy": "client (chat approval)",
+        "discoveryApprovedAt": "2026-08-12"
+      },
+      "currencies": ["USD", "CAD"],
+      "defaultCurrency": "USD",
+      "manualCwv": { "mobileLcp": "1.1 s" },
+      "scores": {
+        "desktop": {
+          "before": { "performance": 88, "accessibility": 87, "bestPractices": 100, "seo": 100 },
+          "after": { "performance": 89, "accessibility": 87, "bestPractices": 100, "seo": 100 }
+        },
+        "mobile": {
+          "before": { "performance": 36, "accessibility": 91, "bestPractices": 96, "seo": 100 },
+          "after": { "performance": 54, "accessibility": 91, "bestPractices": 96, "seo": 100 }
+        },
+        "audioConnexion": {
+          "desktop": { "before": 63, "after": 71 },
+          "mobile": { "before": 56, "after": 56 }
+        }
+      }
+    },
+    {
+      "hostname": "audio-connexion.com",
+      "name": "AudioConnexion",
+      "platform": "bigcommerce",
+      "timeout": 30000,
+      "retries": 2,
+      "notes": "Secondary eCommerce channel for audio components. Built by WebDesk Solution. BigCommerce Stencil theme.",
+      "currencies": ["USD", "CAD"],
+      "defaultCurrency": "USD",
+      "manualCwv": { "mobileLcp": "1.2 s", "mobileCls": "< 0.1" },
+      "scores": {
+        "desktop": {
+          "before": { "performance": 63, "accessibility": 86, "bestPractices": 100, "seo": 100 },
+          "after": { "performance": 71, "accessibility": 86, "bestPractices": 100, "seo": 100 }
+        },
+        "mobile": {
+          "before": { "performance": 56, "accessibility": 86, "bestPractices": 96, "seo": 100 },
+          "after": { "performance": 56, "accessibility": 86, "bestPractices": 96, "seo": 100 }
+        }
+      }
+    },
+    {
+      "hostname": "www.lidstyles.com",
+      "name": "LidStyles",
+      "platform": "magento",
+      "timeout": 30000,
+      "retries": 2,
+      "notes": "Magento-based laptop and device skin eCommerce store. Built by WebDesk Solution.",
+      "pages": {
+        "homepage": "https://www.lidstyles.com/",
+        "product": "https://www.lidstyles.com/blue-dell-e6400-laptop-skin.html"
+      },
+      "scores": {
+        "desktop": {
+          "before": { "performance": 60, "accessibility": 87, "bestPractices": 92, "seo": 91 },
+          "after": { "performance": 74, "accessibility": 96, "bestPractices": 92, "seo": 91 }
+        },
+        "mobile": {
+          "before": { "performance": 41, "accessibility": 86, "bestPractices": 96, "seo": 100 },
+          "after": { "performance": 55, "accessibility": 86, "bestPractices": 96, "seo": 100 }
+        }
+      }
+    },
+    {
+      "hostname": "genpet.org",
+      "name": "Genpet",
+      "platform": "bigcommerce",
+      "timeout": 30000,
+      "retries": 2,
+      "notes": "BigCommerce + Makeswift page builder store for Genpet.",
+      "pages": {
+        "homepage": "https://genpet.org/",
+        "aboutUs": "https://genpet.org/about-us/"
+      },
+      "scores": {
+        "homepage": {
+          "desktop": { "before": 68, "after": 90, "accessibility": 91, "bestPractices": 100, "seo": 100 },
+          "mobile": { "before": 55, "after": 64, "accessibility": 91, "bestPractices": 100, "seo": 100 }
+        },
+        "aboutUs": {
+          "desktop": { "before": 70, "after": 97, "accessibility": 96, "bestPractices": 100, "seo": 100 },
+          "mobile": { "before": 70, "after": 74, "accessibility": 96, "bestPractices": 100, "seo": 100 }
+        },
+        "desktop": {
+          "before": { "performance": 68, "accessibility": 91, "bestPractices": 100, "seo": 100 },
+          "after": { "performance": 90, "accessibility": 91, "bestPractices": 100, "seo": 100 }
+        },
+        "mobile": {
+          "before": { "performance": 55, "accessibility": 91, "bestPractices": 100, "seo": 100 },
+          "after": { "performance": 64, "accessibility": 91, "bestPractices": 100, "seo": 100 }
+        }
+      },
+      "customApp": {
+        "enabled": true,
+        "hostname": "app.genpet.org",
+        "url": "https://app.genpet.org/",
+        "auth": {
+          "usernameEnvVar": "GENPET_CUSTOMAPP_USERNAME",
+          "passwordEnvVar": "GENPET_CUSTOMAPP_PASSWORD",
+          "loginUrl": "https://app.genpet.org/new/login/",
+          "usernameSelector": "input[placeholder=\"email\"]",
+          "passwordSelector": "#auth-login-v2-password",
+          "submitSelector": "button:has-text(\"Login\")"
+        },
+        "safeNavTargets": [
+          { "label": "Dashboard", "url": "https://app.genpet.org/admin/dashboard/" },
+          { "label": "Cron Status", "url": "https://app.genpet.org/admin/cron-status/" },
+          { "label": "Activity Logs", "url": "https://app.genpet.org/admin/logs/" },
+          { "label": "Detail Pricing", "url": "https://app.genpet.org/admin/details-pricing/" }
+        ],
+        "discoveryApprovedBy": "client (chat approval)",
+        "discoveryApprovedAt": "2026-08-11"
+      }
+    }
+  ]
+}

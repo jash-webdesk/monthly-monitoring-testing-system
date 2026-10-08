@@ -1,0 +1,13 @@
+{
+  "_readme": "Confirmed false positives and intentional behaviour per hostname. Suppressor matches on finding 'id', not title. Never re-flag suppressed issues without re-confirming with the team.",
+  "partsconnexion.com": [],
+  "genpet.org": [
+    {
+      "id": "crawler-api-duplicate-calls",
+      "reason": "Intentional batching — app.genpet.org API called 3x per page load by design",
+      "confirmedBy": "James T",
+      "confirmedDate": "2026-07-02",
+      "suppressUntil": null
+    }
+  ]
+}
