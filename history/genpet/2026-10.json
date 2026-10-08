@@ -1,0 +1,484 @@
+{
+  "schemaVersion": 1,
+  "project": "genpet",
+  "month": "2026-10",
+  "generatedAt": "2026-10-08T13:55:25.638Z",
+  "scores": {
+    "genpet.org": [
+      {
+        "page": "homepage",
+        "label": "Homepage",
+        "viewport": "mobile",
+        "before": 78,
+        "after": 80,
+        "delta": 2,
+        "previousAfter": null,
+        "changeVsPreviousMonth": null
+      },
+      {
+        "page": "homepage",
+        "label": "Homepage",
+        "viewport": "desktop",
+        "before": 21,
+        "after": 40,
+        "delta": 19,
+        "previousAfter": null,
+        "changeVsPreviousMonth": null
+      },
+      {
+        "page": "about-us",
+        "label": "About Us",
+        "viewport": "mobile",
+        "before": 80,
+        "after": 81,
+        "delta": 1,
+        "previousAfter": null,
+        "changeVsPreviousMonth": null
+      },
+      {
+        "page": "about-us",
+        "label": "About Us",
+        "viewport": "desktop",
+        "before": 30,
+        "after": 80,
+        "delta": 50,
+        "previousAfter": null,
+        "changeVsPreviousMonth": null
+      }
+    ]
+  },
+  "sites": {
+    "genpet.org": {
+      "url": "https://genpet.org/",
+      "audits": {
+        "network": {
+          "status": "completed",
+          "durationMs": 1303,
+          "findingCount": 0
+        },
+        "dns": {
+          "status": "completed",
+          "durationMs": 2592,
+          "findingCount": 3
+        },
+        "ssl": {
+          "status": "completed",
+          "durationMs": 157,
+          "findingCount": 1
+        },
+        "seo": {
+          "status": "completed",
+          "durationMs": 11067,
+          "findingCount": 1
+        },
+        "ai-crawlers": {
+          "status": "completed",
+          "durationMs": 0,
+          "findingCount": 0,
+          "note": "Derived from the crawler result; these findings are also counted under seo."
+        },
+        "performance": {
+          "status": "completed",
+          "durationMs": 84825,
+          "findingCount": 6
+        },
+        "security": {
+          "status": "completed",
+          "durationMs": 9508,
+          "findingCount": 14
+        },
+        "currency": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Disabled in the project configuration."
+        },
+        "companion-app": {
+          "status": "completed",
+          "durationMs": 4725,
+          "findingCount": 3
+        },
+        "functional": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "No generic storefront-journey runner exists yet (see docs/LIMITATIONS.md)."
+        },
+        "cache": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Server/build-cache metrics are captured manually from the hosting dashboard; no API runner exists yet."
+        }
+      },
+      "metrics": {
+        "performance.homepage.desktop.measuredScore": 92,
+        "performance.homepage.mobile.measuredScore": 68,
+        "performance.aboutUs.desktop.measuredScore": 97,
+        "performance.aboutUs.mobile.measuredScore": 70,
+        "network.uptimePercentage": 100,
+        "network.responseTimeMs": 189,
+        "findings.critical": 0,
+        "findings.high": 5,
+        "findings.medium": 14,
+        "findings.low": 7
+      },
+      "findings": [
+        {
+          "id": "dns-dmarc-policy-none",
+          "runner": "dns",
+          "category": "security",
+          "severity": "medium",
+          "title": "DMARC policy is \"none\" — monitoring only, no enforcement",
+          "detail": "A DMARC policy of \"none\" means emails that fail authentication are still delivered. This provides reporting data but offers no protection against spoofing.",
+          "evidence": "v=DMARC1; p=none;",
+          "recommendation": "Upgrade to p=quarantine (routes to spam) or p=reject (blocks delivery) once legitimate email flows are verified.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "dns-dmarc-no-reporting",
+          "runner": "dns",
+          "category": "dns",
+          "severity": "low",
+          "title": "DMARC record has no aggregate reporting address (rua)",
+          "detail": "Without a reporting address, you will not receive DMARC aggregate reports showing who is sending email on behalf of your domain.",
+          "evidence": "v=DMARC1; p=none;",
+          "recommendation": "Add rua=mailto:dmarc@yourdomain.com to your DMARC record.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "dns-no-dkim-record",
+          "runner": "dns",
+          "category": "security",
+          "severity": "medium",
+          "title": "No DKIM record found",
+          "detail": "DKIM adds a cryptographic signature to outgoing emails, allowing recipients to verify they were sent by an authorised server and have not been tampered with.",
+          "evidence": "Checked selectors: default, google, mail, k1, selector1, selector2, dkim, s1, s2. None found at {selector}._domainkey.genpet.org",
+          "recommendation": "Configure DKIM through your email provider and publish the public key as a TXT record at the appropriate selector.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "ssl-tls-interception-indeterminate",
+          "runner": "ssl",
+          "category": "ssl",
+          "severity": "info",
+          "title": "SSL check indeterminate due to cloud TLS interception",
+          "detail": "Outbound TLS to genpet.org is re-signed by the environment proxy. The certificate that can be read belongs to the proxy, not the site, so its expiry, issuer, and names are not reported. Verify the certificate from a network without TLS interception.",
+          "evidence": "Trust verdict: intercepted. Chain top observed (proxy, not the site): Anthropic (sandbox-egress-gateway-production Egress Gateway CA). Verification reason: SELF_SIGNED_CERT_IN_CHAIN.",
+          "recommendation": "Run the SSL audit from a network without TLS interception to get the site's certificate details.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "crawler-geo-missing-schema",
+          "runner": "crawler",
+          "category": "seo",
+          "severity": "medium",
+          "title": "Pillar 4B: Missing Structured JSON-LD Schema",
+          "detail": "The page does not declare any JSON-LD structured data (Product, Organization, or FAQPage). Generative AI search engines rely on JSON-LD to understand product pricing, specs, and attributes.",
+          "evidence": "0 JSON-LD scripts found in DOM",
+          "recommendation": "Add Schema.org JSON-LD microdata (Product, FAQPage, Organization) to enable AI citation indexing.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-desktop-cls-needs-improvement-homepage",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "medium",
+          "title": "[HOMEPAGE] Desktop Cumulative Layout Shift (CLS) needs improvement (0.14)",
+          "detail": "CLS of 0.14 indicates some layout instability during page load. This can be jarring, especially on slower connections.",
+          "evidence": "[Page: homepage] CLS: 0.14 | Range: 0.1 – 0.25",
+          "recommendation": "Use Chrome DevTools Layout Shift attribution to identify which elements are shifting and fix their dimensions.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-lcp-poor-homepage",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "high",
+          "title": "[HOMEPAGE] Mobile Largest Contentful Paint (LCP) is poor (4.2 s)",
+          "detail": "LCP measures when the largest visible content element loads. It directly impacts perceived page speed and Google SEO ranking. Value of 4.2 s exceeds the poor threshold of 4000ms.",
+          "evidence": "[Page: homepage] LCP: 4247.69ms | Poor > 4000ms | Good < 2500ms",
+          "recommendation": "Optimise images with modern formats (WebP/AVIF), use a CDN, and eliminate render-blocking resources.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-cls-needs-improvement-homepage",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "medium",
+          "title": "[HOMEPAGE] Mobile Cumulative Layout Shift (CLS) needs improvement (0.24)",
+          "detail": "CLS of 0.24 indicates some layout instability during page load. This can be jarring, especially on slower connections.",
+          "evidence": "[Page: homepage] CLS: 0.24 | Range: 0.1 – 0.25",
+          "recommendation": "Use Chrome DevTools Layout Shift attribution to identify which elements are shifting and fix their dimensions.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-fcp-poor-homepage",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "medium",
+          "title": "[HOMEPAGE] Mobile First Contentful Paint is slow (3.0 s)",
+          "detail": "FCP marks the first time any text or image is painted. A value of 3.0 s indicates a slow server response or render-blocking resources.",
+          "evidence": "[Page: homepage] FCP: 3033.02ms | Poor threshold: 3000ms",
+          "recommendation": "Minimise render-blocking CSS/JS, use server-side caching, and reduce Time to First Byte (TTFB).",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-lcp-poor-aboutUs",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "high",
+          "title": "[ABOUTUS] Mobile Largest Contentful Paint (LCP) is poor (5.7 s)",
+          "detail": "LCP measures when the largest visible content element loads. It directly impacts perceived page speed and Google SEO ranking. Value of 5.7 s exceeds the poor threshold of 4000ms.",
+          "evidence": "[Page: aboutUs] LCP: 5674.25ms | Poor > 4000ms | Good < 2500ms",
+          "recommendation": "Optimise images with modern formats (WebP/AVIF), use a CDN, and eliminate render-blocking resources.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-fcp-poor-aboutUs",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "medium",
+          "title": "[ABOUTUS] Mobile First Contentful Paint is slow (3.9 s)",
+          "detail": "FCP marks the first time any text or image is painted. A value of 3.9 s indicates a slow server response or render-blocking resources.",
+          "evidence": "[Page: aboutUs] FCP: 3931.82ms | Poor threshold: 3000ms",
+          "recommendation": "Minimise render-blocking CSS/JS, use server-side caching, and reduce Time to First Byte (TTFB).",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-content-security-policy-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "high",
+          "title": "[HOMEPAGE] Missing security header: Content Security Policy (CSP)",
+          "detail": "CSP instructs the browser which content sources are trusted. Without it, any injected script — from a compromised ad, third-party CDN, or XSS payload — runs freely in your customers' browsers.",
+          "evidence": "[Page: homepage] Header \"content-security-policy\" absent from HTTP response of https://genpet.org/",
+          "recommendation": "Add a Content-Security-Policy header. Start with: default-src 'self'; script-src 'self' and expand only as needed.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-referrer-policy-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[HOMEPAGE] Missing security header: Referrer-Policy",
+          "detail": "Controls how much referrer information is sent when a user navigates away. Without it, full URLs (including order IDs or search terms) may leak to third-party analytics.",
+          "evidence": "[Page: homepage] Header \"referrer-policy\" absent from HTTP response of https://genpet.org/",
+          "recommendation": "Add: Referrer-Policy: strict-origin-when-cross-origin",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-permissions-policy-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[HOMEPAGE] Missing security header: Permissions-Policy",
+          "detail": "Restricts which browser APIs (camera, microphone, geolocation) scripts on the page can access. Without it, third-party scripts have unrestricted access.",
+          "evidence": "[Page: homepage] Header \"permissions-policy\" absent from HTTP response of https://genpet.org/",
+          "recommendation": "Add: Permissions-Policy: geolocation=(), microphone=(), camera=()",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-cross-origin-opener-policy-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[HOMEPAGE] Missing security header: Cross-Origin-Opener-Policy (COOP)",
+          "detail": "COOP isolates the browsing context, preventing cross-origin pages opened in popups from accessing the window object of this page.",
+          "evidence": "[Page: homepage] Header \"cross-origin-opener-policy\" absent from HTTP response of https://genpet.org/",
+          "recommendation": "Add: Cross-Origin-Opener-Policy: same-origin",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-hsts-max-age-too-low-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[HOMEPAGE] HSTS max-age is too low (300s — recommended: 31,536,000s)",
+          "detail": "A short max-age means browsers stop enforcing HTTPS quickly after the last visit. HSTS preloading requires a minimum of 1 year.",
+          "evidence": "[Page: homepage] Strict-Transport-Security: max-age=300",
+          "recommendation": "Set: Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-hsts-missing-includesubdomains-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[HOMEPAGE] HSTS header is missing the includeSubDomains directive",
+          "detail": "Without includeSubDomains, subdomains are not covered by HSTS and could be exploited to downgrade connections to the main domain via cookies.",
+          "evidence": "[Page: homepage] Strict-Transport-Security: max-age=300",
+          "recommendation": "Add includeSubDomains to the HSTS header.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-cookies-missing-samesite-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[HOMEPAGE] 1 sensitive cookie(s) missing SameSite attribute",
+          "detail": "Without SameSite, cookies are included in cross-site requests, enabling Cross-Site Request Forgery (CSRF) attacks.",
+          "evidence": "[Page: homepage] Cookies without SameSite: SHOP_SESSION_TOKEN",
+          "recommendation": "Set SameSite=Lax or SameSite=Strict on all session cookies.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-content-security-policy-aboutUs",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "high",
+          "title": "[ABOUTUS] Missing security header: Content Security Policy (CSP)",
+          "detail": "CSP instructs the browser which content sources are trusted. Without it, any injected script — from a compromised ad, third-party CDN, or XSS payload — runs freely in your customers' browsers.",
+          "evidence": "[Page: aboutUs] Header \"content-security-policy\" absent from HTTP response of https://genpet.org/about-us/",
+          "recommendation": "Add a Content-Security-Policy header. Start with: default-src 'self'; script-src 'self' and expand only as needed.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-referrer-policy-aboutUs",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[ABOUTUS] Missing security header: Referrer-Policy",
+          "detail": "Controls how much referrer information is sent when a user navigates away. Without it, full URLs (including order IDs or search terms) may leak to third-party analytics.",
+          "evidence": "[Page: aboutUs] Header \"referrer-policy\" absent from HTTP response of https://genpet.org/about-us/",
+          "recommendation": "Add: Referrer-Policy: strict-origin-when-cross-origin",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-permissions-policy-aboutUs",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[ABOUTUS] Missing security header: Permissions-Policy",
+          "detail": "Restricts which browser APIs (camera, microphone, geolocation) scripts on the page can access. Without it, third-party scripts have unrestricted access.",
+          "evidence": "[Page: aboutUs] Header \"permissions-policy\" absent from HTTP response of https://genpet.org/about-us/",
+          "recommendation": "Add: Permissions-Policy: geolocation=(), microphone=(), camera=()",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-cross-origin-opener-policy-aboutUs",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[ABOUTUS] Missing security header: Cross-Origin-Opener-Policy (COOP)",
+          "detail": "COOP isolates the browsing context, preventing cross-origin pages opened in popups from accessing the window object of this page.",
+          "evidence": "[Page: aboutUs] Header \"cross-origin-opener-policy\" absent from HTTP response of https://genpet.org/about-us/",
+          "recommendation": "Add: Cross-Origin-Opener-Policy: same-origin",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-hsts-max-age-too-low-aboutUs",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[ABOUTUS] HSTS max-age is too low (300s — recommended: 31,536,000s)",
+          "detail": "A short max-age means browsers stop enforcing HTTPS quickly after the last visit. HSTS preloading requires a minimum of 1 year.",
+          "evidence": "[Page: aboutUs] Strict-Transport-Security: max-age=300",
+          "recommendation": "Set: Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-hsts-missing-includesubdomains-aboutUs",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[ABOUTUS] HSTS header is missing the includeSubDomains directive",
+          "detail": "Without includeSubDomains, subdomains are not covered by HSTS and could be exploited to downgrade connections to the main domain via cookies.",
+          "evidence": "[Page: aboutUs] Strict-Transport-Security: max-age=300",
+          "recommendation": "Add includeSubDomains to the HSTS header.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-cookies-missing-samesite-aboutUs",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[ABOUTUS] 1 sensitive cookie(s) missing SameSite attribute",
+          "detail": "Without SameSite, cookies are included in cross-site requests, enabling Cross-Site Request Forgery (CSRF) attacks.",
+          "evidence": "[Page: aboutUs] Cookies without SameSite: SHOP_SESSION_TOKEN",
+          "recommendation": "Set SameSite=Lax or SameSite=Strict on all session cookies.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "customapp-login-failed",
+          "runner": "customapp",
+          "category": "custom_app",
+          "severity": "high",
+          "title": "Authenticated navigation pass skipped — login did not succeed",
+          "detail": "The login attempt did not redirect away from the login page, meaning authentication failed. This may mean the stored credentials are stale/incorrect, the login form markup changed since the last discovery pass, or the app is rejecting automated logins.",
+          "evidence": "Still on https://app.genpet.org/new/login/ after attempting login at https://app.genpet.org/new/login/",
+          "recommendation": "Verify the credentials in .env are still correct, and manually confirm the login form has not changed since the last discovery pass.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "app-ssl-tls-interception-indeterminate",
+          "runner": "ssl",
+          "category": "ssl",
+          "severity": "info",
+          "title": "SSL check indeterminate due to cloud TLS interception",
+          "detail": "Outbound TLS to app.genpet.org is re-signed by the environment proxy. The certificate that can be read belongs to the proxy, not the site, so its expiry, issuer, and names are not reported. Verify the certificate from a network without TLS interception.",
+          "evidence": "Trust verdict: intercepted. Chain top observed (proxy, not the site): Anthropic (sandbox-egress-gateway-production Egress Gateway CA). Verification reason: SELF_SIGNED_CERT_IN_CHAIN.",
+          "recommendation": "Run the SSL audit from a network without TLS interception to get the site's certificate details.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "app-dns-no-spf-record",
+          "runner": "customapp",
+          "category": "security",
+          "severity": "medium",
+          "title": "No SPF record found on custom app subdomain",
+          "detail": "app.genpet.org does not send email, but has no SPF record either. SPF does not inherit from the parent domain — without an explicit record, an attacker could still spoof \"@app.genpet.org\" addresses in phishing attempts. Since this subdomain never legitimately sends mail, a null SPF record is the correct fix rather than mail-provider setup.",
+          "evidence": "No TXT record starting with \"v=spf1\" found for app.genpet.org",
+          "recommendation": "Add a null SPF record to explicitly declare this subdomain never sends mail: \"v=spf1 -all\"",
+          "status": "new",
+          "openSince": "2026-10"
+        }
+      ],
+      "resolved": []
+    }
+  },
+  "comparison": {
+    "previousMonth": null,
+    "hasPreviousData": false,
+    "sites": {
+      "genpet.org": {
+        "findings": {
+          "new": 28,
+          "persisting": 0,
+          "resolved": 0,
+          "suppressed": 0
+        },
+        "changes": [],
+        "regressions": [],
+        "improvements": []
+      }
+    }
+  }
+}
