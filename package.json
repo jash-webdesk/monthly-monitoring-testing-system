@@ -2,9 +2,14 @@
   "name": "monthly-monitoring-testing-system",
   "version": "1.0.0",
   "description": "AI-powered monthly monitoring suite for eCommerce websites",
-  "main": "monitor.js",
+  "main": "engine/run-audit.js",
   "type": "module",
   "scripts": {
+    "audit": "node engine/run-audit.js",
+    "preflight": "node scripts/cloud-preflight.mjs",
+    "ensure-browser": "node scripts/ensure-browser.mjs",
+    "test": "node --test tests/unit",
+    "test:integration": "node --test tests/integration",
     "monitor": "node monitor.js",
     "test:dns": "node monitor.js --url https://partsconnexion.com/ --phase dns",
     "test:ssl": "node monitor.js --url https://partsconnexion.com/ --phase ssl"

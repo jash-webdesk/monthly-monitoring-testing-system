@@ -149,10 +149,11 @@ export async function runDevtools(url, hostname, month = null, authFile = null) 
     let authConfig = null;
     if (authFile) {
       authConfig = loadAuthConfig(authFile);
-    } else if (process.env.USERNAME && process.env.PASSWORD) {
+    } else if ((process.env.STOREFRONT_USERNAME ?? process.env.USERNAME) && (process.env.STOREFRONT_PASSWORD ?? process.env.PASSWORD)) {
+      // STOREFRONT_* is preferred; bare USERNAME/PASSWORD remain supported for older .env files.
       authConfig = {
-        username: process.env.USERNAME,
-        password: process.env.PASSWORD,
+        username: process.env.STOREFRONT_USERNAME ?? process.env.USERNAME,
+        password: process.env.STOREFRONT_PASSWORD ?? process.env.PASSWORD,
         loginUrl: `${url.endsWith('/') ? url : url + '/'}login.php`
       };
       logger.info('  Found credentials in .env file. Enabling Authenticated mode...');
