@@ -1,6 +1,7 @@
 import tls from 'node:tls';
 import { X509Certificate } from 'node:crypto';
 import { launchChromium } from '../lib/browser.js';
+import { proxyUrl } from '../lib/net.js';
 import { createFinding, createErrorFinding, createRunnerResult, SEVERITY, CATEGORY } from '../lib/result.js';
 import { logger } from '../lib/logger.js';
 
@@ -32,6 +33,16 @@ export async function runSsl(url) {
 
   const findings = [];
   const metrics  = { hostname, url };
+
+  // Decide trust before reading any certificate. Behind a TLS-inspecting proxy the certificate that
+  // the raw socket or the browser sees belongs to the proxy, not to the site, so it must not be reported.
+  const trust = await checkTrust(hostname, DEFAULT_PORT);
+  metrics.trust = trust.verdict;
+  if (trust.verdict !== 'public' && isProxiedEnvironment()) {
+    const indeterminate = indeterminateResult(url, hostname, trust);
+    logger.runnerDone(RUNNER_NAME, indeterminate.findings.length);
+    return indeterminate;
+  }
 
   try {
     logger.debug(`Connecting to ${hostname}:${DEFAULT_PORT} for TLS inspection`);
@@ -263,6 +274,89 @@ async function getCertificateInfoViaBrowser(hostname) {
   } finally {
     await browser.close().catch(() => null);
   }
+}
+
+/**
+ * True when outbound TLS may be re-signed by an environment proxy or a custom CA is trusted
+ * (cloud sandbox: HTTPS_PROXY plus NODE_EXTRA_CA_CERTS / SSL_CERT_FILE). In that case a
+ * non-public verdict cannot be told apart from interception, so the certificate is not reported.
+ */
+function isProxiedEnvironment() {
+  return Boolean(proxyUrl() || process.env.NODE_EXTRA_CA_CERTS || process.env.SSL_CERT_FILE);
+}
+
+/**
+ * Runs one handshake and reads the verdict from socket.authorized. rejectUnauthorized is false only
+ * so the handshake completes and the certificate can be read; nothing is trusted on that basis.
+ * @param {string} hostname
+ * @param {number} port
+ * @param {Object} [options] - extra tls.connect options, e.g. { ca } to choose the trust store
+ * @returns {Promise<{ authorized: boolean, authorizationError: string|null, chainTop: string|null }>}
+ */
+function tlsVerify(hostname, port, options = {}) {
+  return new Promise((resolve, reject) => {
+    const socket = tls.connect(
+      { host: hostname, port, servername: hostname, rejectUnauthorized: false, timeout: TIMEOUT_MS, ...options },
+      () => {
+        let top = socket.getPeerCertificate(true);
+        const seen = new Set();
+        while (top?.issuerCertificate && top.issuerCertificate !== top && !seen.has(top.fingerprint256)) {
+          seen.add(top.fingerprint256);
+          top = top.issuerCertificate;
+        }
+        const chainTop = top?.subject ? `${top.subject.O ?? top.subject.CN ?? 'Unknown'} (${top.subject.CN ?? 'no CN'})` : null;
+        const result = { authorized: socket.authorized === true, authorizationError: socket.authorizationError ?? null, chainTop };
+        socket.destroy();
+        resolve(result);
+      }
+    );
+    socket.on('error',   (err) => { socket.destroy(); reject(err); });
+    socket.on('timeout', ()    => { socket.destroy(); reject(new Error(`TLS connection timed out after ${TIMEOUT_MS}ms`)); });
+  });
+}
+
+/**
+ * Classifies whether the site's certificate chains to a public root, independently of how it is read.
+ * - public:      verifies against Node's bundled public root store.
+ * - intercepted: fails the public store but verifies only via an environment-supplied CA (interception).
+ * - untrusted:   fails both stores (expired, self-signed, wrong host, private CA).
+ * - unknown:     the handshake could not be completed.
+ * @returns {Promise<{ verdict: string, reason: string|null, chainTop: string|null }>}
+ */
+async function checkTrust(hostname, port) {
+  try {
+    const pub = await tlsVerify(hostname, port, { ca: tls.rootCertificates });
+    if (pub.authorized) return { verdict: 'public', reason: null, chainTop: pub.chainTop };
+    const env = await tlsVerify(hostname, port);
+    if (env.authorized) return { verdict: 'intercepted', reason: pub.authorizationError, chainTop: pub.chainTop };
+    return { verdict: 'untrusted', reason: pub.authorizationError, chainTop: pub.chainTop };
+  } catch (err) {
+    return { verdict: 'unknown', reason: err.message, chainTop: null };
+  }
+}
+
+/** Result for a proxied environment where the site's own certificate cannot be established. */
+function indeterminateResult(url, hostname, trust) {
+  const intercepted = trust.verdict === 'intercepted';
+  const title = intercepted
+    ? 'SSL check indeterminate due to cloud TLS interception'
+    : 'SSL check indeterminate: certificate could not be verified through the cloud proxy';
+  const detail = intercepted
+    ? `Outbound TLS to ${hostname} is re-signed by the environment proxy. The certificate that can be read belongs to the proxy, not the site, so its expiry, issuer, and names are not reported. Verify the certificate from a network without TLS interception.`
+    : `The certificate for ${hostname} could not be verified against public roots, and this environment routes TLS through a proxy, so the proxy cannot be ruled out. Its details are not reported.`;
+  const findings = [createFinding({
+    id:             'ssl-tls-interception-indeterminate',
+    runner:         RUNNER_NAME,
+    category:       CATEGORY.SSL,
+    severity:       SEVERITY.INFO,
+    title,
+    detail,
+    evidence:       `Trust verdict: ${trust.verdict}. Chain top observed (proxy, not the site): ${trust.chainTop ?? 'unavailable'}. Verification reason: ${trust.reason ?? 'none'}.`,
+    recommendation: 'Run the SSL audit from a network without TLS interception to get the site\'s certificate details.',
+    owasp:          null,
+    wcag:           null
+  })];
+  return createRunnerResult(RUNNER_NAME, url, findings, { hostname, url, verdict: 'indeterminate', trust: trust.verdict });
 }
 
 /** SSL_MODE = auto (default: raw TLS, then browser) | native | browser */

@@ -82,6 +82,14 @@ test('ssl: browser-based certificate read agrees with the raw TLS read', async (
   process.env.SSL_MODE = 'browser';
   const b = await runSsl('https://example.com/');
   delete process.env.SSL_MODE;
+  if (a.metrics.verdict === 'indeterminate') {
+    // Behind a TLS-inspecting proxy the certificate belongs to the proxy: it must not be reported as the site's.
+    assert.equal(b.metrics.verdict, 'indeterminate');
+    assert.equal(a.metrics.certificate, undefined);
+    assert.equal(b.metrics.certificate, undefined);
+    assert.ok(a.findings.some((f) => f.id === 'ssl-tls-interception-indeterminate'));
+    return;
+  }
   assert.equal(a.metrics.certificate.source, 'tls');
   assert.equal(b.metrics.certificate.source, 'browser');
   assert.equal(new Date(a.metrics.certificate.validTo).getTime(), new Date(b.metrics.certificate.validTo).getTime(), 'expiry differs between methods');
