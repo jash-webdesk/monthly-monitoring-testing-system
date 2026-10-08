@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import { loadResults, getArchivePath, getPreviousMonthStr } from './lib/archive.js';
 import { logger } from './lib/logger.js';
 import { getSiteConfig } from './lib/config.js';
+import { describeDns } from './report/dns-view.js';
 
 /**
  * Generates an executive client-facing PowerPoint presentation dynamically based on actual audit results.
@@ -109,11 +110,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   const sslHealthy = sslDaysRemaining !== null && sslDaysRemaining > 30;
 
   // DNS Health Metrics
-  const nsInfo = dnsResult?.metrics?.nsRecords?.join(', ') ?? 'Cloudflare (Monroe & Noel)';
-  const mxInfo = dnsResult?.metrics?.mxRecords?.length
-    ? dnsResult.metrics.mxRecords.map(mx => `${mx.exchange} (Priority ${mx.priority})`).join(', ')
-    : 'Network Solutions MX (Priority 10)';
-  const hasSpf = dnsResult ? !!dnsResult?.metrics?.spf : true;
+  const dns = describeDns(dnsResult);
 
   // Crawl & Sitemap Metrics
   const sitemapTotalRaw = String(crawlResult?.metrics?.totalSitemapUrls ?? '');
@@ -1698,10 +1695,10 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   });
 
   slide10.addText(
-    `• Name Servers (NS): ${nsInfo}\n\n` +
-    `• Mail Servers (MX): ${mxInfo}\n\n` +
-    `• Email sender protection (SPF): ${hasSpf ? 'In place' : 'Not found'}\n\n` +
-    `• Website address (A records): ${dnsResult?.metrics?.aRecords?.length ? 'Resolving correctly' : 'Not found'}`,
+    `• Name Servers (NS): ${dns.nsText}\n\n` +
+    `• Mail Servers (MX): ${dns.mxText}\n\n` +
+    `• Email sender protection (SPF): ${dns.spfText}\n\n` +
+    `• Website address (A records): ${dns.aText}`,
     {
       x: 7.1,
       y: 3.1,

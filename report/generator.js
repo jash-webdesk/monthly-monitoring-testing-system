@@ -5,6 +5,7 @@ import { logger } from '../lib/logger.js';
 import { loadResults, getArchivePath, getPreviousMonthStr } from '../lib/archive.js';
 import { getSiteConfig } from '../lib/config.js';
 import { generatePptReport } from '../generate_ppt_report.js';
+import { describeDns } from './dns-view.js';
 
 /** Escapes text pulled from runner findings before embedding it in report HTML. */
 function escapeHtml(str) {
@@ -328,17 +329,11 @@ export async function generateClientReport(hostname, month, options = {}) {
     ? null // unknown — SAN list not available from this runner result
     : sslSubjectAltNames.some(san => san === hostname || san === rootDomain || san === `*.${rootDomain}`);
 
-  const dnsRecordsCount = dnsResult ? [
-    ...(dnsResult.metrics?.aRecords ?? []),
-    ...(dnsResult.metrics?.aaaaRecords ?? []),
-    ...(dnsResult.metrics?.cnameRecords ?? []),
-    ...(dnsResult.metrics?.mxRecords ?? []),
-    ...(dnsResult.metrics?.nsRecords ?? []),
-    ...(dnsResult.metrics?.txtRecords ?? [])
-  ].length : 24;
-  const spfPresent = !!dnsResult?.metrics?.spf;
-  const dmarcPresent = !!dnsResult?.metrics?.dmarc;
-  const dkimPresent = !!dnsResult?.metrics?.dkim;
+  const dns = describeDns(dnsResult);
+  const emailAuthText = (present) => present === null ? 'could not be determined' : (present ? 'present' : 'missing');
+  const dnsCountHeading = dns.recordCount === null
+    ? 'DNS Record Count Not Available'
+    : `Healthy DNS Record Count (${dns.recordCount} Records)`;
 
   // Uptime Metrics
   const uptimePct = uptimeResult?.metrics?.uptimePercentage ?? 100.0;
@@ -1222,8 +1217,8 @@ export async function generateClientReport(hostname, month, options = {}) {
       <h3>DNS Name Records Assessment</h3>
       ${renderFindingRows(
         dnsFindings,
-        `Healthy DNS Record Count (${dnsRecordsCount} Records)`,
-        `The nameservers successfully resolved all essential host routing configurations. CNAME structures pointing to the CDN, MX mail exchangers, and NS name servers are properly routed. Email authentication: SPF ${spfPresent ? 'present' : 'missing'}, DKIM ${dkimPresent ? 'present' : 'missing'}, DMARC ${dmarcPresent ? 'present' : 'missing'}.`
+        dnsCountHeading,
+        `The nameservers successfully resolved all essential host routing configurations. CNAME structures pointing to the CDN, MX mail exchangers, and NS name servers are properly routed. Email authentication: SPF ${emailAuthText(dns.spfPresent)}, DKIM ${emailAuthText(dns.dkimPresent)}, DMARC ${emailAuthText(dns.dmarcPresent)}.`
       )}
     </div>
     
