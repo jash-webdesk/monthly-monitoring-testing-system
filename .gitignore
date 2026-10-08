@@ -50,3 +50,5 @@ _capture_store_session.mjs
 
 # Local Claude Code permissions
 .claude/settings.local.json
+
+!scripts/*.template.html

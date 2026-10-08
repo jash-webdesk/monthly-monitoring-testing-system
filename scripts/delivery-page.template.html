@@ -1,0 +1,137 @@
+<title>Audit Reports</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: status header, file list with save buttons, then per-site audit tables. */
+:root {
+  --bg: #f3f5f7; --surface: #ffffff; --ink: #17212b; --muted: #5b6875; --line: #d9e0e6;
+  --accent: #0d6b5f; --accent-ink: #ffffff; --good: #1d7a45; --bad: #b3261e; --warn: #8a5a00; --test-bg: #fff4dc; --test-ink: #6b4a00;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0f161c; --surface: #172029; --ink: #e6edf2; --muted: #93a1ad; --line: #2a3742; --accent: #3fb5a3; --accent-ink: #06201c; --good: #5fcf8c; --bad: #ff8a80; --warn: #f2c261; --test-bg: #3a2f10; --test-ink: #f2d58a; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0f161c; --surface: #172029; --ink: #e6edf2; --muted: #93a1ad; --line: #2a3742; --accent: #3fb5a3; --accent-ink: #06201c; --good: #5fcf8c; --bad: #ff8a80; --warn: #f2c261; --test-bg: #3a2f10; --test-ink: #f2d58a; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.5; padding-inline: 16px; padding-block: 24px 48px; }
+main { max-width: 860px; margin: 0 auto; display: grid; gap: 16px; }
+h1 { font-size: 1.55rem; margin: 0; font-weight: 600; text-wrap: balance; }
+h2 { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; font-weight: 600; }
+.meta { color: var(--muted); margin: 4px 0 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.test { background: var(--test-bg); color: var(--test-ink); border-radius: 6px; padding: 8px 12px; font-weight: 500; }
+.warnbox { background: var(--test-bg); color: var(--test-ink); border-radius: 6px; padding: 8px 12px; font-size: 0.9rem; }
+.file { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 12px; }
+.file:first-of-type { border-top: 0; padding-top: 0; }
+.fname { font-family: var(--mono); font-size: 0.82rem; overflow-wrap: anywhere; }
+.kind { font-weight: 500; }
+.size { color: var(--muted); font-size: 0.84rem; }
+.btn { font: inherit; font-weight: 500; border-radius: 6px; padding: 8px 16px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.msg { font-size: 0.86rem; color: var(--muted); min-height: 1.2em; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 420px; font-variant-numeric: tabular-nums; }
+th { text-align: left; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 6px; font-weight: 600; border-bottom: 1px solid var(--line); }
+td { padding: 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.st-completed { color: var(--good); font-weight: 500; }
+.st-failed { color: var(--bad); font-weight: 500; }
+.st-other { color: var(--muted); }
+.pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill { border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; font-size: 0.84rem; }
+.up { color: var(--good); } .down { color: var(--bad); }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<main>
+  <header>
+    <h1 id="title">Audit reports</h1>
+    <p class="meta" id="meta"></p>
+  </header>
+  <div class="test" id="testBanner" hidden></div>
+  <div class="warnbox" id="warnings" hidden></div>
+
+  <section class="card" aria-labelledby="h-files">
+    <h2 id="h-files">Report files</h2>
+    <div id="files"></div>
+    <div class="msg" id="saveMsg" role="status"></div>
+  </section>
+
+  <div id="sites" style="display:grid;gap:16px"></div>
+</main>
+
+<script>
+(function () {
+  var DATA = /*__DATA__*/null;
+  var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var $ = function (id) { return document.getElementById(id); };
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function kb(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB'; }
+
+  var ym = DATA.month.split('-');
+  var monthName = MONTHS[Number(ym[1]) - 1] + ' ' + ym[0];
+  var name = DATA.project.replace(/-/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+  $('title').textContent = name + ' - ' + monthName;
+  $('meta').textContent = DATA.generatedAt ? 'Generated ' + new Date(DATA.generatedAt).toLocaleString() : '';
+  if (DATA.label) { $('testBanner').hidden = false; $('testBanner').textContent = DATA.label; }
+  if (DATA.warnings && DATA.warnings.length) { $('warnings').hidden = false; $('warnings').textContent = DATA.warnings.join(' '); }
+
+  function b64ToBytes(b64) { var bin = atob(b64), a = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return a; }
+
+  var downloadsPromise = (window.claude && window.claude.use) ? window.claude.use('downloads') : Promise.resolve(null);
+  var downloads = null;
+  downloadsPromise.then(function (d) { downloads = d; document.querySelectorAll('[data-save]').forEach(function (b) { b.disabled = !d || !b.dataset.has; }); if (!d) $('saveMsg').textContent = 'Saving from this page is not available in this view. Use the GitHub links in the Claude session.'; });
+
+  var list = $('files');
+  if (!DATA.files.length) list.appendChild(el('p', 'msg', 'No report files were found for this month.'));
+  DATA.files.forEach(function (f, i) {
+    var row = el('div', 'file');
+    var left = el('div');
+    left.appendChild(el('div', 'kind', f.kind));
+    left.appendChild(el('div', 'fname', f.name));
+    left.appendChild(el('div', 'size', kb(f.size) + (f.b64 ? '' : ' - too large to embed, use the GitHub link')));
+    var b = el('button', 'btn', 'Save'); b.type = 'button'; b.disabled = true; b.dataset.save = String(i); if (f.b64) b.dataset.has = '1';
+    b.addEventListener('click', function () {
+      if (!downloads || !f.b64) return;
+      $('saveMsg').textContent = 'Waiting for you to confirm the save...';
+      downloads.save({ filename: f.name, data: new Blob([b64ToBytes(f.b64)], { type: f.mime }) }).then(
+        function () { $('saveMsg').textContent = 'Saved ' + f.name; },
+        function (e) { $('saveMsg').textContent = 'Not saved' + (e && e.message ? ': ' + e.message : '.'); }
+      );
+    });
+    row.appendChild(left); row.appendChild(b); list.appendChild(row);
+  });
+
+  var sitesBox = $('sites');
+  DATA.sites.forEach(function (s) {
+    var card = el('section', 'card');
+    card.appendChild(el('h2', null, s.host));
+    var pills = el('div', 'pills');
+    pills.appendChild(el('span', 'pill', s.findings + ' findings'));
+    ['critical', 'high', 'medium', 'low', 'info'].forEach(function (k) { if (s.sev[k]) pills.appendChild(el('span', 'pill', s.sev[k] + ' ' + k)); });
+    if (s.cmp && s.cmp.findings) {
+      var f = s.cmp.findings;
+      pills.appendChild(el('span', 'pill', 'vs ' + (DATA.previousMonth || 'previous') + ': ' + f['new'] + ' new, ' + f.persisting + ' persisting, ' + f.resolved + ' resolved'));
+    } else pills.appendChild(el('span', 'pill', 'First month on record: no comparison yet'));
+    card.appendChild(pills);
+    if (s.cmp && s.cmp.regressions && s.cmp.regressions.length) {
+      var reg = el('p', 'down', 'Regressions: ' + s.cmp.regressions.map(function (r) { return r.metric + ' ' + r.previous + ' to ' + r.current; }).join('; '));
+      card.appendChild(reg);
+    }
+    var wrap = el('div', 'tablewrap'), t = el('table'), th = el('thead'), tr = el('tr');
+    ['Audit', 'Status', 'Findings', 'Note'].forEach(function (h) { tr.appendChild(el('th', null, h)); });
+    th.appendChild(tr); t.appendChild(th);
+    var tb = el('tbody');
+    s.audits.forEach(function (a) {
+      var r = el('tr');
+      r.appendChild(el('td', null, a.c));
+      r.appendChild(el('td', a.status === 'completed' ? 'st-completed' : a.status === 'failed' ? 'st-failed' : 'st-other', a.status.replace('_', ' ')));
+      r.appendChild(el('td', null, a.status === 'completed' ? String(a.n) : '-'));
+      r.appendChild(el('td', null, a.note));
+      tb.appendChild(r);
+    });
+    t.appendChild(tb); wrap.appendChild(t); card.appendChild(wrap); sitesBox.appendChild(card);
+  });
+})();
+</script>
