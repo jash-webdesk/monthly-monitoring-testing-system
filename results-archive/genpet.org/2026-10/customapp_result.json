@@ -1,0 +1,91 @@
+{
+  "runner": "customapp",
+  "url": "https://app.genpet.org/",
+  "timestamp": "2026-10-08T13:37:19.985Z",
+  "status": "completed",
+  "findings": [
+    {
+      "id": "customapp-login-failed",
+      "runner": "customapp",
+      "category": "custom_app",
+      "severity": "high",
+      "title": "Authenticated navigation pass skipped — login did not succeed",
+      "detail": "The login attempt did not redirect away from the login page, meaning authentication failed. This may mean the stored credentials are stale/incorrect, the login form markup changed since the last discovery pass, or the app is rejecting automated logins.",
+      "evidence": "Still on https://app.genpet.org/new/login/ after attempting login at https://app.genpet.org/new/login/",
+      "recommendation": "Verify the credentials in .env are still correct, and manually confirm the login form has not changed since the last discovery pass.",
+      "owasp": null,
+      "wcag": null,
+      "status": "new"
+    },
+    {
+      "id": "app-ssl-tls-interception-indeterminate",
+      "runner": "ssl",
+      "category": "ssl",
+      "severity": "info",
+      "title": "SSL check indeterminate due to cloud TLS interception",
+      "detail": "Outbound TLS to app.genpet.org is re-signed by the environment proxy. The certificate that can be read belongs to the proxy, not the site, so its expiry, issuer, and names are not reported. Verify the certificate from a network without TLS interception.",
+      "evidence": "Trust verdict: intercepted. Chain top observed (proxy, not the site): Anthropic (sandbox-egress-gateway-production Egress Gateway CA). Verification reason: SELF_SIGNED_CERT_IN_CHAIN.",
+      "recommendation": "Run the SSL audit from a network without TLS interception to get the site's certificate details.",
+      "owasp": null,
+      "wcag": null,
+      "status": "new"
+    },
+    {
+      "id": "app-dns-no-spf-record",
+      "runner": "customapp",
+      "category": "security",
+      "severity": "medium",
+      "title": "No SPF record found on custom app subdomain",
+      "detail": "app.genpet.org does not send email, but has no SPF record either. SPF does not inherit from the parent domain — without an explicit record, an attacker could still spoof \"@app.genpet.org\" addresses in phishing attempts. Since this subdomain never legitimately sends mail, a null SPF record is the correct fix rather than mail-provider setup.",
+      "evidence": "No TXT record starting with \"v=spf1\" found for app.genpet.org",
+      "recommendation": "Add a null SPF record to explicitly declare this subdomain never sends mail: \"v=spf1 -all\"",
+      "owasp": "A05",
+      "wcag": null,
+      "status": "new"
+    }
+  ],
+  "metrics": {
+    "appUrl": "https://app.genpet.org/",
+    "appHostname": "app.genpet.org",
+    "health": {
+      "reachable": true,
+      "status": 200,
+      "responseTimeMs": 193
+    },
+    "ssl": {
+      "hostname": "app.genpet.org",
+      "url": "https://app.genpet.org/",
+      "verdict": "indeterminate",
+      "trust": "intercepted"
+    },
+    "dns": {
+      "hostname": "app.genpet.org",
+      "capturedAt": "2026-10-08T13:37:17.893Z",
+      "aRecords": [
+        "44.219.62.46"
+      ],
+      "aaaaRecords": [],
+      "cnameRecords": [],
+      "mxRecords": [],
+      "nsRecords": [],
+      "txtRecords": [],
+      "dmarc": null,
+      "snapshot": {
+        "hostname": "app.genpet.org",
+        "aRecords": [
+          "44.219.62.46"
+        ],
+        "aaaaRecords": [],
+        "cnameRecords": [],
+        "mxRecords": [],
+        "nsRecords": [],
+        "txtRecords": [],
+        "capturedAt": "2026-10-08T13:37:19.985Z"
+      }
+    },
+    "credentialsConfigured": true,
+    "navPassRan": true,
+    "writeRequestsDetected": 0,
+    "navPages": []
+  }
+}

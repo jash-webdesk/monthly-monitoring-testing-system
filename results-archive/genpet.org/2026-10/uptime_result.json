@@ -1,0 +1,18 @@
+{
+  "runner": "uptime",
+  "url": "https://genpet.org/",
+  "timestamp": "2026-10-09T13:52:40.899Z",
+  "status": "completed",
+  "findings": [],
+  "metrics": {
+    "hostname": "genpet.org",
+    "targetUrl": "https://genpet.org/",
+    "uptimePercentage": 100,
+    "responseTimeMs": 339,
+    "downtimeMinutes": 0,
+    "status": "up",
+    "redirectsCount": 0,
+    "tlsHandshakeMs": null,
+    "apiLinked": true
+  }
+}

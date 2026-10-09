@@ -3,6 +3,11 @@ import { logger } from '../lib/logger.js';
 
 const RUNNER_NAME = 'uptime';
 
+/** Hostname only, for logs. Monitor URLs are not printed in full. */
+function hostOf(url) {
+  try { return new URL(url).hostname; } catch { return '(invalid URL)'; }
+}
+
 /**
  * Runs the Uptime snapshot runner for a URL.
  * If UPTIMEROBOT_API_KEY is defined in environment, queries UptimeRobot API.
@@ -35,10 +40,15 @@ export async function runUptime(targetUrl) {
     status: 'unknown',
     redirectsCount: 0,
     tlsHandshakeMs: null,
-    apiLinked: false
+    apiLinked: false,
+    // 'uptimerobot' when a 30-day figure came from the API; otherwise 'live-probe' with the reason below.
+    uptimeSource: 'live-probe',
+    uptimeUnlinkedReason: 'UPTIMEROBOT_API_KEY is not set'
   };
 
   const apiKey = process.env.UPTIMEROBOT_API_KEY;
+  // Creating a monitor writes to the client's UptimeRobot account and can fail on plan limits, so it is off unless enabled explicitly.
+  const autoCreate = process.env.UPTIMEROBOT_AUTO_CREATE === '1';
 
   if (apiKey) {
     try {
@@ -61,7 +71,12 @@ export async function runUptime(targetUrl) {
       if (data.stat === 'ok' && Array.isArray(data.monitors)) {
         let monitor = data.monitors.find(m => m.url.includes(hostname));
         if (!monitor) {
-          logger.info(`  No UptimeRobot monitor found matching hostname "${hostname}". Registering a new monitor...`);
+          const visible = data.monitors.map(m => hostOf(m.url));
+          logger.warn(`  No UptimeRobot monitor matches "${hostname}". This key sees ${visible.length} monitor(s): ${visible.join(', ') || 'none'}.`);
+          metrics.uptimeUnlinkedReason = `no active UptimeRobot monitor for ${hostname} on this account`;
+        }
+        if (!monitor && autoCreate) {
+          logger.info(`  UPTIMEROBOT_AUTO_CREATE=1: registering a new monitor for ${hostname}...`);
           try {
             const createRes = await fetch('https://api.uptimerobot.com/v2/newMonitor', {
               method: 'POST',
@@ -90,6 +105,8 @@ export async function runUptime(targetUrl) {
 
         if (monitor && monitor.status !== 0) {
           metrics.apiLinked = true;
+          metrics.uptimeSource = 'uptimerobot';
+          metrics.uptimeUnlinkedReason = null;
           metrics.uptimePercentage = parseFloat(monitor.custom_uptime_ratio) || 100.0;
           metrics.status = (monitor.status === 2 || monitor.status === 1) ? 'up' : 'down';
           
@@ -104,12 +121,14 @@ export async function runUptime(targetUrl) {
 
           logger.success(`  Matched UptimeRobot monitor: "${monitor.friendly_name}". 30-day Uptime: ${metrics.uptimePercentage}%`);
         } else {
+          if (monitor) metrics.uptimeUnlinkedReason = `the UptimeRobot monitor for ${hostname} is paused`;
           logger.warn(`  UptimeRobot monitor for "${hostname}" is paused or unmonitored. Falling back to synthetic live verification.`);
         }
       } else {
         throw new Error(data.error?.message || 'Invalid API key or status');
       }
     } catch (err) {
+      metrics.uptimeUnlinkedReason = 'the UptimeRobot query failed';
       logger.warn(`  UptimeRobot API query failed: ${err.message}. Falling back to synthetic verification.`);
     }
   }
@@ -219,6 +238,20 @@ export async function runUptime(targetUrl) {
       detail:         `The server took ${metrics.responseTimeMs}ms to respond. Slow server response (TTFB) directly hurts search engine crawling speed and initial page loads.`,
       evidence:       `First-response latency: ${metrics.responseTimeMs}ms`,
       recommendation: 'Enable cache layers (like Varnish or Redis) and check database query loads.'
+    }));
+  }
+
+  // No 30-day figure means the report can only say the site answered once. Say so instead of implying a monitored uptime.
+  if (metrics.uptimeSource !== 'uptimerobot') {
+    findings.push(createFinding({
+      id:             'uptime-not-linked',
+      runner:         RUNNER_NAME,
+      category:       CATEGORY.UPTIME,
+      severity:       SEVERITY.LOW,
+      title:          '30-day uptime not measured',
+      detail:         `Only a single live check was made for ${hostname}, so there is no 30-day availability figure this month. Reason: ${metrics.uptimeUnlinkedReason}.`,
+      evidence:       'Source: live probe (UptimeRobot not linked)',
+      recommendation: 'Make sure an active UptimeRobot HTTP monitor for this exact site exists on the account that owns UPTIMEROBOT_API_KEY.'
     }));
   }
 

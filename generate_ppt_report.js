@@ -32,8 +32,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
 
   const siteDisplayName = siteConfig.name || hostname;
   const cleanName = siteDisplayName.replace(/[^a-zA-Z0-9]/g, '_');
-  const pptxPath1 = join(archiveDir, `${cleanName}_Monthly_Optimization_Report_${readableMonthYear}.pptx`);
-  const pptxPath2 = join(archiveDir, `${cleanName}_Monthly_Optimization_Report_${readableMonthYear}_v2.pptx`);
+  const pptxPath = join(archiveDir, `${cleanName}_Monthly_Optimization_Report_${readableMonthYear}.pptx`);
 
   // Load actual runner result JSON files from disk
   const dnsResult = loadResults(hostname, 'dns', month);
@@ -506,7 +505,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   slide3.addText(uptimePct !== null
     ? `Continuous health monitoring measured ${uptimePct}% availability over the last 30 days.`
     : (siteIsUp
-      ? "The storefront was live and responding normally when this month's audit was run."
+      ? "The storefront was live and responding normally when this month's audit was run. No 30-day availability figure is available for this site this month."
       : "The storefront could not be confirmed as available during this month's audit."), {
     x: 1.1,
     y: 3.6,
@@ -2184,22 +2183,15 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Plus Jakarta Sans'
   });
 
-  // Write files safely to both paths
   try {
-    await pptx.writeFile({ fileName: pptxPath1 });
-    logger.success(`PPT Presentation successfully written to: ${pptxPath1}`);
+    await pptx.writeFile({ fileName: pptxPath });
+    logger.success(`PPT Presentation successfully written to: ${pptxPath}`);
   } catch (err) {
-    logger.warn(`Could not overwrite original PPTX (it may be open in PowerPoint): ${err.message}`);
+    logger.error(`Could not write the client PPTX (it may be open in PowerPoint): ${err.message}`);
+    throw err;
   }
 
-  try {
-    await pptx.writeFile({ fileName: pptxPath2 });
-    logger.success(`PPT Presentation successfully written to: ${pptxPath2}`);
-  } catch (err) {
-    logger.error(`Failed to write v2 PPTX: ${err.message}`);
-  }
-
-  return pptxPath1;
+  return pptxPath;
 }
 
 // Support CLI execution directly

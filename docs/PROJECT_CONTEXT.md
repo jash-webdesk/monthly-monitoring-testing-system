@@ -48,4 +48,6 @@ WebDesk Solution's monthly monitoring service for client websites and apps. Each
 - The session starts from a fresh clone: no `.env`, no `results/`, no earlier conversations, no local auto-memory. Everything durable must be in this repo.
 - Foreground commands time out after about two minutes; run audits as background tasks and poll the log.
 - Use a fake month such as `2099-01` for any test, and delete it afterwards so real results are never overwritten or committed.
+- `results/` is git-ignored and gone when the container ends. After every full run the engine copies each month's JSON into `results-archive/<host|project>/<YYYY-MM>/`, and the next run restores it into `results/` before doing anything else. Commit `results-archive/` with `reports/` and `history/`. A partial run (`--only`/`--skip`) never updates `history/` and never archives the whole-month files (run summary, raw findings, diff).
+- UptimeRobot: a monitor is created only with `UPTIMEROBOT_AUTO_CREATE=1`. Without a matched, active monitor the report says there is no 30-day figure (finding `uptime-not-linked`).
 - Deliver by committing `reports/`, `history/`, `inputs/` and `config/dev-notes/` to a `claude/` branch. Never force-push, and do not push to `main` unless asked.

@@ -1,0 +1,714 @@
+{
+  "runner": "lighthouse",
+  "url": "https://genpet.org/",
+  "timestamp": "2026-10-08T13:37:05.334Z",
+  "status": "completed",
+  "findings": [
+    {
+      "id": "lighthouse-mobile-score-critical-homepage",
+      "runner": "lighthouse",
+      "category": "performance",
+      "severity": "high",
+      "title": "[HOMEPAGE] Mobile performance score is critically low (47/100)",
+      "detail": "A Lighthouse performance score below 50 indicates severe issues affecting page load speed, SEO rankings, and user experience.",
+      "evidence": "[Page: homepage] Lighthouse mobile score: 47/100",
+      "recommendation": "Address all high-impact opportunities. Start with LCP, TBT, and render-blocking resources.",
+      "owasp": null,
+      "wcag": null,
+      "status": "new"
+    },
+    {
+      "id": "lighthouse-mobile-lcp-poor-homepage",
+      "runner": "lighthouse",
+      "category": "performance",
+      "severity": "high",
+      "title": "[HOMEPAGE] Mobile Largest Contentful Paint (LCP) is poor (6.9 s)",
+      "detail": "LCP measures when the largest visible content element loads. It directly impacts perceived page speed and Google SEO ranking. Value of 6.9 s exceeds the poor threshold of 4000ms.",
+      "evidence": "[Page: homepage] LCP: 6882.05ms | Poor > 4000ms | Good < 2500ms",
+      "recommendation": "Optimise images with modern formats (WebP/AVIF), use a CDN, and eliminate render-blocking resources.",
+      "owasp": null,
+      "wcag": null,
+      "status": "new"
+    },
+    {
+      "id": "lighthouse-mobile-cls-poor-homepage",
+      "runner": "lighthouse",
+      "category": "performance",
+      "severity": "high",
+      "title": "[HOMEPAGE] Mobile Cumulative Layout Shift (CLS) is poor (0.47)",
+      "detail": "CLS measures visual stability. A score of 0.47 means significant content shifts during load, frustrating users and hurting Core Web Vitals.",
+      "evidence": "[Page: homepage] CLS: 0.47 | Poor ≥ 0.25",
+      "recommendation": "Set explicit width/height on all images and videos. Reserve space for ads, embeds, and dynamic content. Avoid inserting content above existing page content.",
+      "owasp": null,
+      "wcag": null,
+      "status": "new"
+    },
+    {
+      "id": "lighthouse-mobile-fcp-poor-homepage",
+      "runner": "lighthouse",
+      "category": "performance",
+      "severity": "medium",
+      "title": "[HOMEPAGE] Mobile First Contentful Paint is slow (3.9 s)",
+      "detail": "FCP marks the first time any text or image is painted. A value of 3.9 s indicates a slow server response or render-blocking resources.",
+      "evidence": "[Page: homepage] FCP: 3934.42ms | Poor threshold: 3000ms",
+      "recommendation": "Minimise render-blocking CSS/JS, use server-side caching, and reduce Time to First Byte (TTFB).",
+      "owasp": null,
+      "wcag": null,
+      "status": "new"
+    },
+    {
+      "id": "lighthouse-desktop-cls-poor-aboutUs",
+      "runner": "lighthouse",
+      "category": "performance",
+      "severity": "high",
+      "title": "[ABOUTUS] Desktop Cumulative Layout Shift (CLS) is poor (0.56)",
+      "detail": "CLS measures visual stability. A score of 0.56 means significant content shifts during load, frustrating users and hurting Core Web Vitals.",
+      "evidence": "[Page: aboutUs] CLS: 0.56 | Poor ≥ 0.25",
+      "recommendation": "Set explicit width/height on all images and videos. Reserve space for ads, embeds, and dynamic content. Avoid inserting content above existing page content.",
+      "owasp": null,
+      "wcag": null,
+      "status": "new"
+    },
+    {
+      "id": "lighthouse-mobile-lcp-poor-aboutUs",
+      "runner": "lighthouse",
+      "category": "performance",
+      "severity": "high",
+      "title": "[ABOUTUS] Mobile Largest Contentful Paint (LCP) is poor (5.7 s)",
+      "detail": "LCP measures when the largest visible content element loads. It directly impacts perceived page speed and Google SEO ranking. Value of 5.7 s exceeds the poor threshold of 4000ms.",
+      "evidence": "[Page: aboutUs] LCP: 5687.85ms | Poor > 4000ms | Good < 2500ms",
+      "recommendation": "Optimise images with modern formats (WebP/AVIF), use a CDN, and eliminate render-blocking resources.",
+      "owasp": null,
+      "wcag": null,
+      "status": "new"
+    },
+    {
+      "id": "lighthouse-mobile-fcp-poor-aboutUs",
+      "runner": "lighthouse",
+      "category": "performance",
+      "severity": "medium",
+      "title": "[ABOUTUS] Mobile First Contentful Paint is slow (3.9 s)",
+      "detail": "FCP marks the first time any text or image is painted. A value of 3.9 s indicates a slow server response or render-blocking resources.",
+      "evidence": "[Page: aboutUs] FCP: 3940.69ms | Poor threshold: 3000ms",
+      "recommendation": "Minimise render-blocking CSS/JS, use server-side caching, and reduce Time to First Byte (TTFB).",
+      "owasp": null,
+      "wcag": null,
+      "status": "new"
+    }
+  ],
+  "metrics": {
+    "hostname": "genpet.org",
+    "url": "https://genpet.org/",
+    "desktop": {
+      "score": 98,
+      "accessibility": 91,
+      "bestPractices": 100,
+      "seo": 100,
+      "fcp": {
+        "value": 886.41,
+        "displayValue": "0.9 s",
+        "score": 92
+      },
+      "si": {
+        "value": 886.41,
+        "displayValue": "0.9 s",
+        "score": 98
+      },
+      "lcp": {
+        "value": 1005.18,
+        "displayValue": "1.0 s",
+        "score": 94
+      },
+      "tbt": {
+        "value": 0,
+        "displayValue": "0 ms",
+        "score": 100
+      },
+      "cls": {
+        "value": 0.01,
+        "displayValue": "0.005",
+        "score": 100
+      },
+      "tti": {
+        "value": 1005.18,
+        "displayValue": "1.0 s",
+        "score": 100
+      },
+      "opportunities": [
+        {
+          "id": "unused-css-rules",
+          "title": "Reduce unused CSS",
+          "savingsMs": 40,
+          "savingsBytes": 64231,
+          "displayValue": "Est savings of 63 KiB"
+        },
+        {
+          "id": "server-response-time",
+          "title": "Initial server response time was short",
+          "savingsMs": 5,
+          "savingsBytes": 0,
+          "displayValue": "Root document took 10 ms"
+        },
+        {
+          "id": "unminified-css",
+          "title": "Minify CSS",
+          "savingsMs": 0,
+          "savingsBytes": 22397,
+          "displayValue": "Est savings of 22 KiB"
+        }
+      ],
+      "diagnostics": [
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0
+        },
+        {
+          "id": "landmark-one-main",
+          "title": "Document does not have a main landmark.",
+          "score": 0
+        },
+        {
+          "id": "link-name",
+          "title": "Links do not have a discernible name",
+          "score": 0
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0
+        },
+        {
+          "id": "unsized-images",
+          "title": "Image elements do not have explicit `width` and `height`",
+          "score": 50
+        },
+        {
+          "id": "cache-insight",
+          "title": "Use efficient cache lifetimes",
+          "score": 50
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "score": 0
+        }
+      ],
+      "sampledScores": [
+        96,
+        98,
+        98
+      ]
+    },
+    "mobile": {
+      "score": 47,
+      "accessibility": 91,
+      "bestPractices": 100,
+      "seo": 100,
+      "fcp": {
+        "value": 3934.42,
+        "displayValue": "3.9 s",
+        "score": 24
+      },
+      "si": {
+        "value": 3934.42,
+        "displayValue": "3.9 s",
+        "score": 82
+      },
+      "lcp": {
+        "value": 6882.05,
+        "displayValue": "6.9 s",
+        "score": 6
+      },
+      "tbt": {
+        "value": 0,
+        "displayValue": "0 ms",
+        "score": 100
+      },
+      "cls": {
+        "value": 0.47,
+        "displayValue": "0.467",
+        "score": 19
+      },
+      "tti": {
+        "value": 6965.19,
+        "displayValue": "7.0 s",
+        "score": 53
+      },
+      "opportunities": [
+        {
+          "id": "unused-css-rules",
+          "title": "Reduce unused CSS",
+          "savingsMs": 300,
+          "savingsBytes": 62564,
+          "displayValue": "Est savings of 61 KiB"
+        },
+        {
+          "id": "unminified-css",
+          "title": "Minify CSS",
+          "savingsMs": 150,
+          "savingsBytes": 22398,
+          "displayValue": "Est savings of 22 KiB"
+        },
+        {
+          "id": "server-response-time",
+          "title": "Initial server response time was short",
+          "savingsMs": 5,
+          "savingsBytes": 0,
+          "displayValue": "Root document took 10 ms"
+        }
+      ],
+      "diagnostics": [
+        {
+          "id": "link-name",
+          "title": "Links do not have a discernible name",
+          "score": 0
+        },
+        {
+          "id": "unsized-images",
+          "title": "Image elements do not have explicit `width` and `height`",
+          "score": 50
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0
+        },
+        {
+          "id": "landmark-one-main",
+          "title": "Document does not have a main landmark.",
+          "score": 0
+        },
+        {
+          "id": "cache-insight",
+          "title": "Use efficient cache lifetimes",
+          "score": 0
+        },
+        {
+          "id": "layout-shifts",
+          "title": "Avoid large layout shifts",
+          "score": 0
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "score": 0
+        }
+      ],
+      "sampledScores": [
+        47,
+        47,
+        73
+      ]
+    },
+    "pages": {
+      "homepage": {
+        "hostname": "genpet.org",
+        "url": "https://genpet.org/",
+        "desktop": {
+          "score": 98,
+          "accessibility": 91,
+          "bestPractices": 100,
+          "seo": 100,
+          "fcp": {
+            "value": 886.41,
+            "displayValue": "0.9 s",
+            "score": 92
+          },
+          "si": {
+            "value": 886.41,
+            "displayValue": "0.9 s",
+            "score": 98
+          },
+          "lcp": {
+            "value": 1005.18,
+            "displayValue": "1.0 s",
+            "score": 94
+          },
+          "tbt": {
+            "value": 0,
+            "displayValue": "0 ms",
+            "score": 100
+          },
+          "cls": {
+            "value": 0.01,
+            "displayValue": "0.005",
+            "score": 100
+          },
+          "tti": {
+            "value": 1005.18,
+            "displayValue": "1.0 s",
+            "score": 100
+          },
+          "opportunities": [
+            {
+              "id": "unused-css-rules",
+              "title": "Reduce unused CSS",
+              "savingsMs": 40,
+              "savingsBytes": 64231,
+              "displayValue": "Est savings of 63 KiB"
+            },
+            {
+              "id": "server-response-time",
+              "title": "Initial server response time was short",
+              "savingsMs": 5,
+              "savingsBytes": 0,
+              "displayValue": "Root document took 10 ms"
+            },
+            {
+              "id": "unminified-css",
+              "title": "Minify CSS",
+              "savingsMs": 0,
+              "savingsBytes": 22397,
+              "displayValue": "Est savings of 22 KiB"
+            }
+          ],
+          "diagnostics": [
+            {
+              "id": "render-blocking-insight",
+              "title": "Render-blocking requests",
+              "score": 0
+            },
+            {
+              "id": "landmark-one-main",
+              "title": "Document does not have a main landmark.",
+              "score": 0
+            },
+            {
+              "id": "link-name",
+              "title": "Links do not have a discernible name",
+              "score": 0
+            },
+            {
+              "id": "image-delivery-insight",
+              "title": "Improve image delivery",
+              "score": 0
+            },
+            {
+              "id": "unsized-images",
+              "title": "Image elements do not have explicit `width` and `height`",
+              "score": 50
+            },
+            {
+              "id": "cache-insight",
+              "title": "Use efficient cache lifetimes",
+              "score": 50
+            },
+            {
+              "id": "color-contrast",
+              "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+              "score": 0
+            }
+          ],
+          "sampledScores": [
+            96,
+            98,
+            98
+          ]
+        },
+        "mobile": {
+          "score": 47,
+          "accessibility": 91,
+          "bestPractices": 100,
+          "seo": 100,
+          "fcp": {
+            "value": 3934.42,
+            "displayValue": "3.9 s",
+            "score": 24
+          },
+          "si": {
+            "value": 3934.42,
+            "displayValue": "3.9 s",
+            "score": 82
+          },
+          "lcp": {
+            "value": 6882.05,
+            "displayValue": "6.9 s",
+            "score": 6
+          },
+          "tbt": {
+            "value": 0,
+            "displayValue": "0 ms",
+            "score": 100
+          },
+          "cls": {
+            "value": 0.47,
+            "displayValue": "0.467",
+            "score": 19
+          },
+          "tti": {
+            "value": 6965.19,
+            "displayValue": "7.0 s",
+            "score": 53
+          },
+          "opportunities": [
+            {
+              "id": "unused-css-rules",
+              "title": "Reduce unused CSS",
+              "savingsMs": 300,
+              "savingsBytes": 62564,
+              "displayValue": "Est savings of 61 KiB"
+            },
+            {
+              "id": "unminified-css",
+              "title": "Minify CSS",
+              "savingsMs": 150,
+              "savingsBytes": 22398,
+              "displayValue": "Est savings of 22 KiB"
+            },
+            {
+              "id": "server-response-time",
+              "title": "Initial server response time was short",
+              "savingsMs": 5,
+              "savingsBytes": 0,
+              "displayValue": "Root document took 10 ms"
+            }
+          ],
+          "diagnostics": [
+            {
+              "id": "link-name",
+              "title": "Links do not have a discernible name",
+              "score": 0
+            },
+            {
+              "id": "unsized-images",
+              "title": "Image elements do not have explicit `width` and `height`",
+              "score": 50
+            },
+            {
+              "id": "render-blocking-insight",
+              "title": "Render-blocking requests",
+              "score": 0
+            },
+            {
+              "id": "landmark-one-main",
+              "title": "Document does not have a main landmark.",
+              "score": 0
+            },
+            {
+              "id": "cache-insight",
+              "title": "Use efficient cache lifetimes",
+              "score": 0
+            },
+            {
+              "id": "layout-shifts",
+              "title": "Avoid large layout shifts",
+              "score": 0
+            },
+            {
+              "id": "image-delivery-insight",
+              "title": "Improve image delivery",
+              "score": 0
+            },
+            {
+              "id": "color-contrast",
+              "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+              "score": 0
+            }
+          ],
+          "sampledScores": [
+            47,
+            47,
+            73
+          ]
+        }
+      },
+      "aboutUs": {
+        "hostname": "genpet.org",
+        "url": "https://genpet.org/about-us/",
+        "desktop": {
+          "score": 76,
+          "accessibility": 96,
+          "bestPractices": 100,
+          "seo": 100,
+          "fcp": {
+            "value": 923.85,
+            "displayValue": "0.9 s",
+            "score": 90
+          },
+          "si": {
+            "value": 923.85,
+            "displayValue": "0.9 s",
+            "score": 98
+          },
+          "lcp": {
+            "value": 923.85,
+            "displayValue": "0.9 s",
+            "score": 96
+          },
+          "tbt": {
+            "value": 0,
+            "displayValue": "0 ms",
+            "score": 100
+          },
+          "cls": {
+            "value": 0.56,
+            "displayValue": "0.565",
+            "score": 12
+          },
+          "tti": {
+            "value": 923.85,
+            "displayValue": "0.9 s",
+            "score": 100
+          },
+          "opportunities": [
+            {
+              "id": "unused-css-rules",
+              "title": "Reduce unused CSS",
+              "savingsMs": 80,
+              "savingsBytes": 65812,
+              "displayValue": "Est savings of 64 KiB"
+            },
+            {
+              "id": "unminified-css",
+              "title": "Minify CSS",
+              "savingsMs": 40,
+              "savingsBytes": 22398,
+              "displayValue": "Est savings of 22 KiB"
+            },
+            {
+              "id": "server-response-time",
+              "title": "Initial server response time was short",
+              "savingsMs": 2,
+              "savingsBytes": 0,
+              "displayValue": "Root document took 0 ms"
+            }
+          ],
+          "diagnostics": [
+            {
+              "id": "unsized-images",
+              "title": "Image elements do not have explicit `width` and `height`",
+              "score": 50
+            },
+            {
+              "id": "link-name",
+              "title": "Links do not have a discernible name",
+              "score": 0
+            },
+            {
+              "id": "cache-insight",
+              "title": "Use efficient cache lifetimes",
+              "score": 50
+            },
+            {
+              "id": "layout-shifts",
+              "title": "Avoid large layout shifts",
+              "score": 0
+            },
+            {
+              "id": "image-delivery-insight",
+              "title": "Improve image delivery",
+              "score": 50
+            },
+            {
+              "id": "render-blocking-insight",
+              "title": "Render-blocking requests",
+              "score": 0
+            }
+          ],
+          "sampledScores": [
+            74,
+            76,
+            76
+          ]
+        },
+        "mobile": {
+          "score": 70,
+          "accessibility": 96,
+          "bestPractices": 100,
+          "seo": 100,
+          "fcp": {
+            "value": 3940.69,
+            "displayValue": "3.9 s",
+            "score": 24
+          },
+          "si": {
+            "value": 3940.69,
+            "displayValue": "3.9 s",
+            "score": 82
+          },
+          "lcp": {
+            "value": 5687.85,
+            "displayValue": "5.7 s",
+            "score": 16
+          },
+          "tbt": {
+            "value": 0,
+            "displayValue": "0 ms",
+            "score": 100
+          },
+          "cls": {
+            "value": 0.01,
+            "displayValue": "0.007",
+            "score": 100
+          },
+          "tti": {
+            "value": 5695.44,
+            "displayValue": "5.7 s",
+            "score": 68
+          },
+          "opportunities": [
+            {
+              "id": "unused-css-rules",
+              "title": "Reduce unused CSS",
+              "savingsMs": 300,
+              "savingsBytes": 64682,
+              "displayValue": "Est savings of 63 KiB"
+            },
+            {
+              "id": "server-response-time",
+              "title": "Initial server response time was short",
+              "savingsMs": 8,
+              "savingsBytes": 0,
+              "displayValue": "Root document took 10 ms"
+            },
+            {
+              "id": "unminified-css",
+              "title": "Minify CSS",
+              "savingsMs": 0,
+              "savingsBytes": 22398,
+              "displayValue": "Est savings of 22 KiB"
+            }
+          ],
+          "diagnostics": [
+            {
+              "id": "render-blocking-insight",
+              "title": "Render-blocking requests",
+              "score": 0
+            },
+            {
+              "id": "link-name",
+              "title": "Links do not have a discernible name",
+              "score": 0
+            },
+            {
+              "id": "image-delivery-insight",
+              "title": "Improve image delivery",
+              "score": 0
+            },
+            {
+              "id": "unsized-images",
+              "title": "Image elements do not have explicit `width` and `height`",
+              "score": 50
+            },
+            {
+              "id": "cache-insight",
+              "title": "Use efficient cache lifetimes",
+              "score": 0
+            }
+          ],
+          "sampledScores": [
+            68,
+            70,
+            70
+          ]
+        }
+      }
+    }
+  }
+}

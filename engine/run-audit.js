@@ -15,7 +15,7 @@ import { join, resolve } from 'node:path';
 import { installNetwork } from '../lib/net.js';
 import { logger } from '../lib/logger.js';
 import { getProject, setRuntimeOverrides, getSiteConfig, repoRoot } from '../lib/config.js';
-import { saveRawResults, saveDiffResults, loadPreviousRawFindings, getPreviousMonthStr, getArchivePath } from '../lib/archive.js';
+import { saveRawResults, saveDiffResults, loadPreviousRawFindings, getPreviousMonthStr, getArchivePath, archiveMonthResults, restoreMonthResults } from '../lib/archive.js';
 import { diffFindings, buildDiffSummary } from '../lib/differ.js';
 import { loadKnownIssues } from '../lib/config.js';
 import { AUDITS, CATEGORIES } from '../audits/index.js';
@@ -178,6 +178,18 @@ async function main() {
 
   const summary = { project: project.id, month, stage, startedAt: new Date().toISOString(), sites: {}, reports: {}, history: null, warnings: [] };
 
+  // A partial run (--only/--skip) must not overwrite the month's history, or the saved comparison would describe only part of the audit.
+  const partialRun = only.length > 0 || skip.length > 0;
+
+  // Restore archived JSON (this month and the previous one) so a fresh cloud session sees the same inputs as the original run.
+  const archiveKeys = [...new Set([project.id, ...targets.map((t) => t.site.hostname)])];
+  for (const key of archiveKeys) {
+    for (const m of [month, getPreviousMonthStr(month)]) {
+      const restored = restoreMonthResults(key, m);
+      if (restored.length) logger.info(`Restored ${restored.length} archived file(s) for ${key} ${m} from results-archive/`);
+    }
+  }
+
   // 2. Audits (isolated per audit; one failure never stops the rest)
   const siteRuns = {};
   if (!args['reports-only']) {
@@ -190,12 +202,17 @@ async function main() {
 
   // 4. Normalize and persist history (month-over-month)
   if (!args['reports-only'] && !args['no-history'] && stage !== 'before') {
-    const scoreMap = {};
-    for (const host of legacyOverrideHosts) scoreMap[host] = scoresForHost(parsed, host);
-    const record = buildRecord({ project, month, siteRuns, scores: scoreMap });
-    summary.history = historyPath(project.id, month).replace(repoRoot() + '\\', '').replace(repoRoot() + '/', '').replace(/\\/g, '/');
-    saveHistory(record);
-    summary.comparison = record.comparison;
+    if (partialRun) {
+      logger.warn('Partial run (--only/--skip): history/ was not updated, so the saved month-over-month record is kept. Run without --only/--skip to update it.');
+      summary.warnings.push('Partial run: history not updated.');
+    } else {
+      const scoreMap = {};
+      for (const host of legacyOverrideHosts) scoreMap[host] = scoresForHost(parsed, host);
+      const record = buildRecord({ project, month, siteRuns, scores: scoreMap });
+      summary.history = historyPath(project.id, month).replace(repoRoot() + '\\', '').replace(repoRoot() + '/', '').replace(/\\/g, '/');
+      saveHistory(record);
+      summary.comparison = record.comparison;
+    }
   }
 
   // 5. Reports
@@ -215,6 +232,10 @@ async function main() {
   const out = join(getArchivePath(project.id, month), 'run-summary.json');
   mkdirSync(getArchivePath(project.id, month), { recursive: true });
   writeFileSync(out, JSON.stringify(summary, null, 2));
+  if (!args['reports-only']) {
+    for (const key of archiveKeys) archiveMonthResults(key, month, { partial: partialRun });
+    logger.info(`Archived JSON results for ${month} to results-archive/ (commit it so later sessions can rebuild reports).`);
+  }
   console.log('\n===== RUN SUMMARY =====');
   console.log(JSON.stringify(summary, null, 2));
 

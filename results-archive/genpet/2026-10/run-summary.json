@@ -1,0 +1,24 @@
+{
+  "project": "genpet",
+  "month": "2026-10",
+  "stage": "after",
+  "startedAt": "2026-10-09T13:52:45.256Z",
+  "sites": {},
+  "reports": {
+    "genpet.org": {
+      "outputs": [
+        "client"
+      ],
+      "copied": [
+        "reports/genpet/2026-10/Genpet_Monthly_Optimization_Report_October_2026.pdf",
+        "reports/genpet/2026-10/Genpet_Monthly_Optimization_Report_October_2026.pptx",
+        "reports/genpet/2026-10/Genpet_Monthly_Optimization_Report_October_2026_v2.pptx"
+      ],
+      "errors": [],
+      "notes": []
+    }
+  },
+  "history": null,
+  "warnings": [],
+  "finishedAt": "2026-10-09T13:52:49.421Z"
+}

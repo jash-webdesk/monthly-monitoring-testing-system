@@ -1,0 +1,129 @@
+{
+  "runner": "dns",
+  "url": "genpet.org",
+  "timestamp": "2026-10-08T13:34:59.233Z",
+  "status": "completed",
+  "findings": [
+    {
+      "id": "dns-dmarc-policy-none",
+      "runner": "dns",
+      "category": "security",
+      "severity": "medium",
+      "title": "DMARC policy is \"none\" — monitoring only, no enforcement",
+      "detail": "A DMARC policy of \"none\" means emails that fail authentication are still delivered. This provides reporting data but offers no protection against spoofing.",
+      "evidence": "v=DMARC1; p=none;",
+      "recommendation": "Upgrade to p=quarantine (routes to spam) or p=reject (blocks delivery) once legitimate email flows are verified.",
+      "owasp": "A05",
+      "wcag": null,
+      "status": "new"
+    },
+    {
+      "id": "dns-dmarc-no-reporting",
+      "runner": "dns",
+      "category": "dns",
+      "severity": "low",
+      "title": "DMARC record has no aggregate reporting address (rua)",
+      "detail": "Without a reporting address, you will not receive DMARC aggregate reports showing who is sending email on behalf of your domain.",
+      "evidence": "v=DMARC1; p=none;",
+      "recommendation": "Add rua=mailto:dmarc@yourdomain.com to your DMARC record.",
+      "owasp": null,
+      "wcag": null,
+      "status": "new"
+    },
+    {
+      "id": "dns-no-dkim-record",
+      "runner": "dns",
+      "category": "security",
+      "severity": "medium",
+      "title": "No DKIM record found",
+      "detail": "DKIM adds a cryptographic signature to outgoing emails, allowing recipients to verify they were sent by an authorised server and have not been tampered with.",
+      "evidence": "Checked selectors: default, google, mail, k1, selector1, selector2, dkim, s1, s2. None found at {selector}._domainkey.genpet.org",
+      "recommendation": "Configure DKIM through your email provider and publish the public key as a TXT record at the appropriate selector.",
+      "owasp": "A05",
+      "wcag": null,
+      "status": "new"
+    }
+  ],
+  "metrics": {
+    "hostname": "genpet.org",
+    "capturedAt": "2026-10-08T13:34:56.817Z",
+    "aRecords": [
+      "192.200.160.16"
+    ],
+    "aaaaRecords": [],
+    "cnameRecords": [],
+    "mxRecords": [
+      {
+        "priority": 30,
+        "exchange": "alt2.aspmx.l.google.com"
+      },
+      {
+        "priority": 50,
+        "exchange": "aspmx3.googlemail.com"
+      },
+      {
+        "priority": 20,
+        "exchange": "alt1.aspmx.l.google.com"
+      },
+      {
+        "priority": 10,
+        "exchange": "aspmx.l.google.com"
+      },
+      {
+        "priority": 40,
+        "exchange": "aspmx2.googlemail.com"
+      }
+    ],
+    "nsRecords": [
+      "ns1.bigcommerce.com",
+      "ns3.bigcommerce.com",
+      "ns2.bigcommerce.com"
+    ],
+    "txtRecords": [
+      "v=spf1 a mx include:_spf.google.com include:_spf.awpmarketing.com include:goliath.awp2008.com include:qts19.speartek.com include:qts52.speartek.com include:qts53.speartek.com include:qts54.speartek.com include:qts55.speartek.com ~all",
+      "v=spf1 +a +mx include:_spf.bigcommerce.com -all"
+    ],
+    "spf": "v=spf1 a mx include:_spf.google.com include:_spf.awpmarketing.com include:goliath.awp2008.com include:qts19.speartek.com include:qts52.speartek.com include:qts53.speartek.com include:qts54.speartek.com include:qts55.speartek.com ~all",
+    "dmarc": "v=DMARC1; p=none;",
+    "snapshot": {
+      "hostname": "genpet.org",
+      "aRecords": [
+        "192.200.160.16"
+      ],
+      "aaaaRecords": [],
+      "cnameRecords": [],
+      "mxRecords": [
+        {
+          "priority": 30,
+          "exchange": "alt2.aspmx.l.google.com"
+        },
+        {
+          "priority": 50,
+          "exchange": "aspmx3.googlemail.com"
+        },
+        {
+          "priority": 20,
+          "exchange": "alt1.aspmx.l.google.com"
+        },
+        {
+          "priority": 10,
+          "exchange": "aspmx.l.google.com"
+        },
+        {
+          "priority": 40,
+          "exchange": "aspmx2.googlemail.com"
+        }
+      ],
+      "nsRecords": [
+        "ns1.bigcommerce.com",
+        "ns3.bigcommerce.com",
+        "ns2.bigcommerce.com"
+      ],
+      "txtRecords": [
+        "v=spf1 a mx include:_spf.google.com include:_spf.awpmarketing.com include:goliath.awp2008.com include:qts19.speartek.com include:qts52.speartek.com include:qts53.speartek.com include:qts54.speartek.com include:qts55.speartek.com ~all",
+        "v=spf1 +a +mx include:_spf.bigcommerce.com -all"
+      ],
+      "capturedAt": "2026-10-08T13:34:59.233Z"
+    }
+  }
+}

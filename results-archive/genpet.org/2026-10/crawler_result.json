@@ -1,0 +1,62 @@
+{
+  "runner": "crawler",
+  "targetUrl": "https://genpet.org/",
+  "timestamp": "2026-10-08T13:35:06.798Z",
+  "status": "completed",
+  "findings": [
+    {
+      "id": "crawler-geo-missing-schema",
+      "runner": "crawler",
+      "category": "seo",
+      "severity": "medium",
+      "title": "Pillar 4B: Missing Structured JSON-LD Schema",
+      "detail": "The page does not declare any JSON-LD structured data (Product, Organization, or FAQPage). Generative AI search engines rely on JSON-LD to understand product pricing, specs, and attributes.",
+      "evidence": "0 JSON-LD scripts found in DOM",
+      "recommendation": "Add Schema.org JSON-LD microdata (Product, FAQPage, Organization) to enable AI citation indexing.",
+      "owasp": null,
+      "wcag": null,
+      "status": "new"
+    }
+  ],
+  "metrics": {
+    "hostname": "genpet.org",
+    "timestamp": "2026-10-08T13:34:59.404Z",
+    "checkedUrlsCount": 26,
+    "totalSitemapUrls": "4699+",
+    "checkedUrls": [
+      "https://genpet.org/the-honest-kitchen-dehydrated-dog-wh-turkey-7-lb",
+      "https://genpet.org/inaba-churu-tuna-variety-box-20-tubes-new",
+      "https://genpet.org/smallbatch-lightly-cooked-sliders-turkey-5lb",
+      "https://genpet.org/annamaet-dog-kibble-original-extra-chicken-brown-rice-12lb/",
+      "https://genpet.org/yak9-chews-bulk-yak-cow-cheese-sm-1-1oz-70pcs-new/",
+      "https://genpet.org/inaba-cat-churu-entree-pate-chicken-w-salmon-1-76oz-6pk/",
+      "https://genpet.org/soggy-doggy-doormat-large-dark-naturals-chocolate",
+      "https://genpet.org/yak9-chews-bulk-coconut-cheese-sm-1-1oz-70pcs-new/",
+      "https://genpet.org/herbsmith-simple-food-project-d-chicken-turkey-48oz",
+      "https://genpet.org/yak9-peanut-butter-banana-cheese-cruncheese-treats-6oz/",
+      "https://genpet.org/bff-omg-can-duck-tuna-lots-o-luck-5-5oz-8pk",
+      "https://genpet.org/inaba-cat-churu-entree-mousse-can-chicken-5-5oz-24-cs/",
+      "https://genpet.org/himalayan-red-tail-deer-antler-beef-tenderloin-split-sm-md-1-5oz/",
+      "https://genpet.org/instinct-original-grain-free-dog-kibble-real-chicken-4ib",
+      "https://genpet.org/bff-original-can-tuna-chicken-chuckles-3oz-24-cs",
+      "https://genpet.org/bass-brushes-acrylic-handle-all-wire-brass-pin-cushion-extra-long",
+      "https://genpet.org/new-zealand-natural-pet-food-woof-chicken-air-dried-3-5oz",
+      "https://genpet.org/inaba-churu-meal-topper-tuna-with-scallop-6pk",
+      "https://genpet.org/smack-rockin-rockfish-7-4oz/",
+      "https://genpet.org/ark-naturals-gray-muzzle-old-dog-happy-joints-90ct",
+      "https://genpet.org/ark-naturals-brushless-toothpaste-value-pack-small-60ct",
+      "https://genpet.org/yak9-chews-strawberry-cheese-lg-8oz-2pk-new/",
+      "https://genpet.org/furever-primal-bagged-duck-head-3ct/",
+      "https://genpet.org/lazy-dog-pup-pie-happy-birthday-girl-5oz/",
+      "https://genpet.org/weruva-classic-cat-can-mideast-feast-grilled-tilapia-10oz-12-cs",
+      "https://genpet.org/"
+    ],
+    "brokenLinks": [],
+    "geoAeo": {
+      "aiBotsAllowed": true,
+      "jsonLdSchemas": [],
+      "readabilityScore": 28,
+      "hasStructuredDataTables": true
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "runner": "ssl",
+  "url": "https://genpet.org/",
+  "timestamp": "2026-10-08T13:34:59.403Z",
+  "status": "completed",
+  "findings": [
+    {
+      "id": "ssl-tls-interception-indeterminate",
+      "runner": "ssl",
+      "category": "ssl",
+      "severity": "info",
+      "title": "SSL check indeterminate due to cloud TLS interception",
+      "detail": "Outbound TLS to genpet.org is re-signed by the environment proxy. The certificate that can be read belongs to the proxy, not the site, so its expiry, issuer, and names are not reported. Verify the certificate from a network without TLS interception.",
+      "evidence": "Trust verdict: intercepted. Chain top observed (proxy, not the site): Anthropic (sandbox-egress-gateway-production Egress Gateway CA). Verification reason: SELF_SIGNED_CERT_IN_CHAIN.",
+      "recommendation": "Run the SSL audit from a network without TLS interception to get the site's certificate details.",
+      "owasp": null,
+      "wcag": null,
+      "status": "new"
+    }
+  ],
+  "metrics": {
+    "hostname": "genpet.org",
+    "url": "https://genpet.org/",
+    "verdict": "indeterminate",
+    "trust": "intercepted"
+  }
+}
