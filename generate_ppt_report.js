@@ -20,10 +20,16 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   fs.mkdirSync(archiveDir, { recursive: true });
 
   const siteConfig = getSiteConfig(hostname);
-  const siteScores = siteConfig?.scores ?? {
-    desktop: { before: { performance: 60, accessibility: 87, bestPractices: 92, seo: 91 }, after: { performance: 74, accessibility: 96, bestPractices: 92, seo: 91 } },
-    mobile: { before: { performance: 41, accessibility: 86, bestPractices: 96, seo: 100 }, after: { performance: 55, accessibility: 86, bestPractices: 96, seo: 100 } }
-  };
+  const siteScores = siteConfig?.scores ?? {};
+  // Category scores (accessibility, best practices, SEO) and Agentic Browsing come from the site's configuration
+  // (categoryScores / agenticBrowsing in projects/*.json) or from the measured run. Never from a literal here.
+  const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
+  const outOf = (v) => (isNum(v) ? `${v} / 100` : 'Not measured');
+  const catText = (label, before, after) => (!isNum(after)
+    ? `${label}: Not measured`
+    : `${label}: ${!isNum(before) || before === after ? `${after} / 100` : `${before} → ${after} / 100`}`);
+  const agentic = siteConfig?.agenticBrowsing ?? null;
+  const agenticText = agentic ? `Google Agentic Browsing: ${agentic.result} (${agentic.passed}/${agentic.total})` : null;
 
   const [yearStr, monthStr] = month.split('-');
   const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -68,23 +74,23 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   const currMobileScore = options.currMobile ?? siteScores?.mobile?.after?.performance ?? rawMobile;
   const prevMobileScore = options.prevMobile ?? siteScores?.mobile?.before?.performance ?? prevMobileMetrics?.score;
 
-  const desktopA11yAfter = siteScores?.desktop?.after?.accessibility ?? lhResult?.metrics?.desktop?.accessibility ?? 91;
-  const desktopA11yBefore = siteScores?.desktop?.before?.accessibility ?? prevDesktopMetrics?.accessibility ?? 91;
-  const desktopBpAfter = siteScores?.desktop?.after?.bestPractices ?? lhResult?.metrics?.desktop?.bestPractices ?? 100;
-  const desktopBpBefore = siteScores?.desktop?.before?.bestPractices ?? prevDesktopMetrics?.bestPractices ?? 100;
-  const desktopSeoAfter = siteScores?.desktop?.after?.seo ?? lhResult?.metrics?.desktop?.seo ?? 100;
-  const desktopSeoBefore = siteScores?.desktop?.before?.seo ?? prevDesktopMetrics?.seo ?? 100;
+  const desktopA11yAfter = siteScores?.desktop?.after?.accessibility ?? lhResult?.metrics?.desktop?.accessibility ?? null;
+  const desktopA11yBefore = siteScores?.desktop?.before?.accessibility ?? prevDesktopMetrics?.accessibility ?? null;
+  const desktopBpAfter = siteScores?.desktop?.after?.bestPractices ?? lhResult?.metrics?.desktop?.bestPractices ?? null;
+  const desktopBpBefore = siteScores?.desktop?.before?.bestPractices ?? prevDesktopMetrics?.bestPractices ?? null;
+  const desktopSeoAfter = siteScores?.desktop?.after?.seo ?? lhResult?.metrics?.desktop?.seo ?? null;
+  const desktopSeoBefore = siteScores?.desktop?.before?.seo ?? prevDesktopMetrics?.seo ?? null;
 
   const accessibilityScore = desktopA11yAfter;
   const bestPracticesScore = desktopBpAfter;
   const seoScore = desktopSeoAfter;
 
-  const mobileA11yAfter = siteScores?.mobile?.after?.accessibility ?? lhResult?.metrics?.mobile?.accessibility ?? 91;
-  const mobileA11yBefore = siteScores?.mobile?.before?.accessibility ?? prevMobileMetrics?.accessibility ?? 91;
-  const mobileBpAfter = siteScores?.mobile?.after?.bestPractices ?? lhResult?.metrics?.mobile?.bestPractices ?? 100;
-  const mobileBpBefore = siteScores?.mobile?.before?.bestPractices ?? prevMobileMetrics?.bestPractices ?? 100;
-  const mobileSeoAfter = siteScores?.mobile?.after?.seo ?? lhResult?.metrics?.mobile?.seo ?? 100;
-  const mobileSeoBefore = siteScores?.mobile?.before?.seo ?? prevMobileMetrics?.seo ?? 100;
+  const mobileA11yAfter = siteScores?.mobile?.after?.accessibility ?? lhResult?.metrics?.mobile?.accessibility ?? null;
+  const mobileA11yBefore = siteScores?.mobile?.before?.accessibility ?? prevMobileMetrics?.accessibility ?? null;
+  const mobileBpAfter = siteScores?.mobile?.after?.bestPractices ?? lhResult?.metrics?.mobile?.bestPractices ?? null;
+  const mobileBpBefore = siteScores?.mobile?.before?.bestPractices ?? prevMobileMetrics?.bestPractices ?? null;
+  const mobileSeoAfter = siteScores?.mobile?.after?.seo ?? lhResult?.metrics?.mobile?.seo ?? null;
+  const mobileSeoBefore = siteScores?.mobile?.before?.seo ?? prevMobileMetrics?.seo ?? null;
 
   // Core Web Vitals (lab measurement from the Lighthouse run; shape is metrics.mobile.lcp.{value,displayValue})
   const mobileLcpRaw = lhResult?.metrics?.mobile?.lcp;
@@ -809,7 +815,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Plus Jakarta Sans'
   });
 
-  slide5.addText(`✔ Accessibility: ${desktopA11yBefore === desktopA11yAfter ? `${desktopA11yAfter} / 100` : `${desktopA11yBefore} → ${desktopA11yAfter} / 100`}`, {
+  slide5.addText((isNum(desktopA11yAfter) ? `✔ ` : '') + catText('Accessibility', desktopA11yBefore, desktopA11yAfter), {
     x: 7.1,
     y: 2.7,
     w: 5.0,
@@ -820,7 +826,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Outfit'
   });
 
-  slide5.addText(`✔ Best Practices: ${desktopBpBefore === desktopBpAfter ? `${desktopBpAfter} / 100` : `${desktopBpBefore} → ${desktopBpAfter} / 100`}`, {
+  slide5.addText((isNum(desktopBpAfter) ? `✔ ` : '') + catText('Best Practices', desktopBpBefore, desktopBpAfter), {
     x: 7.1,
     y: 3.3,
     w: 5.0,
@@ -831,7 +837,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Outfit'
   });
 
-  slide5.addText(`✔ SEO Rating: ${desktopSeoBefore === desktopSeoAfter ? `${desktopSeoAfter} / 100` : `${desktopSeoBefore} → ${desktopSeoAfter} / 100`}`, {
+  slide5.addText((isNum(desktopSeoAfter) ? `✔ ` : '') + catText('SEO Rating', desktopSeoBefore, desktopSeoAfter), {
     x: 7.1,
     y: 3.9,
     w: 5.0,
@@ -842,7 +848,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Outfit'
   });
 
-  slide5.addText("✔ Google Agentic Browsing: Pass (2/2)", {
+  if (agenticText) slide5.addText(`✔ ${agenticText}`, {
     x: 7.1,
     y: 4.5,
     w: 5.0,
@@ -970,7 +976,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Plus Jakarta Sans'
   });
 
-  slide6.addText(`✔ Accessibility: ${mobileA11yBefore === mobileA11yAfter ? `${mobileA11yAfter} / 100` : `${mobileA11yBefore} → ${mobileA11yAfter} / 100`}`, {
+  slide6.addText((isNum(mobileA11yAfter) ? `✔ ` : '') + catText('Accessibility', mobileA11yBefore, mobileA11yAfter), {
     x: 7.1,
     y: 2.7,
     w: 5.0,
@@ -981,7 +987,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Outfit'
   });
 
-  slide6.addText(`✔ Best Practices: ${mobileBpBefore === mobileBpAfter ? `${mobileBpAfter} / 100` : `${mobileBpBefore} → ${mobileBpAfter} / 100`}`, {
+  slide6.addText((isNum(mobileBpAfter) ? `✔ ` : '') + catText('Best Practices', mobileBpBefore, mobileBpAfter), {
     x: 7.1,
     y: 3.3,
     w: 5.0,
@@ -992,7 +998,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     fontFace: 'Outfit'
   });
 
-  slide6.addText(`✔ SEO Rating: ${mobileSeoBefore === mobileSeoAfter ? `${mobileSeoAfter} / 100` : `${mobileSeoBefore} → ${mobileSeoAfter} / 100`}`, {
+  slide6.addText((isNum(mobileSeoAfter) ? `✔ ` : '') + catText('SEO Rating', mobileSeoBefore, mobileSeoAfter), {
     x: 7.1,
     y: 3.9,
     w: 5.0,
@@ -1133,7 +1139,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
       fontFace: 'Outfit'
     });
 
-    slideAboutUs.addText(`✔ Accessibility: ${siteScores.aboutUs.desktop.accessibility ?? 96} / 100\n✔ Best Practices: ${siteScores.aboutUs.desktop.bestPractices ?? 100} / 100\n✔ SEO Rating: ${siteScores.aboutUs.desktop.seo ?? 100} / 100`, {
+    slideAboutUs.addText(`✔ Accessibility: ${outOf(siteScores.aboutUs.desktop.accessibility)}\n✔ Best Practices: ${outOf(siteScores.aboutUs.desktop.bestPractices)}\n✔ SEO Rating: ${outOf(siteScores.aboutUs.desktop.seo)}`, {
       x: 7.1,
       y: 4.1,
       w: 5.0,

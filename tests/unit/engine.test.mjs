@@ -93,3 +93,18 @@ test('scores: "Before 68 -> After 74" wording parses without a site label', () =
   const p = parseScores('Homepage Mobile Before 68 -> After 74, Desktop Before 79 -> After 83');
   assert.deepEqual(p.shared.homepage.desktop, { before: 79, after: 83 });
 });
+
+test('config: fixed category scores sit under the prompt scores and only apply to the site that has them', async () => {
+  const { getSiteConfig: get, setRuntimeOverrides: set } = await import('../../lib/config.js');
+  const parts = get('partsconnexion.com');
+  assert.equal(parts.scores.desktop.after.accessibility, 87);
+  assert.equal(parts.scores.mobile.after.accessibility, 91);
+  assert.equal(parts.scores.mobile.after.bestPractices, 96);
+  assert.deepEqual(parts.agenticBrowsing, { result: 'Pass', passed: 2, total: 2 });
+  set('partsconnexion.com', { scores: { desktop: { before: { performance: 88 }, after: { performance: 89 } } } });
+  const merged = get('partsconnexion.com').scores;
+  assert.equal(merged.desktop.after.performance, 89);
+  assert.equal(merged.desktop.after.accessibility, 87, 'fixed value survives the per-run scores');
+  assert.equal(get('genpet.org').scores, undefined, 'no other site inherits them');
+  assert.equal(get('audio-connexion.com').agenticBrowsing, undefined);
+});

@@ -265,9 +265,9 @@ export async function generateClientReport(hostname, month, options = {}) {
   if (hostname.includes('audio-connexion') || hostname.includes('audioconnexion')) siteName = 'AudioConnexion';
   if (hostname.includes('lidstyles')) siteName = 'LidStyles LLC';
 
-  const desktopA11yBefore = prevDesktopMetrics?.accessibility ?? siteScores?.desktop?.before?.accessibility ?? null;
-  const desktopBpBefore = prevDesktopMetrics?.bestPractices ?? siteScores?.desktop?.before?.bestPractices ?? null;
-  const desktopSeoBefore = prevDesktopMetrics?.seo ?? siteScores?.desktop?.before?.seo ?? null;
+  const desktopA11yBefore = siteScores?.desktop?.before?.accessibility ?? prevDesktopMetrics?.accessibility ?? null;
+  const desktopBpBefore = siteScores?.desktop?.before?.bestPractices ?? prevDesktopMetrics?.bestPractices ?? null;
+  const desktopSeoBefore = siteScores?.desktop?.before?.seo ?? prevDesktopMetrics?.seo ?? null;
 
   const desktopA11y = siteScores?.desktop?.after?.accessibility ?? desktopMetrics?.accessibility ?? null;
   const desktopBp = siteScores?.desktop?.after?.bestPractices ?? desktopMetrics?.bestPractices ?? null;

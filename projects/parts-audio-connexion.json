@@ -65,7 +65,25 @@
         "usernameEnv": "PARTSCONNEXION_STOREFRONT_USERNAME",
         "passwordEnv": "PARTSCONNEXION_STOREFRONT_PASSWORD",
         "loginPath": "login.php"
-      }
+      },
+      "categoryScores": {
+        "desktop": {
+          "accessibility": 87,
+          "bestPractices": 100,
+          "seo": 100
+        },
+        "mobile": {
+          "accessibility": 91,
+          "bestPractices": 96,
+          "seo": 100
+        }
+      },
+      "agenticBrowsing": {
+        "result": "Pass",
+        "passed": 2,
+        "total": 2
+      },
+      "fixedValuesNote": "categoryScores and agenticBrowsing are the same every month and were set by the user on 2026-10-12. They are shown in the reports in place of the measured values. Update them here if the real results change."
     },
     {
       "hostname": "audio-connexion.com",

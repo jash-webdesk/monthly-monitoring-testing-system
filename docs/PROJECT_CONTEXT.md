@@ -51,3 +51,6 @@ WebDesk Solution's monthly monitoring service for client websites and apps. Each
 
 ## Report fallbacks (decided 2026-10-12)
 The technical PDF (`report/generator.js`) no longer contains invented defaults. LCP, TBT, CLS, FCP, accessibility, best-practices, SEO, uptime, response time and status print the measured value or "Not measured". Removed: forced Genpet CLS of 0.005, the suppression of a measured 0.403, default mobile LCP/CLS/TBT values, fallback scores copied from another site, and a default of 100% uptime and 245 ms. If a number looks wrong in a report, trace it to its runner result; do not add a default.
+
+## Fixed values per site (decided 2026-10-12)
+Some numbers are the same every month and are kept in the project config instead of being measured: `categoryScores` (accessibility, best practices, SEO, per viewport) and `agenticBrowsing` on a site entry in `projects/*.json`. They win over measured values in the reports and sit under the per-run PageSpeed scores. Currently set only for partsconnexion.com (desktop 87 / 100 / 100, mobile 91 / 96 / 100, Google Agentic Browsing Pass 2/2), as given by the user. A site without them shows the measured value or "Not measured". Change them in the config when the real results change.
