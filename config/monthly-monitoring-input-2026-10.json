@@ -63,7 +63,7 @@
         "items": [
           {
             "title": "Staging environment for the app and dashboard",
-            "description": "Set up staging for the Integrity Reforestation app and dashboard on Heroku with a separate staging database. The database structure and data were copied from live without changing the live database. Environment variables, Shopify integration, API communication, authentication and dashboard connectivity were configured. A backend authentication issue found after merging was resolved. Both staging applications are running. Staging app: https://admin.shopify.com/store/test-demo-store-801srwej/apps/integrity-reforestation ; Staging dashboard: https://integrity-staging-dashboard-e835e93f2351.herokuapp.com",
+            "description": "Staging set up for the app and dashboard on Heroku, with a separate database copied from live (live was not changed). Shopify, API, authentication and dashboard connections configured; an authentication issue after merging was fixed. Staging dashboard: https://integrity-staging-dashboard-e835e93f2351.herokuapp.com",
             "impact": "Future changes can be tested on staging before they go to production."
           }
         ]
