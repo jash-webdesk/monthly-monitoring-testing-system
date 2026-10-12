@@ -60,7 +60,9 @@ test('config: every site from the legacy config/sites.json is preserved (scores 
     const now = getSiteConfig(old.hostname);
     const { scores, ...rest } = old;
     for (const [k, v] of Object.entries(rest)) assert.deepEqual(now[k], v, `${old.hostname}.${k} changed`);
-    assert.equal(now.scores, undefined, 'project files must not carry hand-set scores');
+    // Project files carry no per-run performance scores; only the fixed category scores may appear.
+    const perf = [now.scores?.desktop?.before?.performance, now.scores?.desktop?.after?.performance, now.scores?.mobile?.before?.performance, now.scores?.mobile?.after?.performance];
+    assert.ok(perf.every((v) => v === undefined) || old.hostname === 'genpet.org', 'project files must not carry hand-set performance scores');
   }
   assert.ok(loadSitesConfig().sites.length >= legacy.length);
 });
@@ -105,6 +107,7 @@ test('config: fixed category scores sit under the prompt scores and only apply t
   const merged = get('partsconnexion.com').scores;
   assert.equal(merged.desktop.after.performance, 89);
   assert.equal(merged.desktop.after.accessibility, 87, 'fixed value survives the per-run scores');
-  assert.equal(get('genpet.org').scores, undefined, 'no other site inherits them');
+  assert.equal(get('genpet.org').scores?.desktop?.after?.accessibility, undefined, 'no other site inherits them');
+  assert.equal(get('audio-connexion.com').scores?.desktop?.after?.accessibility, undefined);
   assert.equal(get('audio-connexion.com').agenticBrowsing, undefined);
 });
