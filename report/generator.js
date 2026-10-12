@@ -178,10 +178,7 @@ export async function generateClientReport(hostname, month, options = {}) {
   const prevLhResult = loadResults(hostname, 'lighthouse', prevMonth);
   const isFirstRun = !prevLhResult && !beforeLhResult;
 
-  const siteScores = siteConfig?.scores ?? {
-    desktop: { before: { performance: 60, accessibility: 87, bestPractices: 92, seo: 91 }, after: { performance: 74, accessibility: 96, bestPractices: 92, seo: 91 } },
-    mobile: { before: { performance: 41, accessibility: 86, bestPractices: 96, seo: 100 }, after: { performance: 55, accessibility: 86, bestPractices: 96, seo: 100 } }
-  };
+  const siteScores = siteConfig?.scores ?? {};
 
   // Performance metrics (Current Month / After)
   const desktopMetrics = lhResult?.metrics?.desktop ?? lhResult?.metrics?.pages?.product?.desktop;
@@ -268,48 +265,61 @@ export async function generateClientReport(hostname, month, options = {}) {
   if (hostname.includes('audio-connexion') || hostname.includes('audioconnexion')) siteName = 'AudioConnexion';
   if (hostname.includes('lidstyles')) siteName = 'LidStyles LLC';
 
-  const desktopA11yBefore = prevDesktopMetrics?.accessibility ?? siteScores?.desktop?.before?.accessibility ?? 91;
-  const desktopBpBefore = prevDesktopMetrics?.bestPractices ?? siteScores?.desktop?.before?.bestPractices ?? 100;
-  const desktopSeoBefore = prevDesktopMetrics?.seo ?? siteScores?.desktop?.before?.seo ?? 100;
+  const desktopA11yBefore = prevDesktopMetrics?.accessibility ?? siteScores?.desktop?.before?.accessibility ?? null;
+  const desktopBpBefore = prevDesktopMetrics?.bestPractices ?? siteScores?.desktop?.before?.bestPractices ?? null;
+  const desktopSeoBefore = prevDesktopMetrics?.seo ?? siteScores?.desktop?.before?.seo ?? null;
 
-  const desktopA11y = siteScores?.desktop?.after?.accessibility ?? desktopMetrics?.accessibility ?? 91;
-  const desktopBp = siteScores?.desktop?.after?.bestPractices ?? desktopMetrics?.bestPractices ?? 100;
-  const desktopSeo = siteScores?.desktop?.after?.seo ?? desktopMetrics?.seo ?? 100;
+  const desktopA11y = siteScores?.desktop?.after?.accessibility ?? desktopMetrics?.accessibility ?? null;
+  const desktopBp = siteScores?.desktop?.after?.bestPractices ?? desktopMetrics?.bestPractices ?? null;
+  const desktopSeo = siteScores?.desktop?.after?.seo ?? desktopMetrics?.seo ?? null;
 
-  const mobileA11y = siteScores?.mobile?.after?.accessibility ?? mobileMetrics?.accessibility ?? 91;
-  const mobileBp = siteScores?.mobile?.after?.bestPractices ?? mobileMetrics?.bestPractices ?? 100;
-  const mobileSeo = siteScores?.mobile?.after?.seo ?? mobileMetrics?.seo ?? 100;
+  const mobileA11y = siteScores?.mobile?.after?.accessibility ?? mobileMetrics?.accessibility ?? null;
+  const mobileBp = siteScores?.mobile?.after?.bestPractices ?? mobileMetrics?.bestPractices ?? null;
+  const mobileSeo = siteScores?.mobile?.after?.seo ?? mobileMetrics?.seo ?? null;
 
-  const currentDesktopLcp = desktopMetrics?.lcp?.displayValue ?? '0.9s';
-  const currentDesktopTbt = desktopMetrics?.tbt?.displayValue ?? '0ms';
-  let currentDesktopCls = (desktopMetrics?.cls?.displayValue && desktopMetrics?.cls?.displayValue !== '0.403') ? desktopMetrics?.cls?.displayValue : '0.005';
-  if (hostname.includes('genpet')) currentDesktopCls = '0.005';
+  // Anything not measured reads "Not measured". Nothing here is a default or an estimate.
+  const NOT_MEASURED = 'Not measured';
+  const metricText = (v) => (v === undefined || v === null || v === '' ? NOT_MEASURED : v);
+  const currentDesktopLcp = metricText(desktopMetrics?.lcp?.displayValue);
+  const currentDesktopTbt = metricText(desktopMetrics?.tbt?.displayValue);
+  const currentDesktopCls = metricText(desktopMetrics?.cls?.displayValue);
 
-  const currentMobileLcp = siteConfig?.manualCwv?.mobileLcp ?? mobileMetrics?.lcp?.displayValue ?? '8.5s';
-  const currentMobileTbt = mobileMetrics?.tbt?.displayValue ?? '250ms';
-  const currentMobileCls = siteConfig?.manualCwv?.mobileCls ?? mobileMetrics?.cls?.displayValue ?? '0.66';
+  const currentMobileLcp = metricText(siteConfig?.manualCwv?.mobileLcp ?? mobileMetrics?.lcp?.displayValue);
+  const currentMobileTbt = metricText(mobileMetrics?.tbt?.displayValue);
+  const currentMobileCls = metricText(siteConfig?.manualCwv?.mobileCls ?? mobileMetrics?.cls?.displayValue);
 
   // Before score/metrics — see priority chain above (before-capture > last month > static config).
   const prevDesktopScore = options.prevDesktop ?? siteScores?.desktop?.before?.performance ?? prevDesktopMetrics?.score;
   const prevMobileScore = options.prevMobile ?? siteScores?.mobile?.before?.performance ?? prevMobileMetrics?.score;
 
-  const prevDesktopLcp = options.prevDesktopLcp ?? prevDesktopMetrics?.lcp?.displayValue ?? '10.5s';
-  const prevDesktopTbt = options.prevDesktopTbt ?? prevDesktopMetrics?.tbt?.displayValue ?? '120ms';
-  const prevDesktopCls = options.prevDesktopCls ?? prevDesktopMetrics?.cls?.displayValue ?? '0.08';
-  const prevDesktopFcp = options.prevDesktopFcp ?? prevDesktopMetrics?.fcp?.displayValue ?? '1.5s';
+  const prevDesktopLcp = metricText(options.prevDesktopLcp ?? prevDesktopMetrics?.lcp?.displayValue);
+  const prevDesktopTbt = metricText(options.prevDesktopTbt ?? prevDesktopMetrics?.tbt?.displayValue);
+  const prevDesktopCls = metricText(options.prevDesktopCls ?? prevDesktopMetrics?.cls?.displayValue);
+  const prevDesktopFcp = metricText(options.prevDesktopFcp ?? prevDesktopMetrics?.fcp?.displayValue);
 
-  const prevMobileLcp = options.prevMobileLcp ?? prevMobileMetrics?.lcp?.displayValue ?? '14.2s';
-  const prevMobileTbt = options.prevMobileTbt ?? prevMobileMetrics?.tbt?.displayValue ?? '850ms';
-  const prevMobileCls = options.prevMobileCls ?? prevMobileMetrics?.cls?.displayValue ?? '0.72';
-  const prevMobileFcp = options.prevMobileFcp ?? prevMobileMetrics?.fcp?.displayValue ?? '3.2s';
+  const prevMobileLcp = metricText(options.prevMobileLcp ?? prevMobileMetrics?.lcp?.displayValue);
+  const prevMobileTbt = metricText(options.prevMobileTbt ?? prevMobileMetrics?.tbt?.displayValue);
+  const prevMobileCls = metricText(options.prevMobileCls ?? prevMobileMetrics?.cls?.displayValue);
+  const prevMobileFcp = metricText(options.prevMobileFcp ?? prevMobileMetrics?.fcp?.displayValue);
 
   // Dynamic FCP values
-  const currentDesktopFcp = lhResult?.metrics?.desktop?.fcp?.displayValue ?? 'N/A';
-  const currentMobileFcp = lhResult?.metrics?.mobile?.fcp?.displayValue ?? 'N/A';
+  const currentDesktopFcp = metricText(lhResult?.metrics?.desktop?.fcp?.displayValue);
+  const currentMobileFcp = metricText(lhResult?.metrics?.mobile?.fcp?.displayValue);
 
   // Values display formatted for Before run
-  const prevDesktopScoreVal = `${prevDesktopScore}/100`;
-  const prevMobileScoreVal = `${prevMobileScore}/100`;
+  const isScore = (v) => typeof v === 'number' && Number.isFinite(v);
+  const scoreText = (v) => (isScore(v) ? String(v) : NOT_MEASURED);
+  const outOf100 = (v) => (isScore(v) ? `${v} / 100` : NOT_MEASURED);
+  const barWidth = (v) => (isScore(v) ? Math.max(0, Math.min(100, v)) : 0);
+  const changeBadge = (cur, prev) => {
+    if (!isScore(cur) || !isScore(prev)) return '';
+    return cur >= prev
+      ? `<span class="badge-diff">+${cur - prev} Improvement</span>`
+      : `<span class="badge-diff" style="color: #c2410c; background: #fff7ed; border-color: #ffedd5;">${cur - prev} Degradation</span>`;
+  };
+  const allScoresKnown = [currentDesktopScore, currentMobileScore, prevDesktopScore, prevMobileScore].every(isScore);
+  const prevDesktopScoreVal = isScore(prevDesktopScore) ? `${prevDesktopScore}/100` : NOT_MEASURED;
+  const prevMobileScoreVal = isScore(prevMobileScore) ? `${prevMobileScore}/100` : NOT_MEASURED;
 
   const prevDesktopLcpVal = isFirstRun ? 'N/A' : prevDesktopLcp;
   const prevDesktopTbtVal = isFirstRun ? 'N/A' : prevDesktopTbt;
@@ -336,10 +346,11 @@ export async function generateClientReport(hostname, month, options = {}) {
     : `Healthy DNS Record Count (${dns.recordCount} Records)`;
 
   // Uptime Metrics
-  const uptimePct = uptimeResult?.metrics?.uptimePercentage ?? 100.0;
-  const uptimeStatus = uptimeResult?.metrics?.status ?? 'up';
-  const responseTimeMs = uptimeResult?.metrics?.responseTimeMs ?? 245;
-  const redirectsCount = uptimeResult?.metrics?.redirectsCount ?? 0;
+  // Null means the runner did not measure it (for example no 30-day monitor is linked).
+  const uptimePct = typeof uptimeResult?.metrics?.uptimePercentage === 'number' ? uptimeResult.metrics.uptimePercentage : null;
+  const uptimeStatus = uptimeResult?.metrics?.status ?? null;
+  const responseTimeMs = typeof uptimeResult?.metrics?.responseTimeMs === 'number' ? uptimeResult.metrics.responseTimeMs : null;
+  const redirectsCount = typeof uptimeResult?.metrics?.redirectsCount === 'number' ? uptimeResult.metrics.redirectsCount : null;
 
   // Running page counter for footer numbering — the cover page (page 1) has no
   // numbered footer, so numbering starts at 2. Using a counter instead of hardcoded
@@ -881,9 +892,10 @@ export async function generateClientReport(hostname, month, options = {}) {
 
       <div class="stat-card indigo">
         <div class="stat-card-title">3. Optimization Direction</div>
-        <div class="stat-card-value">${isFirstRun ? 'Baseline Established' : (currentDesktopScore + currentMobileScore) - (prevDesktopScore + prevMobileScore) >= 3 ? 'Improving' : (currentDesktopScore + currentMobileScore) - (prevDesktopScore + prevMobileScore) <= -3 ? 'Regressing' : 'Stable'}</div>
+        <div class="stat-card-value">${isFirstRun ? 'Baseline Established' : !allScoresKnown ? 'Not measured' : (currentDesktopScore + currentMobileScore) - (prevDesktopScore + prevMobileScore) >= 3 ? 'Improving' : (currentDesktopScore + currentMobileScore) - (prevDesktopScore + prevMobileScore) <= -3 ? 'Regressing' : 'Stable'}</div>
         <div class="stat-card-desc">${isFirstRun
           ? 'This is the first monitored run for this site — subsequent months will compare against this baseline automatically.'
+          : !allScoresKnown ? 'Before and After scores were not supplied for every viewport, so no direction is stated.'
           : `Desktop performance moved from ${prevDesktopScore} to ${currentDesktopScore}; mobile moved from ${prevMobileScore} to ${currentMobileScore}, compared to last month's audit (${prevMonth}).`}</div>
       </div>
     </div>
@@ -914,18 +926,18 @@ export async function generateClientReport(hostname, month, options = {}) {
       <div class="perf-comparison-box">
         <div class="gauge-header">
           <strong>Desktop Performance Score ${siteScores?.aboutUs ? '(Homepage)' : siteScores?.audioConnexion ? '(PartsConnexion)' : ''}</strong>
-          ${currentDesktopScore >= prevDesktopScore ? `<span class="badge-diff">+${currentDesktopScore - prevDesktopScore} Improvement</span>` : `<span class="badge-diff" style="color: #c2410c; background: #fff7ed; border-color: #ffedd5;">${currentDesktopScore - prevDesktopScore} Degradation</span>`}
+          ${changeBadge(currentDesktopScore, prevDesktopScore)}
         </div>
         <div class="gauge-wrapper">
           <div class="gauge-bar-container">
-            <div class="gauge-bar-prev" style="width: ${prevDesktopScore}%;"></div>
-            <div class="gauge-bar-curr" style="width: ${currentDesktopScore}%;"></div>
+            <div class="gauge-bar-prev" style="width: ${barWidth(prevDesktopScore)}%;"></div>
+            <div class="gauge-bar-curr" style="width: ${barWidth(currentDesktopScore)}%;"></div>
           </div>
-          <div class="gauge-number">${currentDesktopScore} / 100</div>
+          <div class="gauge-number">${outOf100(currentDesktopScore)}</div>
         </div>
         <div style="font-size: 11px; color: var(--gray-500); margin-top: 6px; display: flex; justify-content: space-between;">
-          <span>Before Score: ${prevDesktopScore}</span>
-          <span>After Score: ${currentDesktopScore} (Out of 100)</span>
+          <span>Before Score: ${scoreText(prevDesktopScore)}</span>
+          <span>After Score: ${scoreText(currentDesktopScore)} (Out of 100)</span>
         </div>
       </div>
 
@@ -933,18 +945,18 @@ export async function generateClientReport(hostname, month, options = {}) {
       <div class="perf-comparison-box">
         <div class="gauge-header">
           <strong>Mobile Performance Score ${siteScores?.aboutUs ? '(Homepage)' : siteScores?.audioConnexion ? '(PartsConnexion)' : ''}</strong>
-          ${currentMobileScore >= prevMobileScore ? `<span class="badge-diff">+${currentMobileScore - prevMobileScore} Improvement</span>` : `<span class="badge-diff" style="color: #c2410c; background: #fff7ed; border-color: #ffedd5;">${currentMobileScore - prevMobileScore} Degradation</span>`}
+          ${changeBadge(currentMobileScore, prevMobileScore)}
         </div>
         <div class="gauge-wrapper">
           <div class="gauge-bar-container">
-            <div class="gauge-bar-prev" style="width: ${prevMobileScore}%;"></div>
-            <div class="gauge-bar-curr" style="width: ${currentMobileScore}%;"></div>
+            <div class="gauge-bar-prev" style="width: ${barWidth(prevMobileScore)}%;"></div>
+            <div class="gauge-bar-curr" style="width: ${barWidth(currentMobileScore)}%;"></div>
           </div>
-          <div class="gauge-number">${currentMobileScore} / 100</div>
+          <div class="gauge-number">${outOf100(currentMobileScore)}</div>
         </div>
         <div style="font-size: 11px; color: var(--gray-500); margin-top: 6px; display: flex; justify-content: space-between;">
-          <span>Before Score: ${prevMobileScore}</span>
-          <span>After Score: ${currentMobileScore} (Out of 100)</span>
+          <span>Before Score: ${scoreText(prevMobileScore)}</span>
+          <span>After Score: ${scoreText(currentMobileScore)} (Out of 100)</span>
         </div>
       </div>
 
@@ -1032,15 +1044,15 @@ export async function generateClientReport(hostname, month, options = {}) {
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 12px;">
         <div style="border: 1px solid var(--gray-200); border-radius: 12px; padding: 10px; background: #fafbfc; text-align: center;">
           <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--gray-500); margin-bottom: 4px; letter-spacing: 0.5px;">Accessibility (axe) Score</div>
-          <div style="font-size: 18px; font-weight: 800; font-family: var(--font-display); color: var(--green-dark);">${desktopA11yBefore === desktopA11y ? `${desktopA11y} / 100` : `${desktopA11yBefore} &rarr; ${desktopA11y} / 100`}</div>
+          <div style="font-size: 18px; font-weight: 800; font-family: var(--font-display); color: var(--green-dark);">${!isScore(desktopA11y) ? NOT_MEASURED : (!isScore(desktopA11yBefore) || desktopA11yBefore === desktopA11y) ? `${desktopA11y} / 100` : `${desktopA11yBefore} &rarr; ${desktopA11y} / 100`}</div>
         </div>
         <div style="border: 1px solid var(--gray-200); border-radius: 12px; padding: 10px; background: #fafbfc; text-align: center;">
           <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--gray-500); margin-bottom: 4px; letter-spacing: 0.5px;">Best Practices</div>
-          <div style="font-size: 18px; font-weight: 800; font-family: var(--font-display); color: var(--green-dark);">${desktopBpBefore === desktopBp ? `${desktopBp} / 100` : `${desktopBpBefore} &rarr; ${desktopBp} / 100`}</div>
+          <div style="font-size: 18px; font-weight: 800; font-family: var(--font-display); color: var(--green-dark);">${!isScore(desktopBp) ? NOT_MEASURED : (!isScore(desktopBpBefore) || desktopBpBefore === desktopBp) ? `${desktopBp} / 100` : `${desktopBpBefore} &rarr; ${desktopBp} / 100`}</div>
         </div>
         <div style="border: 1px solid var(--gray-200); border-radius: 12px; padding: 10px; background: #fafbfc; text-align: center;">
           <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--gray-500); margin-bottom: 4px; letter-spacing: 0.5px;">SEO Score</div>
-          <div style="font-size: 18px; font-weight: 800; font-family: var(--font-display); color: var(--green-dark);">${desktopSeoBefore === desktopSeo ? `${desktopSeo} / 100` : `${desktopSeoBefore} &rarr; ${desktopSeo} / 100`}</div>
+          <div style="font-size: 18px; font-weight: 800; font-family: var(--font-display); color: var(--green-dark);">${!isScore(desktopSeo) ? NOT_MEASURED : (!isScore(desktopSeoBefore) || desktopSeoBefore === desktopSeo) ? `${desktopSeo} / 100` : `${desktopSeoBefore} &rarr; ${desktopSeo} / 100`}</div>
         </div>
       </div>
     </div>
@@ -1247,15 +1259,15 @@ export async function generateClientReport(hostname, month, options = {}) {
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
         <div style="border: 1px solid var(--gray-200); border-radius: 12px; padding: 10px; background: #fafbfc; text-align: center;">
           <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--gray-500); margin-bottom: 4px; letter-spacing: 0.5px;">30-Day Uptime</div>
-          <div style="font-size: 20px; font-weight: 800; font-family: var(--font-display); color: ${uptimePct >= 99.5 ? 'var(--green-dark)' : 'var(--red-dark)'};">${uptimePct}%</div>
+          <div style="font-size: 20px; font-weight: 800; font-family: var(--font-display); color: ${uptimePct === null ? 'var(--gray-500)' : (uptimePct >= 99.5 ? 'var(--green-dark)' : 'var(--red-dark)')};">${uptimePct === null ? 'Not measured' : uptimePct + '%'}</div>
         </div>
         <div style="border: 1px solid var(--gray-200); border-radius: 12px; padding: 10px; background: #fafbfc; text-align: center;">
           <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--gray-500); margin-bottom: 4px; letter-spacing: 0.5px;">Avg Response Time</div>
-          <div style="font-size: 20px; font-weight: 800; font-family: var(--font-display); color: ${responseTimeMs <= 1000 ? 'var(--green-dark)' : 'var(--brand-dark)'};">${responseTimeMs}ms</div>
+          <div style="font-size: 20px; font-weight: 800; font-family: var(--font-display); color: ${responseTimeMs === null ? 'var(--gray-500)' : (responseTimeMs <= 1000 ? 'var(--green-dark)' : 'var(--brand-dark)')};">${responseTimeMs === null ? 'Not measured' : responseTimeMs + 'ms'}</div>
         </div>
         <div style="border: 1px solid var(--gray-200); border-radius: 12px; padding: 10px; background: #fafbfc; text-align: center;">
           <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--gray-500); margin-bottom: 4px; letter-spacing: 0.5px;">SLA Status</div>
-          <div style="font-size: 20px; font-weight: 800; font-family: var(--font-display); color: ${uptimeStatus === 'up' ? 'var(--green-dark)' : 'var(--red-dark)'};">${uptimeStatus.toUpperCase()}</div>
+          <div style="font-size: 20px; font-weight: 800; font-family: var(--font-display); color: ${uptimeStatus === null ? 'var(--gray-500)' : (uptimeStatus === 'up' ? 'var(--green-dark)' : 'var(--red-dark)')};">${uptimeStatus === null ? 'Not measured' : String(uptimeStatus).toUpperCase()}</div>
         </div>
       </div>
 
@@ -1263,7 +1275,9 @@ export async function generateClientReport(hostname, month, options = {}) {
       ${renderFindingRows(
         uptimeFindings,
         'Responsive Server Availability',
-        `The web host returned standard HTTP ${uptimeStatus === 'up' ? '200' : 'error'} responses to our synthetic health probes, with ${responseTimeMs}ms response latency and ${redirectsCount} redirect${redirectsCount === 1 ? '' : 's'} on the homepage.`
+        uptimeStatus === null && responseTimeMs === null
+          ? 'The availability check did not return a measurement this month, so no availability result is stated.'
+          : `The web host ${uptimeStatus === null ? 'responded' : (uptimeStatus === 'up' ? 'returned standard HTTP 200 responses' : 'returned error responses')} to our synthetic health probes${responseTimeMs === null ? '' : `, with ${responseTimeMs}ms response latency`}${redirectsCount === null ? '' : ` and ${redirectsCount} redirect${redirectsCount === 1 ? '' : 's'} on the homepage`}.`
       )}
     </div>
 

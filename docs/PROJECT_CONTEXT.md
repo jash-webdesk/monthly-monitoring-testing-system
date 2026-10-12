@@ -48,3 +48,6 @@ WebDesk Solution's monthly monitoring service for client websites and apps. Each
 - Foreground commands time out after about two minutes; run audits as background tasks and poll the log.
 - Use a fake month such as `2099-01` for any test, and delete it afterwards so real results are never overwritten or committed.
 - Deliver by committing `reports/`, `history/`, `inputs/` and `config/dev-notes/` to a `claude/` branch. Never force-push, and do not push to `main` unless asked.
+
+## Report fallbacks (decided 2026-10-12)
+The technical PDF (`report/generator.js`) no longer contains invented defaults. LCP, TBT, CLS, FCP, accessibility, best-practices, SEO, uptime, response time and status print the measured value or "Not measured". Removed: forced Genpet CLS of 0.005, the suppression of a measured 0.403, default mobile LCP/CLS/TBT values, fallback scores copied from another site, and a default of 100% uptime and 245 ms. If a number looks wrong in a report, trace it to its runner result; do not add a default.
