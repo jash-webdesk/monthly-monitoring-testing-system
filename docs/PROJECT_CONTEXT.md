@@ -57,3 +57,6 @@ Some numbers are the same every month and are kept in the project config instead
 
 ## Integrity re-test and dev-team fixes (decided 2026-10-12)
 The dev team's response to the October review says every identified issue is addressed. The account owner decided that every item in the response counts as fixed, so the re-test reads "N of N fixed", with no separate "Items still open" slide. The list for each month lives in `config/dev-fixes/integrity-reforestation-<month>.json` (`reportedFixedIds`). The deck, the technical report and `compareWithBaseline` all use it. An item also counts as fixed if it is missing from a new run. Items found on a re-test that were not in the baseline are reported as "new", not as open. Caution: a live check on 7 October still saw the Stores View button clipped and several keyboard issues. Re-run the custom-app check before sending a report that claims those as fixed.
+
+## Integrity October re-test wording (decided 2026-10-12)
+The account owner's rule: count only the items in the dev team's response. The re-test reads "10 of 10 issues fixed". The e-mail details window item is excluded from the count (`excludedIds` in `config/dev-fixes/integrity-reforestation-2026-10.json`). Do not use the words "follow-up", "items still open" or "noted for follow-up" in any Integrity deliverable.

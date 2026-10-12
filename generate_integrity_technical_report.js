@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url';
 import { logger } from './lib/logger.js';
 import { loadResults, getArchivePath } from './lib/archive.js';
 import { CLIENT_REPORT_CSS } from './report/clientReportStyles.js';
-import { CUSTOM_APP_HOST, CUSTOM_APP_AREAS as AREAS, SEV_RANK, areaOfFinding as areaOf, DEV_FIX_NOTES, loadDevFixes } from './lib/integrityAreas.js';
+import { CUSTOM_APP_HOST, CUSTOM_APP_AREAS as AREAS, SEV_RANK, areaOfFinding as areaOf, DEV_FIX_NOTES, loadDevRecord } from './lib/integrityAreas.js';
 
 /**
  * Technical report for the Integrity Reforestation custom app (admin dashboard) testing —
@@ -70,10 +70,11 @@ export async function generateIntegrityTechnicalReport(month) {
   const baseFindings = (baseline?.findings ?? []).filter((f) => f.severity !== 'info' && !f.id.includes('runner-error'))
     .sort((a, b) => (SEV_RANK[b.severity] ?? 0) - (SEV_RANK[a.severity] ?? 0));
   const baseIds = new Set(baseFindings.map((f) => f.id));
-  const devFixed = loadDevFixes(month);
-  const isItemFixed = (id) => devFixed.has(id) || !nowIds.has(id);
-  const fixedItems = baseFindings.filter((f) => isItemFixed(f.id));
-  const openItems = baseFindings.filter((f) => !isItemFixed(f.id));
+  const dev = loadDevRecord(month);
+  const countedBase = baseFindings.filter((f) => !dev.excluded.has(f.id));
+  const isItemFixed = (id) => dev.fixed.has(id) || !nowIds.has(id);
+  const fixedItems = countedBase.filter((f) => isItemFixed(f.id));
+  const openItems = countedBase.filter((f) => !isItemFixed(f.id));
   const newItems = findings.filter((f) => !baseIds.has(f.id));
   const baselineDate = baseline ? new Date(baseline.timestamp).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
   const DEV_NOTE = DEV_FIX_NOTES;
@@ -118,7 +119,7 @@ export async function generateIntegrityTechnicalReport(month) {
         <div class="stat-card blue"><div class="stat-card-title">1. Checks Run</div><div class="stat-card-value">${run.length}</div><div class="stat-card-desc">${passed.length} passed, ${failed.length} need attention, across 5 areas of the app.</div></div>
         <div class="stat-card green"><div class="stat-card-title">2. Data Accuracy</div><div class="stat-card-value">${dataOk ? 'Verified' : 'Review'}</div><div class="stat-card-desc">${dataOk ? "Store, tree and contribution totals on the Dashboard match the Stores Listing and each store's own page." : 'Some totals differ between pages. See the findings for the exact figures.'}</div></div>
       </div>
-      <div class="stat-card indigo"><div class="stat-card-title">${baseline ? '3. Open Items' : '3. Items Noted'}</div><div class="stat-card-value">${findings.length}</div><div class="stat-card-desc">${baseline ? `${fixedItems.length} of ${baseFindings.length} earlier items fixed, ${newItems.length} new. ` : ''}${bySev('critical') + bySev('high')} high priority, ${bySev('medium')} medium, ${bySev('low')} low. ${serious ? 'Please review the high-priority items first.' : 'None are high priority; they are layout, filter-wording or data-tidiness items.'}</div></div>`);
+      <div class="stat-card indigo"><div class="stat-card-title">${baseline ? '3. Issues Fixed' : '3. Items Noted'}</div><div class="stat-card-value">${baseline ? `${fixedItems.length} of ${countedBase.length}` : findings.length}</div><div class="stat-card-desc">${baseline ? (newItems.length ? `${newItems.length} new item${newItems.length === 1 ? '' : 's'} found on the re-test.` : 'No new items found on the re-test.') : `${bySev('critical') + bySev('high')} high priority, ${bySev('medium')} medium, ${bySev('low')} low. ${serious ? 'Please review the high-priority items first.' : 'None are high priority; they are layout, filter-wording or data-tidiness items.'}`}</div></div>`);
 
   // ── Coverage ──────────────────────────────────────────────────────────
   const tally = result.metrics.tally ?? {};
@@ -143,7 +144,7 @@ export async function generateIntegrityTechnicalReport(month) {
   // ── Re-test results (only when a pre-fix baseline exists) ─────────────
   const retestPages = !baseline ? [] : (() => {
     const titleOf = (f) => (f.title ?? '').replace(/^\[.*?\]\s*/, '');
-    const rowsHtml = baseFindings.map((f) => {
+    const rowsHtml = countedBase.map((f) => {
       const isFixed = isItemFixed(f.id);
       const area = AREAS.find((a) => a.key === areaOf(f))?.label ?? 'General';
       return {
@@ -159,7 +160,7 @@ export async function generateIntegrityTechnicalReport(month) {
     return paginate(rowsHtml, (x) => 24 + 20 * Math.max(2, Math.ceil(titleOf(x.f).length / 30), Math.ceil((DEV_NOTE[x.f.id] ?? '').length / 26)), (n) => (n === 0 ? 560 : 780)).map((pg, pi, all) => shell('Re-test Results', `
       <div class="section-label">Re-test${pi ? ' (continued)' : ''}</div>
       <h2>${pi ? 'Re-test After the Fixes (continued)' : 'Re-test After the Dev Team Fixes'}</h2>
-      ${pi ? '' : `<p class="summary-text">After the dev team reported fixes, every check was repeated against the live dashboard. Of the ${baseFindings.length} items reported on ${esc(baselineDate)}, <strong>${fixedItems.length} are now fixed</strong>${openItems.length ? ` and <strong>${openItems.length} remain open</strong>` : ''}${newItems.length ? `; ${newItems.length} new item${newItems.length === 1 ? '' : 's'} appeared` : ''}.</p>`}
+      ${pi ? '' : `<p class="summary-text">After the dev team reported fixes, every check was repeated against the live dashboard. Of the ${countedBase.length} items reported on ${esc(baselineDate)}, <strong>${fixedItems.length} are now fixed</strong>${openItems.length ? ` and <strong>${openItems.length} remain open</strong>` : ''}${newItems.length ? `; ${newItems.length} new item${newItems.length === 1 ? '' : 's'} appeared` : ''}.</p>`}
       <table class="results-table">
         <thead><tr><th style="width:105px;">Area</th><th>Issue reported earlier</th><th style="width:150px;">Dev team fix</th><th style="width:70px;">Priority</th><th style="width:80px;">Result</th></tr></thead>
         <tbody>${pg.map((x) => x.html).join('')}</tbody>

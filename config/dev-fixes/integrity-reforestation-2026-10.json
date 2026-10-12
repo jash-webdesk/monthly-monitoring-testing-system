@@ -13,7 +13,10 @@
     "integrity-stores-view-button-clipped",
     "integrity-detail-duplicate-events",
     "integrity-emailLogs-calendar-clipped",
-    "integrity-emailLogs-datepicker-escape",
+    "integrity-emailLogs-datepicker-escape"
+  ],
+  "excludedIds": [
     "integrity-logs-view-escape"
-  ]
+  ],
+  "excludedNote": "Removed from the count by the account owner (e-mail details window closed with Escape). Not counted in the October re-test."
 }

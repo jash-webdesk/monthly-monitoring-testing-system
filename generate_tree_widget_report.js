@@ -4,7 +4,7 @@ import { join, resolve, relative } from 'node:path';
 import fs, { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { logger } from './lib/logger.js';
 import { loadResults, getArchivePath } from './lib/archive.js';
-import { CUSTOM_APP_HOST, summarizeCustomApp, compareWithBaseline, loadDevFixes } from './lib/integrityAreas.js';
+import { CUSTOM_APP_HOST, summarizeCustomApp, compareWithBaseline, loadDevRecord } from './lib/integrityAreas.js';
 
 /**
  * Standalone, content-driven client report generator for the Integrity Reforestation
@@ -152,17 +152,17 @@ function applyCustomAppCoverage(data) {
   data.customAppTesting = sum;
   // Re-test mode: a pre-fix baseline saved before the dev team's fixes turns this into a before/after view.
   const basePath = join(getArchivePath(CUSTOM_APP_HOST, data.month), 'integrity_dashboard_baseline_pre-fix.json');
-  if (existsSync(basePath)) { try { sum.retest = compareWithBaseline(sum, JSON.parse(readFileSync(basePath, 'utf8')), loadDevFixes(data.month)); } catch { /* unreadable baseline: ignore */ } }
+  if (existsSync(basePath)) { try { sum.retest = compareWithBaseline(sum, JSON.parse(readFileSync(basePath, 'utf8')), loadDevRecord(data.month).fixed, loadDevRecord(data.month).excluded); } catch { /* unreadable baseline: ignore */ } }
   const n = sum.findings.length;
-  data.executiveSummary = `${data.executiveSummary ?? ''} ${data.opsMonitoringSection ? 'We also tested' : 'This cycle we tested'} the Integrity custom app dashboard end to end in read-only mode (${sum.run} checks across the Dashboard, Stores Listing, Email Templates and Email Logs): ${sum.dataOk ? 'store, tree and contribution figures agree across the dashboard and every store page' : 'some figures differ between pages'}${sum.retest ? `. After the dev team's fixes the checks were repeated: ${sum.retest.fixed} of ${sum.retest.baselineCount} earlier items are fixed and ${n} remain open for follow-up in the accompanying technical report.` : `, and ${n} item${n === 1 ? ' was' : 's were'} noted for follow-up in the accompanying technical report.`}`.trim();
+  data.executiveSummary = `${data.executiveSummary ?? ''} ${data.opsMonitoringSection ? 'We also tested' : 'This cycle we tested'} the Integrity custom app dashboard end to end in read-only mode (${sum.run} checks across the Dashboard, Stores Listing, Email Templates and Email Logs): ${sum.dataOk ? 'store, tree and contribution figures agree across the dashboard and every store page' : 'some figures differ between pages'}${sum.retest ? `. After the dev team's fixes the checks were repeated: ${sum.retest.fixed} of ${sum.retest.baselineCount} earlier items are fixed.` : `, and ${n} item${n === 1 ? ' was' : 's were'} noted in the accompanying technical report.`}`.trim();
   const ops = data.opsMonitoringSection;
   if (!ops) return;
   ops.overview ??= {};
   ops.overview.optimizationsReviewed = [...(ops.overview.optimizationsReviewed ?? []), 'Custom app dashboard testing: Dashboard, Stores Listing, Email Templates and Email Logs (read-only)'];
-  ops.overallSummary = [...(ops.overallSummary ?? []), { area: 'Custom App Dashboard', status: 'Tested', remarks: `${sum.run} read-only checks; ${n} item${n === 1 ? '' : 's'} noted for follow-up` }];
+  ops.overallSummary = [...(ops.overallSummary ?? []), { area: 'Custom App Dashboard', status: 'Tested', remarks: `${sum.run} read-only checks; ${n} item${n === 1 ? '' : 's'} noted` }];
   ops.finalAssessment ??= {};
   ops.finalAssessment.successfulOutcomes = [...(ops.finalAssessment.successfulOutcomes ?? []), `Custom app dashboard tested in read-only mode: ${sum.run} checks across 4 areas, with no data changed.`];
-  if (n > 0) ops.finalAssessment.continuedMonitoring = [...(ops.finalAssessment.continuedMonitoring ?? []), `Work through the ${n} custom app item${n === 1 ? '' : 's'} listed in the technical report, then re-run the read-only checks next cycle.`];
+  if (n > 0 && !sum.retest) ops.finalAssessment.continuedMonitoring = [...(ops.finalAssessment.continuedMonitoring ?? []), `Work through the ${n} custom app item${n === 1 ? '' : 's'} listed in the technical report, then re-run the read-only checks next cycle.`];
 }
 
 async function generatePptx(data, outPath) {
@@ -233,7 +233,7 @@ async function generatePptx(data, outPath) {
     ? [
         { stat: `${catCards.run}`, label: 'Automated Checks Run' },
         { stat: `${catCards.passed}`, label: 'Checks Passed' },
-        { stat: `${catCards.findings.length}`, label: 'Items Noted for Follow-up' }
+        { stat: `${catCards.findings.length}`, label: 'Items Noted' }
       ]
     : ops
     ? [
@@ -270,16 +270,16 @@ async function generatePptx(data, outPath) {
       setBackground(sCa); addLogo(sCa);
       eyebrow(sCa, 'Custom App Testing');
       heading(sCa, 'Custom App Dashboard: Coverage & Results');
-      // left: donut of passed vs follow-up
+      // left: donut of passed vs not passed
       card(sCa, 0.8, 1.7, 4.2, 4.9);
       sCa.addText('CHECKS RUN', { x: 1.1, y: 1.9, w: 3.6, h: 0.3, fontSize: 10.5, bold: true, color: COLOR_MUTED, fontFace: 'Plus Jakarta Sans' });
-      sCa.addChart(pptx.charts.DOUGHNUT, [{ name: 'Checks', labels: ['Passed', 'Needs follow-up'], values: [cat.passed, Math.max(0, cat.failed)] }], {
+      sCa.addChart(pptx.charts.DOUGHNUT, [{ name: 'Checks', labels: ['Passed', 'Not passed'], values: [cat.passed, Math.max(0, cat.failed)] }], {
         x: 1.0, y: 2.2, w: 3.8, h: 3.0, holeSize: 68, chartColors: ['10B981', 'F59E0B'],
         showLegend: false, showPercent: false, showValue: false, showLabel: false, showTitle: false, dataBorder: { pt: 2, color: 'FFFFFF' }
       });
       sCa.addText(`${cat.run}`, { x: 1.0, y: 3.15, w: 3.8, h: 0.7, fontSize: 40, bold: true, color: COLOR_TEXT_DARK, align: 'center', fontFace: 'Outfit' });
       sCa.addText('automated checks', { x: 1.0, y: 3.8, w: 3.8, h: 0.3, fontSize: 11, color: COLOR_MUTED, align: 'center', fontFace: 'Plus Jakarta Sans' });
-      [['Passed', '10B981', cat.passed], ['Follow-up', 'F59E0B', cat.failed]].forEach(([label, color, v], i) => {
+      [['Passed', '10B981', cat.passed], ['Not passed', 'F59E0B', cat.failed]].forEach(([label, color, v], i) => {
         const lx = 1.5 + i * 1.7;
         sCa.addShape(pptx.shapes.OVAL, { x: lx, y: 5.45, w: 0.16, h: 0.16, fill: { color }, line: { color, width: 0 } });
         sCa.addText(`${label} ${v}`, { x: lx + 0.2, y: 5.37, w: 1.5, h: 0.3, fontSize: 10.5, bold: true, color: COLOR_TEXT_DARK, fontFace: 'Plus Jakarta Sans' });
@@ -357,7 +357,7 @@ async function generatePptx(data, outPath) {
       const items = cat.findings;
       if (items.length === 0) {
         sCi.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: 0.8, y: 2.0, w: 11.7, h: 1.2, fill: { color: 'ECFDF5' }, line: { color: '86EFAC', width: 1 }, rectRadius: 0.1 });
-        sCi.addText('✔  All checks passed. No items need follow-up.', { x: 1.1, y: 2.0, w: 11.1, h: 1.2, fontSize: 16, bold: true, color: '166534', valign: 'middle', fontFace: 'Outfit' });
+        sCi.addText('✔  All checks passed. No issues found.', { x: 1.1, y: 2.0, w: 11.1, h: 1.2, fontSize: 16, bold: true, color: '166534', valign: 'middle', fontFace: 'Outfit' });
       } else {
         sCi.addText(`${items.length} item${items.length === 1 ? '' : 's'} ${cat.retest ? 'still open after the re-test' : 'noted'}, highest priority first. ${items.some((f) => f.severity === 'high' || f.severity === 'critical') ? 'Please review the high-priority items first.' : 'None stop the dashboard from working; they are layout, wording and data-tidiness improvements.'}`, { x: 0.8, y: 1.45, w: 11.7, h: 0.4, fontSize: 12, color: COLOR_MUTED, fontFace: 'Plus Jakarta Sans' });
         const shown = items.slice(0, 6);
@@ -1070,7 +1070,7 @@ function renderCustomAppPages(data) {
   const rowsHtml = cat.areas.map((a) => `<tr><td class="device-name">${escapeHtml(a.label)}</td><td style="font-size:9.5px;color:var(--muted);">${escapeHtml(a.tested)}</td><td>${a.run}</td><td style="color:var(--success);font-weight:700;">${a.passed}</td><td style="font-weight:700;">${a.items || '—'}</td></tr>`).join('');
   const itemsHtml = cat.findings.length
     ? cat.findings.slice(0, 6).map((f) => `<div class="dev-item" style="border-left-color:${f.severity === 'high' || f.severity === 'critical' ? '#DC2626' : f.severity === 'medium' ? '#F59E0B' : '#64748B'};"><div class="cat">${escapeHtml((SEV_PILL[f.severity] ?? ['Note'])[0])} priority</div><div class="title">${escapeHtml(f.title)}</div><div>${escapeHtml(plainTrim(f.detail, 220))}</div></div>`).join('') + (cat.findings.length > 6 ? `<p class="muted" style="font-size:11px;margin-top:6px;">+ ${cat.findings.length - 6} more item${cat.findings.length - 6 === 1 ? '' : 's'} in the technical report</p>` : '')
-    : '<div class="ops-conclusion">✔ All checks passed. No items need follow-up.</div>';
+    : '<div class="ops-conclusion">✔ All checks passed. No issues found.</div>';
   const retestPage = cat.retest ? `
   <div class="page">
     <div class="eyebrow">Custom App Testing</div>
@@ -1092,7 +1092,7 @@ function renderCustomAppPages(data) {
     <div class="metrics">
       <div class="metric"><div class="stat">${cat.run}</div><div class="label">Automated checks run</div></div>
       <div class="metric"><div class="stat" style="color:var(--success);">${cat.passed}</div><div class="label">Passed</div></div>
-      <div class="metric"><div class="stat" style="color:#B45309;">${cat.findings.length}</div><div class="label">Items noted for follow-up</div></div>
+      <div class="metric"><div class="stat" style="color:#B45309;">${cat.findings.length}</div><div class="label">Items noted</div></div>
     </div>
     <table class="device-table" style="margin-top:14px;"><thead><tr><th style="width:130px;">Area</th><th>What we checked</th><th style="width:50px;">Checks</th><th style="width:50px;">Passed</th><th style="width:45px;">Items</th></tr></thead><tbody>${rowsHtml}</tbody></table>
     <p class="muted" style="font-size:11px;margin-top:8px;">Read-only: nothing was added, changed, deleted or sent. Email Templates' Add, Edit, Delete and Send test mail were intentionally not used.</p>
@@ -1427,7 +1427,7 @@ async function generatePdf(data, outPath) {
       ${(!ops && data.customAppTesting) ? `
       <div class="metric"><div class="stat">${data.customAppTesting.run}</div><div class="label">Automated Checks Run</div></div>
       <div class="metric"><div class="stat">${data.customAppTesting.passed}</div><div class="label">Checks Passed</div></div>
-      <div class="metric"><div class="stat">${data.customAppTesting.findings.length}</div><div class="label">Items Noted for Follow-up</div></div>
+      <div class="metric"><div class="stat">${data.customAppTesting.findings.length}</div><div class="label">Items Noted</div></div>
       ` : ops ? `
       <div class="metric"><div class="stat">${escapeHtml(ops.performanceMetrics?.app?.responseTime ?? 'N/A')}</div><div class="label">App Response Time</div></div>
       <div class="metric"><div class="stat">${escapeHtml(ops.performanceMetrics?.dashboard?.responseTime ?? 'N/A')}</div><div class="label">Dashboard Response Time</div></div>
