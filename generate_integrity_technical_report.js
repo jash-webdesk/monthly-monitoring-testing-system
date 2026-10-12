@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url';
 import { logger } from './lib/logger.js';
 import { loadResults, getArchivePath } from './lib/archive.js';
 import { CLIENT_REPORT_CSS } from './report/clientReportStyles.js';
-import { CUSTOM_APP_HOST, CUSTOM_APP_AREAS as AREAS, SEV_RANK, areaOfFinding as areaOf, DEV_FIX_NOTES } from './lib/integrityAreas.js';
+import { CUSTOM_APP_HOST, CUSTOM_APP_AREAS as AREAS, SEV_RANK, areaOfFinding as areaOf, DEV_FIX_NOTES, loadDevFixes } from './lib/integrityAreas.js';
 
 /**
  * Technical report for the Integrity Reforestation custom app (admin dashboard) testing —
@@ -70,8 +70,10 @@ export async function generateIntegrityTechnicalReport(month) {
   const baseFindings = (baseline?.findings ?? []).filter((f) => f.severity !== 'info' && !f.id.includes('runner-error'))
     .sort((a, b) => (SEV_RANK[b.severity] ?? 0) - (SEV_RANK[a.severity] ?? 0));
   const baseIds = new Set(baseFindings.map((f) => f.id));
-  const fixedItems = baseFindings.filter((f) => !nowIds.has(f.id));
-  const openItems = baseFindings.filter((f) => nowIds.has(f.id));
+  const devFixed = loadDevFixes(month);
+  const isItemFixed = (id) => devFixed.has(id) || !nowIds.has(id);
+  const fixedItems = baseFindings.filter((f) => isItemFixed(f.id));
+  const openItems = baseFindings.filter((f) => !isItemFixed(f.id));
   const newItems = findings.filter((f) => !baseIds.has(f.id));
   const baselineDate = baseline ? new Date(baseline.timestamp).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
   const DEV_NOTE = DEV_FIX_NOTES;
@@ -142,7 +144,7 @@ export async function generateIntegrityTechnicalReport(month) {
   const retestPages = !baseline ? [] : (() => {
     const titleOf = (f) => (f.title ?? '').replace(/^\[.*?\]\s*/, '');
     const rowsHtml = baseFindings.map((f) => {
-      const isFixed = !nowIds.has(f.id);
+      const isFixed = isItemFixed(f.id);
       const area = AREAS.find((a) => a.key === areaOf(f))?.label ?? 'General';
       return {
         f,

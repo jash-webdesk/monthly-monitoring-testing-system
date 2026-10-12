@@ -1,0 +1,19 @@
+{
+  "project": "integrity-reforestation",
+  "month": "2026-10",
+  "source": "Dev team response (October 2026): all identified issues addressed; Professional plan in Stores filter; Inactive filter covers uninstalled stores; Email Logs calendar kept on screen; responsive tablet/mobile layouts; consistent date filters; lint passing.",
+  "decision": "Confirmed by the account owner: count every item in this list as fixed, per the dev response.",
+  "reportedFixedIds": [
+    "integrity-stores-truncated-headers",
+    "integrity-dashboard-truncated-headers",
+    "integrity-stores-status-filter-label",
+    "integrity-stores-plan-filter-missing-option",
+    "integrity-stores-numbering-restarts",
+    "integrity-stores-datepicker-escape",
+    "integrity-stores-view-button-clipped",
+    "integrity-detail-duplicate-events",
+    "integrity-emailLogs-calendar-clipped",
+    "integrity-emailLogs-datepicker-escape",
+    "integrity-logs-view-escape"
+  ]
+}

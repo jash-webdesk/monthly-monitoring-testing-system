@@ -4,7 +4,7 @@ import { join, resolve, relative } from 'node:path';
 import fs, { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { logger } from './lib/logger.js';
 import { loadResults, getArchivePath } from './lib/archive.js';
-import { CUSTOM_APP_HOST, summarizeCustomApp, compareWithBaseline } from './lib/integrityAreas.js';
+import { CUSTOM_APP_HOST, summarizeCustomApp, compareWithBaseline, loadDevFixes } from './lib/integrityAreas.js';
 
 /**
  * Standalone, content-driven client report generator for the Integrity Reforestation
@@ -152,7 +152,7 @@ function applyCustomAppCoverage(data) {
   data.customAppTesting = sum;
   // Re-test mode: a pre-fix baseline saved before the dev team's fixes turns this into a before/after view.
   const basePath = join(getArchivePath(CUSTOM_APP_HOST, data.month), 'integrity_dashboard_baseline_pre-fix.json');
-  if (existsSync(basePath)) { try { sum.retest = compareWithBaseline(sum, JSON.parse(readFileSync(basePath, 'utf8'))); } catch { /* unreadable baseline: ignore */ } }
+  if (existsSync(basePath)) { try { sum.retest = compareWithBaseline(sum, JSON.parse(readFileSync(basePath, 'utf8')), loadDevFixes(data.month)); } catch { /* unreadable baseline: ignore */ } }
   const n = sum.findings.length;
   data.executiveSummary = `${data.executiveSummary ?? ''} ${data.opsMonitoringSection ? 'We also tested' : 'This cycle we tested'} the Integrity custom app dashboard end to end in read-only mode (${sum.run} checks across the Dashboard, Stores Listing, Email Templates and Email Logs): ${sum.dataOk ? 'store, tree and contribution figures agree across the dashboard and every store page' : 'some figures differ between pages'}${sum.retest ? `. After the dev team's fixes the checks were repeated: ${sum.retest.fixed} of ${sum.retest.baselineCount} earlier items are fixed and ${n} remain open for follow-up in the accompanying technical report.` : `, and ${n} item${n === 1 ? ' was' : 's were'} noted for follow-up in the accompanying technical report.`}`.trim();
   const ops = data.opsMonitoringSection;
@@ -348,6 +348,8 @@ async function generatePptx(data, outPath) {
         sRt.addText('Each earlier item was repeated against the live dashboard after the dev team reported their fixes.', { x: 5.3, y: 6.5, w: 7.2, h: 0.35, fontSize: 9.5, italic: true, color: COLOR_MUTED, fontFace: 'Plus Jakarta Sans' });
       }
 
+      // With a re-test, the retest slide carries the full list; the separate "still open" slide is skipped.
+      if (!cat.retest) {
       const sCi = pptx.addSlide();
       setBackground(sCi); addLogo(sCi);
       eyebrow(sCi, 'Custom App Testing');
@@ -376,6 +378,7 @@ async function generatePptx(data, outPath) {
       }
       sCi.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: 0.8, y: 6.82, w: 11.7, h: 0.5, fill: { color: 'F0F9FF' }, line: { color: '7DD3FC', width: 1 }, rectRadius: 0.1 });
       sCi.addText('Full detail, evidence and recommended fixes are in the Custom App Technical Report that accompanies this deck.', { x: 1.05, y: 6.82, w: 11.2, h: 0.5, fontSize: 10.5, bold: true, color: '075985', valign: 'middle', fontFace: 'Plus Jakarta Sans' });
+      }
     }
 
   }
@@ -1095,12 +1098,14 @@ function renderCustomAppPages(data) {
     <p class="muted" style="font-size:11px;margin-top:8px;">Read-only: nothing was added, changed, deleted or sent. Email Templates' Add, Edit, Delete and Send test mail were intentionally not used.</p>
   </div>
   ${retestPage}
+  ${cat.retest ? '' : `
   <div class="page">
     <div class="eyebrow">Custom App Testing</div>
     <h1>${cat.retest ? 'Custom App Dashboard: Items Still Open' : 'Custom App Dashboard: Items Noted'}</h1>
     <p class="muted">Highest priority first. ${cat.findings.some((f) => ['high', 'critical'].includes(f.severity)) ? 'Please review the high-priority items first.' : 'None stop the dashboard from working; they are layout, wording and data-tidiness improvements.'} Full detail, evidence and recommended fixes are in the Custom App Technical Report.</p>
     ${itemsHtml}
-  </div>`;
+  </div>
+  `}`;
 }
 
 /** Renders the optional "Monthly App & Server Monitoring" (opsMonitoringSection) pages —
