@@ -10,21 +10,27 @@
     "summary": "Shopify released maintenance updates for its modern theme collection. We audited Horizon (v4.2.0), which is currently active on this store.",
     "updateGroups": [
       {
-        "version": "4.2.0",
-        "date": "2026-09-18",
-        "whatChanged": "RTL improvements, native dialog cart drawer stability, and cart-page layout fixes",
+        "version": "16.1.0",
+        "whatChanged": "Customer account experience changes",
         "themes": [
-          "Horizon",
-          "Dwell",
-          "Heritage",
-          "Vessel",
-          "Fabric"
+          "Dawn",
+          "Crave",
+          "Craft",
+          "Origin",
+          "Publisher",
+          "Refresh",
+          "Ride",
+          "Sense",
+          "Taste",
+          "Rise"
         ],
-        "fromVersion": "4.1.0"
+        "fromVersion": "15.5.0"
       }
     ],
     "testedThemes": [
-      "Horizon"
+      "Dawn",
+      "Crave",
+      "Craft"
     ],
     "testedNote": "Horizon (v4.2.0) is actively published on this store. Full Tree Contribution Widget compatibility, dynamic cart math, and multi-device responsive testing were executed — visual evidence and results on the following pages."
   },
