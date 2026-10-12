@@ -7,7 +7,7 @@
   "executiveSummary": "During the October 2026 monthly monitoring cycle, we conducted comprehensive storefront testing for the Integrity Reforestation Tree Contribution Widget on the newly activated Horizon theme (v4.2.0). Testing covered product pages, native dialog cart drawers, and cart pages across desktop, tablet, and mobile viewports. In addition, we executed end-to-end read-only regression testing on the Integrity Custom Admin Dashboard.",
   "themeUpdateLog": {
     "sectionTitle": "Shopify Theme Updates",
-    "summary": "Shopify released maintenance updates for its modern theme collection. We audited Horizon (v4.2.0), which is currently active on this store.",
+    "summary": "Shopify released maintenance updates for its modern theme collection. We audited Craft (v16.1.0), which is currently active on this store.",
     "updateGroups": [
       {
         "version": "16.1.0",
