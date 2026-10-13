@@ -46,6 +46,11 @@ The Integrity client deck is built from `config/monthly-monitoring-input-<month>
 - D. SSL certificate (domain, issuer, issued and expiry dates, screenshot name) -> `sslSecurity`
 Also derived: `overview`, `overallSummary`, `finalAssessment`, and the executive summary.
 
+The prompt also carries a "Theme details" block. Use it as the source of truth for theme names and versions:
+- "Active theme" -> the `Active theme` note in the operations section and the theme names in the executive summary and theme slide (for example "We audited Craft (v16.1.0), which is currently active on this store.").
+- "Free theme update" (from, to, what changed, themes in the update, tested this cycle) -> `themeUpdateLog`: `updateGroups[0].version` = to-version, `fromVersion` = from-version, `whatChanged`, `themes`; `testedThemes` = the tested list. Themes not tested are pending.
+Never take theme names or versions from the dev text when the Theme details block is present, and never keep the previous month's theme wording.
+
 When the prompt contains this block:
 1. Read the previous month's input file to learn the exact JSON shape and wording style. Use it as the template, not as content.
 2. Write `config/monthly-monitoring-input-<month>.json` for the new month from the pasted text ONLY. Copy every number, URL, date and name exactly as given. Never invent or reuse evidence links, metrics or incident text from a previous month. Narrative bullets (assessments, findings, conclusions) may be written, but only from facts in the text.
