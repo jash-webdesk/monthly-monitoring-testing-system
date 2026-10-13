@@ -9,14 +9,14 @@
     "integrity-stores-status-filter-label",
     "integrity-stores-plan-filter-missing-option",
     "integrity-stores-numbering-restarts",
-    "integrity-stores-datepicker-escape",
     "integrity-stores-view-button-clipped",
     "integrity-detail-duplicate-events",
-    "integrity-emailLogs-calendar-clipped",
-    "integrity-emailLogs-datepicker-escape"
+    "integrity-emailLogs-calendar-clipped"
   ],
   "excludedIds": [
-    "integrity-logs-view-escape"
+    "integrity-logs-view-escape",
+    "integrity-stores-datepicker-escape",
+    "integrity-emailLogs-datepicker-escape"
   ],
-  "excludedNote": "Removed from the count by the account owner (e-mail details window closed with Escape). Not counted in the October re-test."
+  "excludedNote": "Removed from the count by the account owner: e-mail details window (Escape), and the two date-filter keyboard items. October re-test counts 8 items."
 }
