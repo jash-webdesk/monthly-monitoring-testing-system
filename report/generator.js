@@ -280,13 +280,15 @@ export async function generateClientReport(hostname, month, options = {}) {
   // Anything not measured reads "Not measured". Nothing here is a default or an estimate.
   const NOT_MEASURED = 'Not measured';
   const metricText = (v) => (v === undefined || v === null || v === '' ? NOT_MEASURED : v);
-  const currentDesktopLcp = metricText(desktopMetrics?.lcp?.displayValue);
+  const currentDesktopLcp = metricText(siteConfig?.cwvDesktop?.lcp ?? desktopMetrics?.lcp?.displayValue);
   const currentDesktopTbt = metricText(desktopMetrics?.tbt?.displayValue);
-  const currentDesktopCls = metricText(desktopMetrics?.cls?.displayValue);
+  const currentDesktopCls = metricText(siteConfig?.cwvDesktop?.cls ?? desktopMetrics?.cls?.displayValue);
 
-  const currentMobileLcp = metricText(siteConfig?.manualCwv?.mobileLcp ?? mobileMetrics?.lcp?.displayValue);
+  // Sites with supplied desktop CWV are reported on desktop only; mobile LCP and CLS are not reported for them.
+  const cwvDesktopOnly = Boolean(siteConfig?.cwvDesktop);
+  const currentMobileLcp = cwvDesktopOnly ? 'Not reported' : metricText(siteConfig?.manualCwv?.mobileLcp ?? mobileMetrics?.lcp?.displayValue);
   const currentMobileTbt = metricText(mobileMetrics?.tbt?.displayValue);
-  const currentMobileCls = metricText(siteConfig?.manualCwv?.mobileCls ?? mobileMetrics?.cls?.displayValue);
+  const currentMobileCls = cwvDesktopOnly ? 'Not reported' : metricText(siteConfig?.manualCwv?.mobileCls ?? mobileMetrics?.cls?.displayValue);
 
   // Before score/metrics — see priority chain above (before-capture > last month > static config).
   const prevDesktopScore = options.prevDesktop ?? siteScores?.desktop?.before?.performance ?? prevDesktopMetrics?.score;

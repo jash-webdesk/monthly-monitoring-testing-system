@@ -152,3 +152,23 @@ export function flattenScores(pages) {
     page, label: p.label ?? page, viewport: vp, before: p[vp].before, after: p[vp].after, delta: p[vp].after - p[vp].before
   })));
 }
+
+/**
+ * Desktop Core Web Vitals supplied in the prompt, e.g. "PartsConnexion: LCP 1.3 s, CLS 0; AudioConnexion: LCP 1.5 s, CLS 0".
+ * @returns {Object<string,{lcp?:string,cls?:string}>} keyed by hostname
+ */
+export function parseCwvText(text, aliases = new Map()) {
+  const out = {};
+  if (!text) return out;
+  let current = null;
+  for (let chunk of String(text).split(/[;\n]+/).map((x) => x.trim()).filter(Boolean)) {
+    const head = chunk.match(/^([^:]{2,40}):\s*(.*)$/);
+    if (head && aliases.has(norm(head[1]))) { current = aliases.get(norm(head[1])); chunk = head[2].trim(); }
+    const lcp = chunk.match(/LCP\s*:?\s*([\d.]+\s*(?:s|ms))/i);
+    const cls = chunk.match(/CLS\s*:?\s*([\d.]+)/i);
+    if (!lcp && !cls) throw new Error(`Cannot read LCP or CLS in: "${chunk}"`);
+    const key = current ?? '*';
+    out[key] = { ...(out[key] ?? {}), ...(lcp ? { lcp: lcp[1].replace(/\s+/g, ' ') } : {}), ...(cls ? { cls: cls[1] } : {}) };
+  }
+  return out;
+}

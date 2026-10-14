@@ -99,10 +99,15 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   // over the live lab run, the same way the hand-tested performance scores do.
   const manualLcp = siteConfig?.manualCwv?.mobileLcp ?? null;
   const manualCls = siteConfig?.manualCwv?.mobileCls ?? null;
-  const mobileLcp = manualLcp ?? mobileLcpRaw?.displayValue ?? 'Not measured';
-  const mobileCls = manualCls ?? mobileClsRaw?.displayValue ?? 'Not measured';
-  const manualLcpMs = manualLcp ? parseFloat(manualLcp) * (/ms/i.test(manualLcp) ? 1 : 1000) : null;
-  const manualClsNum = manualCls ? parseFloat(manualCls.replace(/[^0-9.]/g, '')) : null;
+  // Desktop values supplied for this month (siteConfig.cwvDesktop) replace the mobile figures.
+  const cwvD = siteConfig?.cwvDesktop ?? null;
+  const cwvLabel = cwvD ? 'Desktop' : 'Mobile';
+  const mobileLcp = cwvD?.lcp ?? manualLcp ?? mobileLcpRaw?.displayValue ?? 'Not measured';
+  const mobileCls = cwvD?.cls ?? manualCls ?? mobileClsRaw?.displayValue ?? 'Not measured';
+  const lcpSource = cwvD?.lcp ?? manualLcp;
+  const manualLcpMs = lcpSource ? parseFloat(lcpSource) * (/ms/i.test(lcpSource) ? 1 : 1000) : null;
+  const clsSource = cwvD?.cls ?? manualCls;
+  const manualClsNum = clsSource != null ? parseFloat(String(clsSource).replace(/[^0-9.]/g, '')) : null;
   const lcpPass = manualLcpMs !== null ? manualLcpMs <= 2500 : (typeof mobileLcpRaw?.value === 'number' ? mobileLcpRaw.value <= 2500 : null);
   const clsPass = manualClsNum !== null ? manualClsNum <= 0.1 : (typeof mobileClsRaw?.value === 'number' ? mobileClsRaw.value <= 0.1 : null);
   const cwvStatusColor = (pass) => pass === null ? '64748B' : (pass ? '10B981' : 'DC2626');
@@ -602,7 +607,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   });
 
   slide4.addText(
-    "Core Web Vitals are Google's measures of how quickly a page shows its main content and how stable it looks while loading. These figures come from this month's mobile speed test of your homepage.",
+    `Core Web Vitals are Google's measures of how quickly a page shows its main content and how stable it looks while loading. These figures come from this month's ${cwvD ? 'desktop' : 'mobile'} speed test of your homepage.`,
     {
       x: 0.8,
       y: 1.6,
@@ -624,7 +629,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     rectRadius: 0.1
   });
 
-  slide4.addText("Largest Contentful Paint (LCP) - Mobile", {
+  slide4.addText(`Largest Contentful Paint (LCP) - ${cwvLabel}`, {
     x: 1.1,
     y: 2.9,
     w: 4.8,
@@ -666,7 +671,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
     rectRadius: 0.1
   });
 
-  slide4.addText("Cumulative Layout Shift (CLS) - Mobile", {
+  slide4.addText(`Cumulative Layout Shift (CLS) - ${cwvLabel}`, {
     x: 7.3,
     y: 2.9,
     w: 4.8,

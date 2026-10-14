@@ -20,7 +20,7 @@ import { diffFindings, buildDiffSummary } from '../lib/differ.js';
 import { loadKnownIssues } from '../lib/config.js';
 import { AUDITS, CATEGORIES } from '../audits/index.js';
 import { identifyProject } from './identify.js';
-import { parseScores, scoresForHost, toLegacyScores, siteAliases } from './scores.js';
+import { parseScores, scoresForHost, toLegacyScores, siteAliases, parseCwvText } from './scores.js';
 import { buildRecord, saveHistory, historyPath } from './history.js';
 import { generateReports, normalizeOutputs } from './reports.js';
 
@@ -139,6 +139,10 @@ async function main() {
   if (typeof args['scores-file'] === 'string') parsed = parseScores(readFileSync(resolve(args['scores-file']), 'utf8'), { aliases });
   else if (typeof args['scores-json'] === 'string') parsed = parseScores(args['scores-json'], { aliases });
   else if (typeof args.scores === 'string') parsed = parseScores(args.scores, { aliases });
+
+  // Desktop LCP and CLS supplied for this month (shown in the Core Web Vitals slide and table).
+  const cwv = typeof args.cwv === 'string' ? parseCwvText(args.cwv, aliases) : {};
+  for (const [host, v] of Object.entries(cwv)) if (host !== '*') setRuntimeOverrides(host, { cwvDesktop: v });
 
   logger.section(`Monthly Monitoring: ${project.name} - ${month}`);
   logger.info(`Context: ${project.context ?? 'n/a'}`);
