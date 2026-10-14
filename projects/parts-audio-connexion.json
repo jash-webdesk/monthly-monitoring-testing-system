@@ -57,9 +57,6 @@
         "CAD"
       ],
       "defaultCurrency": "USD",
-      "manualCwv": {
-        "mobileLcp": "1.1 s"
-      },
       "archiveKey": "partsconnexion.com",
       "storefrontLogin": {
         "usernameEnv": "PARTSCONNEXION_STOREFRONT_USERNAME",
@@ -97,10 +94,6 @@
         "CAD"
       ],
       "defaultCurrency": "USD",
-      "manualCwv": {
-        "mobileLcp": "1.2 s",
-        "mobileCls": "< 0.1"
-      },
       "archiveKey": "audio-connexion.com",
       "storefrontLogin": {
         "usernameEnv": "AUDIOCONNEXION_STOREFRONT_USERNAME",
