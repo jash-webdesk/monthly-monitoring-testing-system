@@ -58,7 +58,7 @@ test('config: every site from the legacy config/sites.json is preserved (scores 
   const legacy = JSON.parse(readFileSync(new URL('../../config/sites.json', import.meta.url), 'utf8')).sites;
   for (const old of legacy) {
     const now = getSiteConfig(old.hostname);
-    const { scores, ...rest } = old;
+    const { scores, manualCwv, ...rest } = old; // manualCwv (old months) was removed from the project files on purpose
     for (const [k, v] of Object.entries(rest)) assert.deepEqual(now[k], v, `${old.hostname}.${k} changed`);
     // Project files carry no per-run performance scores; only the fixed category scores may appear.
     const perf = [now.scores?.desktop?.before?.performance, now.scores?.desktop?.after?.performance, now.scores?.mobile?.before?.performance, now.scores?.mobile?.after?.performance];
