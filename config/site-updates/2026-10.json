@@ -1,0 +1,29 @@
+{
+  "partsconnexion.com": {
+    "title": "Server Memory and Log Optimization",
+    "note": "This work covers the PartsConnexion server, which also serves AudioConnexion.",
+    "memory": {
+      "status": "Healthy",
+      "summary": "Server memory use stayed steady at about 25% this month, well within normal limits.",
+      "points": [
+        "No unusual spikes were detected.",
+        "No sign of memory leaks.",
+        "Resources stayed within expected limits."
+      ],
+      "evidence": "https://app.screencast.com/ewttZ7RRhBB25"
+    },
+    "serverLogs": {
+      "status": "Improved",
+      "before": "The server recorded far more log entries than were useful, which made problems harder to find and slowed troubleshooting.",
+      "before_evidence": "https://app.screencast.com/QIHESSDzoOc0n",
+      "after": "Logs are now cleaner, shorter and easier to read.",
+      "after_evidence": "https://app.screencast.com/tnCHbJK4K9NwF",
+      "improvements": [
+        "Less noise in the logs",
+        "Clearer, easier-to-read entries",
+        "Faster to find a problem",
+        "Better visibility of how the store is running"
+      ]
+    }
+  }
+}

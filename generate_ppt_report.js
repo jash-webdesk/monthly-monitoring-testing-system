@@ -1158,6 +1158,44 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   }
 
   // ==========================================
+  // SERVER MEMORY & LOG OPTIMIZATION (only when config/site-updates/<month>.json has an entry for this site)
+  // ==========================================
+  const siteUpdate = (() => {
+    try {
+      const all = JSON.parse(fs.readFileSync(join(process.cwd(), 'config', 'site-updates', `${month}.json`), 'utf8'));
+      return all[hostname] ?? null;
+    } catch { return null; }
+  })();
+  if (siteUpdate) {
+    const slideOps = pptx.addSlide();
+    setBackground(slideOps);
+    addLogo(slideOps);
+    slideOps.addText('Server Performance', { x: 0.8, y: 0.4, w: 9, h: 0.4, fontSize: 13, color: COLOR_BRAND_BLUE, bold: true, fontFace: 'Outfit' });
+    slideOps.addText(siteUpdate.title ?? 'Server Memory and Log Optimization', { x: 0.8, y: 0.8, w: 10.5, h: 0.6, fontSize: 26, color: COLOR_TEXT_DARK, bold: true, fontFace: 'Outfit' });
+    if (siteUpdate.note) slideOps.addText(siteUpdate.note, { x: 0.8, y: 1.4, w: 11.5, h: 0.4, fontSize: 12, color: COLOR_MUTED, fontFace: 'Plus Jakarta Sans' });
+
+    const drawCard = (x, title, status, body, bullets, evidence) => {
+      slideOps.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x, y: 2.0, w: 5.75, h: 4.6, fill: { color: COLOR_CARD_BG }, line: { color: COLOR_BORDER, width: 1 }, rectRadius: 0.08 });
+      slideOps.addText(title, { x: x + 0.3, y: 2.2, w: 5.2, h: 0.4, fontSize: 16, bold: true, color: COLOR_TEXT_DARK, fontFace: 'Outfit' });
+      slideOps.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: x + 0.3, y: 2.7, w: 1.9, h: 0.36, fill: { color: 'ECFDF5' }, line: { color: COLOR_SUCCESS_GREEN, width: 1.2 }, rectRadius: 0.15 });
+      slideOps.addText(status, { x: x + 0.3, y: 2.7, w: 1.9, h: 0.36, fontSize: 11, bold: true, color: '047857', align: 'center', valign: 'middle', fontFace: 'Plus Jakarta Sans' });
+      slideOps.addText(body, { x: x + 0.3, y: 3.2, w: 5.2, h: 0.9, fontSize: 12.5, color: COLOR_TEXT_DARK, valign: 'top', fontFace: 'Plus Jakarta Sans', lineSpacing: 16 });
+      if (bullets && bullets.length) {
+        slideOps.addText(bullets.map((b) => ({ text: b, options: { bullet: true, breakLine: true } })), { x: x + 0.3, y: 4.15, w: 5.2, h: 1.6, fontSize: 12, color: COLOR_TEXT_DARK, valign: 'top', fontFace: 'Plus Jakarta Sans', paraSpaceAfter: 4 });
+      }
+      if (evidence) slideOps.addText(evidence, { x: x + 0.3, y: 5.95, w: 5.2, h: 0.5, fontSize: 9, color: COLOR_MUTED, valign: 'bottom', fontFace: 'Plus Jakarta Sans' });
+    };
+
+    const mem = siteUpdate.memory ?? {};
+    drawCard(0.8, 'Server memory', mem.status ?? 'Healthy', mem.summary ?? '', mem.points ?? [], mem.evidence ? `Evidence: ${mem.evidence}` : null);
+
+    const logs = siteUpdate.serverLogs ?? {};
+    const logBody = [logs.before, logs.after].filter(Boolean).join(' ');
+    const logEvidence = [logs.before_evidence ? `Before: ${logs.before_evidence}` : null, logs.after_evidence ? `After: ${logs.after_evidence}` : null].filter(Boolean).join('   ');
+    drawCard(6.75, 'Server logs', logs.status ?? 'Improved', logBody, logs.improvements ?? [], logEvidence || null);
+  }
+
+  // ==========================================
   // SLIDE 7: TECHNICAL SEO & INDEXING HEALTH (Pillar 4)
   // ==========================================
   const slide7 = pptx.addSlide();
