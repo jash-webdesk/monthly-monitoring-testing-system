@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "id": "our-green-house",
+  "name": "Our Green House",
+  "client": "Our Green House",
+  "platform": "bigcommerce",
+  "domains": [
+    "ourgreenhouse.com",
+    "www.ourgreenhouse.com"
+  ],
+  "sites": [
+    {
+      "hostname": "www.ourgreenhouse.com",
+      "archiveKey": "www.ourgreenhouse.com",
+      "name": "Our Green House",
+      "platform": "bigcommerce",
+      "timeout": 30000,
+      "retries": 2,
+      "notes": "BigCommerce store (gift baskets). Reviewed read-only: no payment, contact or newsletter forms are submitted and nothing is changed on the live site.",
+      "pages": {
+        "homepage": "https://www.ourgreenhouse.com/",
+        "product": "https://www.ourgreenhouse.com/organic-cotton-swaddle-blanket-daisy-print/"
+      },
+      "storefront": {
+        "platform": "bigcommerce",
+        "aboutPath": "/about-us/",
+        "loginPath": "/login.php",
+        "cartPath": "/cart.php",
+        "checkoutPath": "/checkout",
+        "searchPath": "/search.php",
+        "searchParam": "search_query",
+        "sampleProduct": "/organic-cotton-swaddle-blanket-daisy-print/",
+        "addToCartSelector": "#form-action-addToCart",
+        "searchTerms": {
+          "valid": "swaddle",
+          "partial": "swad",
+          "none": "zzqxjkvw"
+        },
+        "navCrawl": {
+          "max": 450,
+          "concurrency": 6
+        },
+        "seoSample": 19,
+        "builderPath": "/make-your-own-gift-basket/"
+      }
+    }
+  ],
+  "audits": {
+    "performance": {
+      "enabled": true,
+      "pages": "all",
+      "note": "Lighthouse lab run on the homepage and a product page. Used for layout stability and load time; no Before/After scores are reported for this client."
+    },
+    "security": {
+      "enabled": true,
+      "pages": "all",
+      "authenticatedPass": false,
+      "note": "Browser pass (headers, cookies, script and network errors, third-party tools) plus secure-address redirect and insecure-content checks."
+    },
+    "dns": {
+      "enabled": true
+    },
+    "ssl": {
+      "enabled": true
+    },
+    "seo": {
+      "enabled": true,
+      "note": "Sitemap and robots checks plus a sample of 19 pages (title, description, headings, canonical, sharing tags, structured data)."
+    },
+    "ai-crawlers": {
+      "enabled": true
+    },
+    "network": {
+      "enabled": true
+    },
+    "availability": {
+      "enabled": true,
+      "note": "Every page linked from the header, menus and footer: status, redirects and response time."
+    },
+    "functional": {
+      "enabled": true,
+      "note": "Search, category, product, add to cart, quantity, coupon message, checkout screen (view only), remove, sign-in messages."
+    },
+    "responsive": {
+      "enabled": true,
+      "note": "Desktop, tablet and phone screenshots and sideways-scroll check."
+    },
+    "accessibility": {
+      "enabled": true,
+      "note": "Basic automated accessibility checks."
+    },
+    "currency": {
+      "enabled": false,
+      "reason": "Single-currency store."
+    },
+    "companion-app": {
+      "enabled": false,
+      "reason": "No companion app."
+    },
+    "cache": {
+      "enabled": false,
+      "reason": "No API runner for hosting cache metrics."
+    }
+  },
+  "secrets": [
+    {
+      "env": "PAGESPEED_API_KEY",
+      "purpose": "Google PageSpeed Insights API (optional; local Lighthouse is used without it)",
+      "required": false,
+      "scope": "environment"
+    },
+    {
+      "env": "UPTIMEROBOT_API_KEY",
+      "purpose": "UptimeRobot read-only API key (optional; a live probe is used without it)",
+      "required": false,
+      "scope": "environment"
+    }
+  ],
+  "reports": {
+    "client": "ogh-deck"
+  },
+  "reportMeta": {},
+  "inputs": {
+    "performanceScores": "not-applicable",
+    "scoresPerSite": false,
+    "notes": "No Before/After PageSpeed scores for this client. Do NOT ask for them."
+  },
+  "context": "BigCommerce gift-basket store (ourgreenhouse.com). The monthly report is a plain-language website health and maintenance deck (not a performance-score report). Everything is reviewed read-only: guest cart actions only, checkout is viewed but never submitted, no contact or newsletter forms are sent."
+}

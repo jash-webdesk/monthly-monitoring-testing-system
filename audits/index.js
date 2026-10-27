@@ -9,10 +9,13 @@ import * as currency from './currency/index.js';
 import * as companionApp from './companion-app/index.js';
 import * as functional from './functional/index.js';
 import * as cache from './cache/index.js';
+import * as availability from './availability/index.js';
+import * as responsive from './responsive/index.js';
+import * as accessibility from './accessibility/index.js';
 
 /** Registry in execution order. ai-crawlers runs after seo so it can reuse the crawl. */
 export const AUDITS = [
-  network, dns, ssl, seo, aiCrawlers, performance, security, currency, companionApp, functional, cache
+  network, dns, ssl, availability, seo, aiCrawlers, performance, security, functional, responsive, accessibility, currency, companionApp, cache
 ].map((m) => ({ ...m.meta, run: m.run }));
 
 export const CATEGORIES = AUDITS.map((a) => a.category);

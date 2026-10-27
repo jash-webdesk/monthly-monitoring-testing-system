@@ -1,5 +1,6 @@
 import { runDevtools } from '../../runners/devtools.runner.js';
 import { logger } from '../../lib/logger.js';
+import { runSecurityExtras } from '../../runners/storefront.runner.js';
 import { runPerPage, combine, save } from '../_shared.js';
 
 export const meta = { category: 'security', runners: ['devtools'], description: 'Chrome DevTools/CDP: security headers, cookies, SRI, console and network errors, vulnerable libraries, per page.' };
@@ -18,5 +19,11 @@ export async function run(ctx) {
   const merged = await runPerPage(ctx, (url) => runDevtools(url, ctx.hostname, ctx.month, null, credentials));
   const result = combine(ctx, 'devtools', merged);
   save(ctx, 'devtools', result);
+  const cfg = ctx.siteConfig.storefront;
+  if (cfg) {
+    const extras = await runSecurityExtras(ctx.url, cfg);
+    save(ctx, 'security_extras', extras);
+    return { status: 'completed', runners: [result, extras], findings: [...result.findings, ...extras.findings], metrics: { ...result.metrics, extras: extras.metrics } };
+  }
   return { status: 'completed', runners: [result], findings: result.findings, metrics: result.metrics };
 }
