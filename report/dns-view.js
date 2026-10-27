@@ -31,6 +31,10 @@ export function describeDns(dnsResult) {
     spfPresent: hasResult ? !!m.spf : null,
     dmarcPresent: hasResult ? !!m.dmarc : null,
     dkimPresent: hasResult ? !!m.dkim : null,
+    dnsblClean: hasResult ? (m.dnsbl?.clean ?? true) : null,
+    dnsblText: hasResult ? (m.dnsbl ? (m.dnsbl.clean ? 'Verified Clean (0 Listings)' : `Listed on ${m.dnsbl.listings.length} Blacklist(s)`) : 'Clean') : DNS_NOT_AVAILABLE,
+    bimiPresent: hasResult ? Boolean(m.bimi?.configured) : null,
+    dmarcText: hasResult ? (m.dmarc ? (typeof m.dmarc === 'string' ? (m.dmarc.match(/p=(none|quarantine|reject)/)?.[1] || 'Enforced') : 'In place') : 'Not found') : DNS_NOT_AVAILABLE,
     recordCount
   };
 }
