@@ -1,0 +1,577 @@
+{
+  "schemaVersion": 1,
+  "project": "our-green-house",
+  "month": "2026-10",
+  "generatedAt": "2026-10-27T11:13:14.728Z",
+  "scores": {},
+  "sites": {
+    "www.ourgreenhouse.com": {
+      "url": "https://www.ourgreenhouse.com/",
+      "audits": {
+        "network": {
+          "status": "completed",
+          "durationMs": 1544,
+          "findingCount": 0
+        },
+        "dns": {
+          "status": "completed",
+          "durationMs": 14613,
+          "findingCount": 2
+        },
+        "ssl": {
+          "status": "completed",
+          "durationMs": 182,
+          "findingCount": 0
+        },
+        "availability": {
+          "status": "completed",
+          "durationMs": 75160,
+          "findingCount": 2
+        },
+        "seo": {
+          "status": "completed",
+          "durationMs": 22671,
+          "findingCount": 3
+        },
+        "ai-crawlers": {
+          "status": "completed",
+          "durationMs": 0,
+          "findingCount": 0,
+          "note": "Derived from the crawler result; these findings are also counted under seo."
+        },
+        "performance": {
+          "status": "completed",
+          "durationMs": 121995,
+          "findingCount": 5
+        },
+        "security": {
+          "status": "completed",
+          "durationMs": 73472,
+          "findingCount": 20
+        },
+        "functional": {
+          "status": "completed",
+          "durationMs": 83648,
+          "findingCount": 1
+        },
+        "responsive": {
+          "status": "completed",
+          "durationMs": 23452,
+          "findingCount": 0
+        },
+        "accessibility": {
+          "status": "completed",
+          "durationMs": 21954,
+          "findingCount": 5
+        },
+        "currency": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Single-currency store."
+        },
+        "companion-app": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "No companion app."
+        },
+        "cache": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "No API runner for hosting cache metrics."
+        }
+      },
+      "metrics": {
+        "performance.homepage.desktop.measuredScore": 93,
+        "performance.homepage.mobile.measuredScore": 71,
+        "performance.product.desktop.measuredScore": 91,
+        "performance.product.mobile.measuredScore": 66,
+        "ssl.daysRemaining": 54,
+        "network.uptimePercentage": 100,
+        "network.responseTimeMs": 219,
+        "findings.critical": 2,
+        "findings.high": 7,
+        "findings.medium": 16,
+        "findings.low": 13
+      },
+      "findings": [
+        {
+          "id": "dns-no-dmarc-record",
+          "runner": "dns",
+          "category": "security",
+          "severity": "high",
+          "title": "No DMARC record found",
+          "detail": "DMARC tells receiving mail servers what to do with emails that fail SPF or DKIM checks. Without it, spoofed emails from this domain may be delivered to recipients.",
+          "evidence": "No TXT record found at _dmarc.www.ourgreenhouse.com",
+          "recommendation": "Add a DMARC record: v=DMARC1; p=quarantine; rua=mailto:dmarc@yourdomain.com",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "dns-no-dkim-record",
+          "runner": "dns",
+          "category": "security",
+          "severity": "medium",
+          "title": "No DKIM record found",
+          "detail": "DKIM adds a cryptographic signature to outgoing emails, allowing recipients to verify they were sent by an authorised server and have not been tampered with.",
+          "evidence": "Checked selectors: default, google, mail, k1, selector1, selector2, dkim, s1, s2. None found at {selector}._domainkey.www.ourgreenhouse.com",
+          "recommendation": "Configure DKIM through your email provider and publish the public key as a TXT record at the appropriate selector.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "availability-redirecting-links",
+          "runner": "availability",
+          "category": "availability",
+          "severity": "low",
+          "title": "3 navigation links redirect to a newer address",
+          "detail": "The pages work, but the link in the menu is not the current address.",
+          "evidence": "https://www.ourgreenhouse.com/compare; https://www.ourgreenhouse.com/him-her-category/; https://www.ourgreenhouse.com/pet-category/",
+          "recommendation": "Update the links to the current addresses to save a redirect on each visit.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "availability-slow-pages",
+          "runner": "availability",
+          "category": "performance",
+          "severity": "low",
+          "title": "4 pages took longer than 2 seconds to respond",
+          "detail": "Response time was measured from this monitoring location in one pass.",
+          "evidence": "https://www.ourgreenhouse.com/him-her/apparel/scarves/ (2546 ms); https://www.ourgreenhouse.com/organic-baby/by-size/6-12m/ (2049 ms); https://www.ourgreenhouse.com/baby-gifts/baby-gift-baskets/by-occassion/pregnancy/ (2023 ms); https://www.ourgreenhouse.com/baby-gifts/baby-gift-baskets/eco-friendly",
+          "recommendation": "Review caching for the slowest pages.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "seo-sample-missing-description",
+          "runner": "seo",
+          "category": "seo",
+          "severity": "medium",
+          "title": "3 of 19 sampled pages have no meta description",
+          "detail": "Search results show a generic snippet instead of a written summary.",
+          "evidence": "https://www.ourgreenhouse.com/about-us/; https://www.ourgreenhouse.com/our-impact/; https://www.ourgreenhouse.com/personalized/",
+          "recommendation": "Add a short description to each page.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "seo-sample-headings",
+          "runner": "seo",
+          "category": "seo",
+          "severity": "low",
+          "title": "4 sampled page(s) have a missing or repeated main heading",
+          "detail": "Each page should have exactly one main heading.",
+          "evidence": "https://www.ourgreenhouse.com/our-impact/; https://www.ourgreenhouse.com/organic-cotton-swaddle-blanket-daisy-print/; https://www.ourgreenhouse.com/organic-baby/pacifiers-teethers-rattles/teethers/; https://www.ourgreenhouse.com/him-her/eco-home/african-baskets-storage/",
+          "recommendation": "Use one main heading per page.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "seo-sample-social-tags",
+          "runner": "seo",
+          "category": "seo",
+          "severity": "low",
+          "title": "2 sampled page(s) are missing social sharing tags",
+          "detail": "Shared links may appear without a proper title or image.",
+          "evidence": "https://www.ourgreenhouse.com/about-us/; https://www.ourgreenhouse.com/our-impact/",
+          "recommendation": "Add sharing tags (title and image).",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-lcp-poor-homepage",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "high",
+          "title": "[HOMEPAGE] Mobile Largest Contentful Paint (LCP) is poor (5.0 s)",
+          "detail": "LCP measures when the largest visible content element loads. It directly impacts perceived page speed and Google SEO ranking. Value of 5.0 s exceeds the poor threshold of 4000ms.",
+          "evidence": "[Page: homepage] LCP: 4997ms | Poor > 4000ms | Good < 2500ms",
+          "recommendation": "Optimise images with modern formats (WebP/AVIF), use a CDN, and eliminate render-blocking resources.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-fcp-poor-homepage",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "medium",
+          "title": "[HOMEPAGE] Mobile First Contentful Paint is slow (4.3 s)",
+          "detail": "FCP marks the first time any text or image is painted. A value of 4.3 s indicates a slow server response or render-blocking resources.",
+          "evidence": "[Page: homepage] FCP: 4252.73ms | Poor threshold: 3000ms",
+          "recommendation": "Minimise render-blocking CSS/JS, use server-side caching, and reduce Time to First Byte (TTFB).",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-lcp-poor-product",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "high",
+          "title": "[PRODUCT] Mobile Largest Contentful Paint (LCP) is poor (4.7 s)",
+          "detail": "LCP measures when the largest visible content element loads. It directly impacts perceived page speed and Google SEO ranking. Value of 4.7 s exceeds the poor threshold of 4000ms.",
+          "evidence": "[Page: product] LCP: 4653.02ms | Poor > 4000ms | Good < 2500ms",
+          "recommendation": "Optimise images with modern formats (WebP/AVIF), use a CDN, and eliminate render-blocking resources.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-tbt-needs-improvement-product",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "medium",
+          "title": "[PRODUCT] Mobile Total Blocking Time (TBT) needs improvement (320 ms)",
+          "detail": "TBT measures how long the main thread was blocked between FCP and TTI. High TBT means the page feels unresponsive to user interactions. Value of 320 ms is in the \"needs improvement\" range.",
+          "evidence": "[Page: product] TBT: 322.5ms | Range: 200ms – 600ms",
+          "recommendation": "Reduce JavaScript execution time, split long tasks, and defer third-party scripts.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-fcp-poor-product",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "medium",
+          "title": "[PRODUCT] Mobile First Contentful Paint is slow (4.3 s)",
+          "detail": "FCP marks the first time any text or image is painted. A value of 4.3 s indicates a slow server response or render-blocking resources.",
+          "evidence": "[Page: product] FCP: 4266.31ms | Poor threshold: 3000ms",
+          "recommendation": "Minimise render-blocking CSS/JS, use server-side caching, and reduce Time to First Byte (TTFB).",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-content-security-policy-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "high",
+          "title": "[HOMEPAGE] Missing security header: Content Security Policy (CSP)",
+          "detail": "CSP instructs the browser which content sources are trusted. Without it, any injected script — from a compromised ad, third-party CDN, or XSS payload — runs freely in your customers' browsers.",
+          "evidence": "[Page: homepage] Header \"content-security-policy\" absent from HTTP response of https://www.ourgreenhouse.com/",
+          "recommendation": "Add a Content-Security-Policy header. Start with: default-src 'self'; script-src 'self' and expand only as needed.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-referrer-policy-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[HOMEPAGE] Missing security header: Referrer-Policy",
+          "detail": "Controls how much referrer information is sent when a user navigates away. Without it, full URLs (including order IDs or search terms) may leak to third-party analytics.",
+          "evidence": "[Page: homepage] Header \"referrer-policy\" absent from HTTP response of https://www.ourgreenhouse.com/",
+          "recommendation": "Add: Referrer-Policy: strict-origin-when-cross-origin",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-permissions-policy-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[HOMEPAGE] Missing security header: Permissions-Policy",
+          "detail": "Restricts which browser APIs (camera, microphone, geolocation) scripts on the page can access. Without it, third-party scripts have unrestricted access.",
+          "evidence": "[Page: homepage] Header \"permissions-policy\" absent from HTTP response of https://www.ourgreenhouse.com/",
+          "recommendation": "Add: Permissions-Policy: geolocation=(), microphone=(), camera=()",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-cross-origin-opener-policy-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[HOMEPAGE] Missing security header: Cross-Origin-Opener-Policy (COOP)",
+          "detail": "COOP isolates the browsing context, preventing cross-origin pages opened in popups from accessing the window object of this page.",
+          "evidence": "[Page: homepage] Header \"cross-origin-opener-policy\" absent from HTTP response of https://www.ourgreenhouse.com/",
+          "recommendation": "Add: Cross-Origin-Opener-Policy: same-origin",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-hsts-max-age-too-low-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[HOMEPAGE] HSTS max-age is too low (0s — recommended: 31,536,000s)",
+          "detail": "A short max-age means browsers stop enforcing HTTPS quickly after the last visit. HSTS preloading requires a minimum of 1 year.",
+          "evidence": "[Page: homepage] Strict-Transport-Security: max-age=0",
+          "recommendation": "Set: Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-hsts-missing-includesubdomains-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[HOMEPAGE] HSTS header is missing the includeSubDomains directive",
+          "detail": "Without includeSubDomains, subdomains are not covered by HSTS and could be exploited to downgrade connections to the main domain via cookies.",
+          "evidence": "[Page: homepage] Strict-Transport-Security: max-age=0",
+          "recommendation": "Add includeSubDomains to the HSTS header.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-console-errors-homepage",
+          "runner": "devtools",
+          "category": "functional",
+          "severity": "low",
+          "title": "[HOMEPAGE] 1 JavaScript console error(s) on guest page load",
+          "detail": "Console errors indicate broken JavaScript that may silently break functionality users rely on.",
+          "evidence": "[Page: homepage] [warning] [webmcp-interceptor] document.modelContext is not available.\nTo enable WebMCP, use Chrome M146+ and enable:\nchrome://flags/#enable-experimental-web-platform-features (https://www.ourgreenhouse.com/.webmcp/bridge.js:2132)",
+          "recommendation": "Review and fix each console error. Prioritise errors related to checkout, cart, or account functionality.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-cookies-missing-samesite-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[HOMEPAGE] 1 sensitive cookie(s) missing SameSite attribute",
+          "detail": "Without SameSite, cookies are included in cross-site requests, enabling Cross-Site Request Forgery (CSRF) attacks.",
+          "evidence": "[Page: homepage] Cookies without SameSite: SHOP_SESSION_TOKEN",
+          "recommendation": "Set SameSite=Lax or SameSite=Strict on all session cookies.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-sri-missing-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "high",
+          "title": "[HOMEPAGE] 15 external script(s) loaded without Subresource Integrity (SRI)",
+          "detail": "External scripts without SRI hashes can be silently replaced with malicious code if the CDN or third-party host is compromised. This is an A08 supply chain risk — the most common vector for Magecart-style attacks on eCommerce sites.",
+          "evidence": "[Page: homepage] https://snap.licdn.com/li.lms-analytics/insight.min.js\nhttps://s.pinimg.com/ct/lib/main.c61fa7c9.js\nhttps://bzrcdn.openai.com/sdk/oaiq.min.js\nhttps://s.pinimg.com/ct/core.js\nhttps://cdn11.bigcommerce.com/s-yto0giq5nx/stencil/02fc94e0-aa06-013f-a5c9-56d78b2bc3e8/e/00d1d980-b36d-013f-",
+          "recommendation": "Add integrity and crossorigin=\"anonymous\" attributes to all external scripts. Generate hashes at https://www.srihash.org/",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-retire-js-vulnerable-libraries-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "critical",
+          "title": "[HOMEPAGE] 2 known-vulnerable JavaScript libraries detected",
+          "detail": "One or more JavaScript libraries loaded on this page match a known-vulnerable version in the Retire.js CVE database. These are exploitable directly in the browser, independent of any server-side hardening.",
+          "evidence": "[Page: homepage] jquery@1.7.2 (medium) — https://cdn11.bigcommerce.com/s-yto0giq5nx/stencil/02fc94e0-aa06-013f-a5c9-56d78b2bc3e8/e/00d1d980-b36d-013f-7630-62890bdf7e54/js/vendor/jquery.min.js\n  CVE-2012-6708; CVE-2020-7656; CVE-2015-9251; jQuery 1.x and 2.x are End-of-Life and no longer receiving se",
+          "recommendation": "Upgrade each flagged library to a patched version — see evidence above for the specific component, version, and advisory.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-content-security-policy-product",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "high",
+          "title": "[PRODUCT] Missing security header: Content Security Policy (CSP)",
+          "detail": "CSP instructs the browser which content sources are trusted. Without it, any injected script — from a compromised ad, third-party CDN, or XSS payload — runs freely in your customers' browsers.",
+          "evidence": "[Page: product] Header \"content-security-policy\" absent from HTTP response of https://www.ourgreenhouse.com/organic-cotton-swaddle-blanket-daisy-print/",
+          "recommendation": "Add a Content-Security-Policy header. Start with: default-src 'self'; script-src 'self' and expand only as needed.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-referrer-policy-product",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[PRODUCT] Missing security header: Referrer-Policy",
+          "detail": "Controls how much referrer information is sent when a user navigates away. Without it, full URLs (including order IDs or search terms) may leak to third-party analytics.",
+          "evidence": "[Page: product] Header \"referrer-policy\" absent from HTTP response of https://www.ourgreenhouse.com/organic-cotton-swaddle-blanket-daisy-print/",
+          "recommendation": "Add: Referrer-Policy: strict-origin-when-cross-origin",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-permissions-policy-product",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[PRODUCT] Missing security header: Permissions-Policy",
+          "detail": "Restricts which browser APIs (camera, microphone, geolocation) scripts on the page can access. Without it, third-party scripts have unrestricted access.",
+          "evidence": "[Page: product] Header \"permissions-policy\" absent from HTTP response of https://www.ourgreenhouse.com/organic-cotton-swaddle-blanket-daisy-print/",
+          "recommendation": "Add: Permissions-Policy: geolocation=(), microphone=(), camera=()",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-cross-origin-opener-policy-product",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[PRODUCT] Missing security header: Cross-Origin-Opener-Policy (COOP)",
+          "detail": "COOP isolates the browsing context, preventing cross-origin pages opened in popups from accessing the window object of this page.",
+          "evidence": "[Page: product] Header \"cross-origin-opener-policy\" absent from HTTP response of https://www.ourgreenhouse.com/organic-cotton-swaddle-blanket-daisy-print/",
+          "recommendation": "Add: Cross-Origin-Opener-Policy: same-origin",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-hsts-max-age-too-low-product",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[PRODUCT] HSTS max-age is too low (0s — recommended: 31,536,000s)",
+          "detail": "A short max-age means browsers stop enforcing HTTPS quickly after the last visit. HSTS preloading requires a minimum of 1 year.",
+          "evidence": "[Page: product] Strict-Transport-Security: max-age=0",
+          "recommendation": "Set: Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-hsts-missing-includesubdomains-product",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[PRODUCT] HSTS header is missing the includeSubDomains directive",
+          "detail": "Without includeSubDomains, subdomains are not covered by HSTS and could be exploited to downgrade connections to the main domain via cookies.",
+          "evidence": "[Page: product] Strict-Transport-Security: max-age=0",
+          "recommendation": "Add includeSubDomains to the HSTS header.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-console-errors-product",
+          "runner": "devtools",
+          "category": "functional",
+          "severity": "low",
+          "title": "[PRODUCT] 1 JavaScript console error(s) on guest page load",
+          "detail": "Console errors indicate broken JavaScript that may silently break functionality users rely on.",
+          "evidence": "[Page: product] [warning] [webmcp-interceptor] document.modelContext is not available.\nTo enable WebMCP, use Chrome M146+ and enable:\nchrome://flags/#enable-experimental-web-platform-features (https://www.ourgreenhouse.com/.webmcp/bridge.js:2132)",
+          "recommendation": "Review and fix each console error. Prioritise errors related to checkout, cart, or account functionality.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-cookies-missing-samesite-product",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[PRODUCT] 1 sensitive cookie(s) missing SameSite attribute",
+          "detail": "Without SameSite, cookies are included in cross-site requests, enabling Cross-Site Request Forgery (CSRF) attacks.",
+          "evidence": "[Page: product] Cookies without SameSite: SHOP_SESSION_TOKEN",
+          "recommendation": "Set SameSite=Lax or SameSite=Strict on all session cookies.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-sri-missing-product",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "high",
+          "title": "[PRODUCT] 17 external script(s) loaded without Subresource Integrity (SRI)",
+          "detail": "External scripts without SRI hashes can be silently replaced with malicious code if the CDN or third-party host is compromised. This is an A08 supply chain risk — the most common vector for Magecart-style attacks on eCommerce sites.",
+          "evidence": "[Page: product] https://snap.licdn.com/li.lms-analytics/insight.min.js\nhttps://s.pinimg.com/ct/lib/main.c61fa7c9.js\nhttps://bzrcdn.openai.com/sdk/oaiq.min.js\nhttps://s.pinimg.com/ct/core.js\nhttps://cdn11.bigcommerce.com/s-yto0giq5nx/stencil/02fc94e0-aa06-013f-a5c9-56d78b2bc3e8/e/00d1d980-b36d-013f-7",
+          "recommendation": "Add integrity and crossorigin=\"anonymous\" attributes to all external scripts. Generate hashes at https://www.srihash.org/",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-retire-js-vulnerable-libraries-product",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "critical",
+          "title": "[PRODUCT] 5 known-vulnerable JavaScript libraries detected",
+          "detail": "One or more JavaScript libraries loaded on this page match a known-vulnerable version in the Retire.js CVE database. These are exploitable directly in the browser, independent of any server-side hardening.",
+          "evidence": "[Page: product] jquery@1.7.2 (medium) — https://cdn11.bigcommerce.com/s-yto0giq5nx/stencil/02fc94e0-aa06-013f-a5c9-56d78b2bc3e8/e/00d1d980-b36d-013f-7630-62890bdf7e54/js/vendor/jquery.min.js\n  CVE-2012-6708; CVE-2020-7656; CVE-2015-9251; jQuery 1.x and 2.x are End-of-Life and no longer receiving sec",
+          "recommendation": "Upgrade each flagged library to a patched version — see evidence above for the specific component, version, and advisory.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "journey-builder-script-errors",
+          "runner": "functional",
+          "category": "functional",
+          "severity": "low",
+          "title": "The gift-basket builder shows 1 script error when it loads",
+          "detail": "The builder still loads, but script errors can stop a part of it from working.",
+          "evidence": "Cannot read properties of null (reading 'top')",
+          "recommendation": "Have a developer fix the errors in the builder scripts.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "a11y-aria-hidden-focus",
+          "runner": "accessibility",
+          "category": "accessibility",
+          "severity": "medium",
+          "title": "Accessibility: ARIA hidden element must not be focusable or contain focusable elements",
+          "detail": "An automated accessibility check found this on one or more pages. Fixing it makes the site easier for everyone to use.",
+          "evidence": "12 element(s) on /",
+          "recommendation": "Fix the flagged elements (see the rule on dequeuniversity.com/rules/axe).",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "a11y-color-contrast",
+          "runner": "accessibility",
+          "category": "accessibility",
+          "severity": "medium",
+          "title": "Accessibility: Elements must meet minimum color contrast ratio thresholds",
+          "detail": "An automated accessibility check found this on one or more pages. Fixing it makes the site easier for everyone to use.",
+          "evidence": "28 element(s) on /, /organic-cotton-swaddle-blanket-daisy-print/, /cart.php, /login.php",
+          "recommendation": "Fix the flagged elements (see the rule on dequeuniversity.com/rules/axe).",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "a11y-frame-title",
+          "runner": "accessibility",
+          "category": "accessibility",
+          "severity": "medium",
+          "title": "Accessibility: Frames must have an accessible name",
+          "detail": "An automated accessibility check found this on one or more pages. Fixing it makes the site easier for everyone to use.",
+          "evidence": "1 element(s) on /",
+          "recommendation": "Fix the flagged elements (see the rule on dequeuniversity.com/rules/axe).",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "a11y-link-name",
+          "runner": "accessibility",
+          "category": "accessibility",
+          "severity": "medium",
+          "title": "Accessibility: Links must have discernible text",
+          "detail": "An automated accessibility check found this on one or more pages. Fixing it makes the site easier for everyone to use.",
+          "evidence": "4 element(s) on /, /organic-cotton-swaddle-blanket-daisy-print/, /cart.php, /login.php",
+          "recommendation": "Fix the flagged elements (see the rule on dequeuniversity.com/rules/axe).",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "a11y-dlitem",
+          "runner": "accessibility",
+          "category": "accessibility",
+          "severity": "medium",
+          "title": "Accessibility: <dt> and <dd> elements must be contained by a <dl>",
+          "detail": "An automated accessibility check found this on one or more pages. Fixing it makes the site easier for everyone to use.",
+          "evidence": "4 element(s) on /organic-cotton-swaddle-blanket-daisy-print/",
+          "recommendation": "Fix the flagged elements (see the rule on dequeuniversity.com/rules/axe).",
+          "status": "new",
+          "openSince": "2026-10"
+        }
+      ],
+      "resolved": []
+    }
+  },
+  "comparison": {
+    "previousMonth": null,
+    "hasPreviousData": false,
+    "sites": {
+      "www.ourgreenhouse.com": {
+        "findings": {
+          "new": 38,
+          "persisting": 0,
+          "resolved": 0,
+          "suppressed": 0
+        },
+        "changes": [],
+        "regressions": [],
+        "improvements": []
+      }
+    }
+  }
+}

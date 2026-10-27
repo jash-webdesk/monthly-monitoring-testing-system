@@ -60,3 +60,11 @@ The dev team's response to the October review says every identified issue is add
 
 ## Integrity October re-test wording (decided 2026-10-12)
 The account owner's rule: count only the items in the dev team's response. The re-test reads "10 of 10 issues fixed". The e-mail details window item is excluded from the count (`excludedIds` in `config/dev-fixes/integrity-reforestation-2026-10.json`). Do not use the words "follow-up", "items still open" or "noted for follow-up" in any Integrity deliverable.
+
+## Our Green House (ourgreenhouse.com, BigCommerce)
+- Project file `projects/our-green-house.json`; the `storefront` block holds the selectors, paths and search terms. Audit code: `runners/storefront.runner.js`, wrapped by the availability, responsive, accessibility, functional, seo and security audits.
+- Read-only: journeys add a sample item to the cart and remove it again, view checkout as a guest, and never submit payment, contact or newsletter forms or create accounts.
+- No PageSpeed scores are used. The only report is the client deck, made by patching the September deck kept at `templates/ogh/monthly-report-template.pptx` (`node generate_ogh_report.js --host www.ourgreenhouse.com --month YYYY-MM`). Evidence screenshots must match the template frame ratios (desktop 1366x778, tablet 820x1114, mobile 390x844).
+- The UptimeRobot runner auto-creates a monitor for a new host. This happened for this site in October 2026; a brand-new monitor has no history, so its uptime figure is not reported.
+- The existing devtools, retire.js and DNS runners grade more strictly than the September report did (October: jQuery 1.7.2 critical, missing CSP/SRI high, no DMARC high). Month-over-month counts are therefore not directly comparable with September.
+- The gift basket builder page has a small script error in the page's own code ("reading 'top'"), seen in September as well.

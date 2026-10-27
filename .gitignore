@@ -52,3 +52,7 @@ _capture_store_session.mjs
 .claude/settings.local.json
 
 !scripts/*.template.html
+
+# Report templates are tracked
+!templates/
+!templates/**

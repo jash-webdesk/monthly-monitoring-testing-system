@@ -87,8 +87,15 @@ export async function generateReports({ project, hostname, month, outputs }) {
   const errors = [];
   const notes = [];
   const isIntegrity = project.reports?.client === 'integrity-deck';
+  const isOgh = project.reports?.client === 'ogh-deck';
   try {
-    if (isIntegrity) await integrityReports({ project, hostname, month, want });
+    if (isOgh) {
+      if (want.includes('technical')) notes.push('Our Green House has one report, the client maintenance report (PowerPoint and PDF). A separate technical report is not produced for this project.');
+      if (want.includes('client')) {
+        const { generateOghReport } = await import('../generate_ogh_report.js');
+        await generateOghReport(hostname, month, { pdf: true });
+      }
+    } else if (isIntegrity) await integrityReports({ project, hostname, month, want });
     else await siteReports({ hostname, month, want, notes });
   } catch (err) {
     errors.push(err.message);

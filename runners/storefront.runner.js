@@ -525,7 +525,25 @@ export async function runSeoSample(baseUrl, cfg = {}, navLinks = []) {
   add('seo-sample-social-tags', SEVERITY.LOW, `${noOg.length} sampled page(s) are missing social sharing tags`, noOg, 'Shared links may appear without a proper title or image.', 'Add sharing tags (title and image).');
   add('seo-sample-noindex', SEVERITY.MEDIUM, `${noIndex.length} sampled page(s) are blocked from search engines`, noIndex, 'These pages tell search engines not to list them.', 'Confirm this is intended.');
 
+  // robots.txt: present, valid text, and does not block the whole site
+  const robotsRes = await timedFetch(abs(baseUrl, '/robots.txt'), { redirect: 'follow' });
+  const robots = {
+    status: robotsRes.status,
+    present: robotsRes.status === 200 && /user-agent/i.test(robotsRes.body),
+    listsSitemap: /^\s*sitemap:/im.test(robotsRes.body),
+    blocksWholeSite: /user-agent:\s*\*\s*\n\s*disallow:\s*\/\s*$/im.test(robotsRes.body)
+  };
+  if (!robots.present) {
+    findings.push(createFinding({ id: 'seo-robots-missing', runner: 'seo', category: CATEGORY.SEO, severity: SEVERITY.MEDIUM, title: 'No valid robots.txt file was found',
+      detail: 'robots.txt tells search engines which pages they may visit.', evidence: `/robots.txt returned status ${robotsRes.status}`, recommendation: 'Add a robots.txt file.' }));
+  }
+  if (robots.blocksWholeSite) {
+    findings.push(createFinding({ id: 'seo-robots-blocks-site', runner: 'seo', category: CATEGORY.SEO, severity: SEVERITY.HIGH, title: 'robots.txt blocks search engines from the whole site',
+      detail: 'Search engines are told not to visit any page.', evidence: 'Disallow: / for all crawlers', recommendation: 'Remove the blanket block unless the site is meant to be private.' }));
+  }
+
   return createRunnerResult('seo_sample', baseUrl, findings, {
+    robots,
     sampled: pages.length, ok: ok.length, missingDescription: noDesc.length, missingTitle: noTitle.length, headingIssues: badH1.length, missingCanonical: noCanonical.length,
     missingSocialTags: noOg.length, blockedFromSearch: noIndex.length, withStructuredData: structuredCount, structuredTypes: types, pages
   });
