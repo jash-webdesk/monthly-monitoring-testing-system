@@ -171,6 +171,23 @@ export async function runDns(hostname) {
         }));
       }
 
+      const pctMatch = dmarc.match(/pct=(\d+)/);
+      const pctVal = pctMatch ? parseInt(pctMatch[1], 10) : 100;
+      if (pctVal < 100 && policyMatch?.[1] !== 'none') {
+        findings.push(createFinding({
+          id:             'dns-dmarc-partial-enforcement',
+          runner:         RUNNER_NAME,
+          category:       CATEGORY.SECURITY,
+          severity:       SEVERITY.MEDIUM,
+          title:          `DMARC enforcement is partial (pct=${pctVal})`,
+          detail:         `The DMARC policy applies to only ${pctVal}% of unauthenticated emails. The remaining ${100 - pctVal}% are delivered without policy enforcement, leaving the domain partially vulnerable to email spoofing.`,
+          evidence:       `DMARC record contains pct=${pctVal}`,
+          recommendation: 'Increase pct to 100 (or remove the pct tag, which defaults to 100%) to ensure full protection.',
+          owasp:          'A05',
+          wcag:           null
+        }));
+      }
+
       if (!dmarc.includes('rua=')) {
         findings.push(createFinding({
           id:             'dns-dmarc-no-reporting',
@@ -185,6 +202,16 @@ export async function runDns(hostname) {
           wcag:           null
         }));
       }
+    }
+
+    // ── BIMI Check ────────────────────────────────────────────────
+    let bimi = null;
+    try {
+      const rawBimi = await dns.resolveTxt(`default._bimi.${hostname}`);
+      bimi = rawBimi.flat().join('');
+      metrics.bimi = { record: bimi, configured: true };
+    } catch {
+      metrics.bimi = { record: null, configured: false };
     }
 
     // ── DKIM Check (probe common selectors) ───────────────────────
@@ -216,6 +243,62 @@ export async function runDns(hostname) {
         owasp:          'A05',
         wcag:           null
       }));
+    }
+
+    // ── Email Server Blacklist Check (DNSBL) ───────────────────────
+    const DNSBL_PROVIDERS = [
+      { name: 'Spamhaus ZEN', zone: 'zen.spamhaus.org' },
+      { name: 'SpamCop', zone: 'bl.spamcop.net' },
+      { name: 'Barracuda', zone: 'b.barracudacentral.org' }
+    ];
+
+    const mailServerIps = new Set();
+    if (Array.isArray(metrics.mxRecords) && metrics.mxRecords.length > 0) {
+      for (const mx of metrics.mxRecords) {
+        if (!mx?.exchange) continue;
+        try {
+          const ips = await dns.resolve4(mx.exchange);
+          for (const ip of ips) mailServerIps.add(JSON.stringify({ ip, host: mx.exchange }));
+        } catch { /* ignore individual MX resolution error */ }
+      }
+    } else if (Array.isArray(metrics.aRecords) && metrics.aRecords.length > 0) {
+      for (const ip of metrics.aRecords) mailServerIps.add(JSON.stringify({ ip, host: hostname }));
+    }
+
+    const uniqueMailServers = Array.from(mailServerIps).map(s => JSON.parse(s));
+    metrics.dnsbl = {
+      checkedIps: uniqueMailServers.map(x => x.ip),
+      providers: DNSBL_PROVIDERS.map(p => p.name),
+      clean: true,
+      listings: []
+    };
+
+    for (const { ip, host } of uniqueMailServers) {
+      const reversedIp = ip.split('.').reverse().join('.');
+      for (const provider of DNSBL_PROVIDERS) {
+        try {
+          const queryHost = `${reversedIp}.${provider.zone}`;
+          const answers = await dns.resolve4(queryHost);
+          if (answers && answers.length > 0) {
+            metrics.dnsbl.clean = false;
+            metrics.dnsbl.listings.push({ ip, host, provider: provider.name, response: answers });
+            findings.push(createFinding({
+              id: `dns-blacklisted-${provider.zone.replace(/\./g, '-')}`,
+              runner: RUNNER_NAME,
+              category: CATEGORY.SECURITY,
+              severity: SEVERITY.HIGH,
+              title: `Mail server ${host} (${ip}) listed on ${provider.name}`,
+              detail: `The mail server for ${hostname} is listed on the ${provider.name} blacklist (${answers.join(', ')}). This can cause transactional emails (order confirmations, shipping notices, password resets) to be blocked or routed to spam folders.`,
+              evidence: `Query ${queryHost} returned ${answers.join(', ')}`,
+              recommendation: `Request delisting from ${provider.name} and inspect outbound mail server logs for compromised accounts or spam spikes.`,
+              owasp: 'A05',
+              wcag: null
+            }));
+          }
+        } catch {
+          // NXDOMAIN / ENOTFOUND means clean (not listed)
+        }
+      }
     }
 
     // ── Full snapshot for month-over-month diff ───────────────────

@@ -30,7 +30,13 @@
       },
       "currencies": ["USD", "CAD"],
       "defaultCurrency": "USD",
-      "manualCwv": { "mobileLcp": "1.1 s" },
+      "manualCwv": { "mobileLcp": "1.3 s", "desktopLcp": "1.3 s", "mobileCls": "< 0.1", "desktopCls": "< 0.1" },
+      "securityFixes": {
+        "2026-09": [
+          { "layer": "sri", "tools": ["GetResponse (email marketing)"] }
+        ],
+        "2026-10": []
+      },
       "scores": {
         "desktop": {
           "before": { "performance": 88, "accessibility": 87, "bestPractices": 100, "seo": 100 },

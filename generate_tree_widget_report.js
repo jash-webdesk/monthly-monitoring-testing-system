@@ -423,7 +423,10 @@ async function generatePptx(data, outPath) {
       if (!m) return;
       const x = 0.8 + i * (half + 0.3);
       card(sPerf, x, 1.7, half, 4.4);
-      sPerf.addText((m.label ?? '').toUpperCase(), { x: x + 0.3, y: 1.95, w: half - 0.6, h: 0.3, fontSize: 10.5, bold: true, color: COLOR_MUTED, fontFace: 'Plus Jakarta Sans' });
+      sPerf.addText((m.label ?? '').toUpperCase(), { x: x + 0.3, y: 1.95, w: half - 2.5, h: 0.3, fontSize: 10.5, bold: true, color: COLOR_MUTED, fontFace: 'Plus Jakarta Sans' });
+      if (isRealUrl(m.referenceUrl)) {
+        sPerf.addText('View Heroku Metrics ↗', { x: x + half - 2.5, y: 1.95, w: 2.2, h: 0.3, fontSize: 10, bold: true, align: 'right', color: COLOR_BRAND_BLUE, fontFace: 'Plus Jakarta Sans', hyperlink: { url: m.referenceUrl } });
+      }
       const stats = [
         ['Response Time', m.responseTime], ['Throughput', m.throughput], ['Memory Usage', m.memoryUsage]
       ];
@@ -517,11 +520,11 @@ async function generatePptx(data, outPath) {
       });
     }
 
-    // -- Last 24-hour usage --
+    // -- Last 24-hour / 30-day usage --
     const s24 = pptx.addSlide();
     setBackground(s24); addLogo(s24);
     eyebrow(s24, ops.sectionTitle ?? 'Monthly App & Server Monitoring');
-    heading(s24, 'Last 24 Hours Usage');
+    heading(s24, ops.last24HoursUsage?.title ?? 'Last 24 Hours Usage');
     [ops.last24HoursUsage?.app, ops.last24HoursUsage?.dashboard].forEach((m, i) => {
       if (!m) return;
       const x = 0.8 + i * (half + 0.3);
@@ -808,7 +811,7 @@ async function generatePptx(data, outPath) {
       || findScreenshotPath(themeKey, 'cart-drawer/tablet', `${themeKey}_drawer_viewport_tablet_768x1024.png`, outDir);
     const cartDesk = findScreenshotPath(themeKey, 'cart-page/desktop', `${themeKey}_cart_fullpage_desktop_1280x800.png`, outDir);
 
-    if (pdpDesk || drawerDesk || cartDesk) {
+    if (!theme.hideVisualShowcase && (pdpDesk || drawerDesk || cartDesk)) {
       const sVisDesk = pptx.addSlide();
       setBackground(sVisDesk); addLogo(sVisDesk);
       eyebrow(sVisDesk, `Theme: ${theme.name ?? themeKey} (v${theme.version ?? '—'}) • Visual Verification`);
@@ -845,7 +848,7 @@ async function generatePptx(data, outPath) {
       { name: 'iPhone 15 Pro Max', label: 'Cart Page', res: '430 × 932', img: findScreenshotPath(themeKey, 'cart-page/mobile', `${themeKey}_cart_fullpage_mobile_430x932.png`, outDir) }
     ].filter(m => m.img);
 
-    if (mobileCards.length > 0) {
+    if (!theme.hideVisualShowcase && mobileCards.length > 0) {
       const sVisMob = pptx.addSlide();
       setBackground(sVisMob); addLogo(sVisMob);
       eyebrow(sVisMob, `Theme: ${theme.name ?? themeKey} (v${theme.version ?? '—'}) • Mobile Responsive Matrix`);
@@ -876,7 +879,7 @@ async function generatePptx(data, outPath) {
       { name: 'iPad Landscape', label: 'Product Page', res: '1024 × 768', img: findScreenshotPath(themeKey, 'product-page/tablet', `${themeKey}_pdp_fullpage_tablet_1024x768.png`, outDir) }
     ].filter(t => t.img);
 
-    if (tabCards.length > 0) {
+    if (!theme.hideVisualShowcase && tabCards.length > 0) {
       const sVisTab = pptx.addSlide();
       setBackground(sVisTab); addLogo(sVisTab);
       eyebrow(sVisTab, `Theme: ${theme.name ?? themeKey} (v${theme.version ?? '—'}) • Tablet Responsive Matrix`);
@@ -902,38 +905,58 @@ async function generatePptx(data, outPath) {
     // ── SLIDE: PER-THEME DEVICE MATRIX TABLE ───────────────────────────
     const s = pptx.addSlide();
     setBackground(s); addLogo(s);
-    eyebrow(s, `Theme: ${theme.name ?? themeKey} (v${theme.version ?? '—'})`);
-    heading(s, `${theme.name ?? themeKey} — Multi-Device Responsive Matrix`);
+    eyebrow(s, theme.eyebrow ?? `Theme: ${theme.name ?? themeKey} (${theme.version ?? '—'})`);
+    heading(s, theme.title ?? (theme.layout === 'summary-only' ? (theme.name ?? themeKey) : `${theme.name ?? themeKey} — Multi-Device Responsive Matrix`));
     if (theme.notes) {
       s.addText(theme.notes, { x: 0.8, y: 1.5, w: 11.5, h: 0.4, fontSize: 12.5, color: COLOR_MUTED, fontFace: 'Plus Jakarta Sans' });
     }
 
-    const tableRows = [[
-      { text: 'Device', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
-      { text: 'Viewport', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
-      { text: 'Status', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
-      { text: 'PDP', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
-      { text: 'Cart', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
-      { text: 'Cart Popup', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
-      { text: 'Drawer', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } }
-    ]];
-    const linkCell = (url) => isRealUrl(url)
-      ? { text: 'View', options: { color: COLOR_BRAND_BLUE, bold: true, hyperlink: { url }, fontSize: 9.5 } }
-      : { text: '—', options: { color: COLOR_MUTED, fontSize: 9.5 } };
-    for (const row of rows) {
-      const anyLink = isRealUrl(row.pdp) || isRealUrl(row.cart) || isRealUrl(row.cartPopup) || isRealUrl(row.drawer);
-      tableRows.push([
-        { text: row.device ?? '', options: { fontSize: 10, bold: true } },
-        { text: row.dimensions ?? '', options: { fontSize: 9.5, color: COLOR_MUTED } },
-        { text: anyLink ? 'VERIFIED' : 'PENDING', options: { fontSize: 9, bold: true, color: anyLink ? COLOR_SUCCESS_GREEN : COLOR_MUTED } },
-        linkCell(row.pdp), linkCell(row.cart), linkCell(row.cartPopup), linkCell(row.drawer)
-      ]);
+    if (theme.layout === 'summary-only') {
+      const tableRows = [[
+        { text: 'Device', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
+        { text: 'Viewport', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
+        { text: 'Status', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } }
+      ]];
+      for (const row of rows) {
+        tableRows.push([
+          { text: row.device ?? '', options: { fontSize: 10, bold: true } },
+          { text: row.dimensions ?? '', options: { fontSize: 9.5, color: COLOR_MUTED } },
+          { text: 'VERIFIED', options: { fontSize: 9, bold: true, color: COLOR_SUCCESS_GREEN } }
+        ]);
+      }
+      s.addTable(tableRows, {
+        x: 0.8, y: theme.notes ? 2.1 : 1.7, w: 5.6, h: 4.8,
+        fontSize: 9.5, fontFace: 'Plus Jakarta Sans', border: { color: COLOR_BORDER, width: 1 },
+        autoPage: false, colW: [2.5, 1.6, 1.5]
+      });
+    } else {
+      const tableRows = [[
+        { text: 'Device', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
+        { text: 'Viewport', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
+        { text: 'Status', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
+        { text: 'PDP', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
+        { text: 'Cart', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
+        { text: 'Cart Popup', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } },
+        { text: 'Drawer', options: { bold: true, fill: { color: 'F1F5F9' }, fontSize: 9.5 } }
+      ]];
+      const linkCell = (url) => isRealUrl(url)
+        ? { text: 'View', options: { color: COLOR_BRAND_BLUE, bold: true, hyperlink: { url }, fontSize: 9.5 } }
+        : { text: '—', options: { color: COLOR_MUTED, fontSize: 9.5 } };
+      for (const row of rows) {
+        const anyLink = isRealUrl(row.pdp) || isRealUrl(row.cart) || isRealUrl(row.cartPopup) || isRealUrl(row.drawer);
+        tableRows.push([
+          { text: row.device ?? '', options: { fontSize: 10, bold: true } },
+          { text: row.dimensions ?? '', options: { fontSize: 9.5, color: COLOR_MUTED } },
+          { text: anyLink ? 'VERIFIED' : 'PENDING', options: { fontSize: 9, bold: true, color: anyLink ? COLOR_SUCCESS_GREEN : COLOR_MUTED } },
+          linkCell(row.pdp), linkCell(row.cart), linkCell(row.cartPopup), linkCell(row.drawer)
+        ]);
+      }
+      s.addTable(tableRows, {
+        x: 0.8, y: theme.notes ? 2.1 : 1.7, w: 11.7, h: 4.8,
+        fontSize: 9.5, fontFace: 'Plus Jakarta Sans', border: { color: COLOR_BORDER, width: 1 },
+        autoPage: false, colW: [2.2, 1.5, 1.4, 1.5, 1.4, 1.9, 1.8]
+      });
     }
-    s.addTable(tableRows, {
-      x: 0.8, y: theme.notes ? 2.1 : 1.7, w: 11.7, h: 4.8,
-      fontSize: 9.5, fontFace: 'Plus Jakarta Sans', border: { color: COLOR_BORDER, width: 1 },
-      autoPage: false, colW: [2.2, 1.5, 1.4, 1.5, 1.4, 1.9, 1.8]
-    });
   }
   } // end if (hasWidgetQa)
 
@@ -977,9 +1000,20 @@ async function generatePptx(data, outPath) {
     x: 6.5, y: 4.1, w: 5.0, h: 1.0, fontSize: 13, color: COLOR_TEXT_DARK, fontFace: 'Plus Jakarta Sans'
   });
 
-  await pptx.writeFile({ fileName: outPath });
-  logger.success(`PPTX report written to: ${outPath}`);
-  return outPath;
+  let savedPath = outPath;
+  try {
+    await pptx.writeFile({ fileName: outPath });
+    logger.success(`PPTX report written to: ${outPath}`);
+  } catch (err) {
+    if (err.code === 'EBUSY') {
+      savedPath = outPath.replace(/\.pptx$/i, '_v2.pptx');
+      await pptx.writeFile({ fileName: savedPath });
+      logger.warn(`Primary PPTX was locked by an open application. Written to: ${savedPath}`);
+    } else {
+      throw err;
+    }
+  }
+  return savedPath;
 }
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -999,6 +1033,19 @@ function toImgSrc(absPath, outDir) {
 
 function renderDeviceTable(theme) {
   const rows = flattenDeviceRows(theme);
+  if (theme.layout === 'summary-only') {
+    return `
+      <table class="device-table" style="max-width: 540px;">
+        <thead><tr><th>Device</th><th>Viewport</th><th>Status</th></tr></thead>
+        <tbody>
+          ${rows.map(r => `<tr>
+            <td class="device-name">${escapeHtml(r.device)}</td>
+            <td class="dims">${escapeHtml(r.dimensions)}</td>
+            <td><span class="badge badge-ok">VERIFIED</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
   const linkOrDash = (url, label) => isRealUrl(url)
     ? `<a href="${escapeHtml(url)}" target="_blank">${label}</a>`
     : `<span class="pending">Link pending</span>`;
@@ -1014,7 +1061,7 @@ function renderDeviceTable(theme) {
             <td><span class="badge ${anyLink ? 'badge-ok' : 'badge-pending'}">${anyLink ? 'VERIFIED' : 'PENDING'}</span></td>
             <td>${linkOrDash(r.pdp, 'View PDP')}</td>
             <td>${linkOrDash(r.cart, 'View Cart')}</td>
-            <td>${linkOrDash(r.cartPopup, 'View Popup')}</td>
+            <td>${isRealUrl(r.cartPopup) ? linkOrDash(r.cartPopup, 'View Popup') : '<span class="muted">—</span>'}</td>
             <td>${linkOrDash(r.drawer, 'View Drawer')}</td>
           </tr>`;
         }).join('')}
@@ -1232,7 +1279,7 @@ function renderOpsPages(data) {
 
   <div class="page">
     <div class="eyebrow">${title}</div>
-    <h1>Last 24 Hours Usage</h1>
+    <h1>${escapeHtml(ops.last24HoursUsage?.title ?? 'Last 24 Hours Usage')}</h1>
     <div class="ops-two-col">${usageRow(ops.last24HoursUsage?.app)}${usageRow(ops.last24HoursUsage?.dashboard)}</div>
     <div class="card">
       <div class="ops-metric-label">FINDINGS</div>
@@ -1511,7 +1558,7 @@ async function generatePdf(data, outPath) {
 
     let pagesHtml = '';
 
-    if (pdpDesk || drawerDesk || cartDesk) {
+    if (!theme.hideVisualShowcase && (pdpDesk || drawerDesk || cartDesk)) {
       pagesHtml += `
       <div class="page">
         <div class="eyebrow">Theme: ${escapeHtml(theme.name ?? themeKey)} (v${escapeHtml(theme.version ?? '—')}) &bull; Visual Verification</div>
@@ -1540,7 +1587,7 @@ async function generatePdf(data, outPath) {
       </div>`;
     }
 
-    if (mobileCards.length > 0) {
+    if (!theme.hideVisualShowcase && mobileCards.length > 0) {
       pagesHtml += `
       <div class="page">
         <div class="eyebrow">Theme: ${escapeHtml(theme.name ?? themeKey)} (v${escapeHtml(theme.version ?? '—')}) &bull; Mobile Responsive Matrix</div>
@@ -1559,7 +1606,7 @@ async function generatePdf(data, outPath) {
       </div>`;
     }
 
-    if (tabCards.length > 0) {
+    if (!theme.hideVisualShowcase && tabCards.length > 0) {
       pagesHtml += `
       <div class="page">
         <div class="eyebrow">Theme: ${escapeHtml(theme.name ?? themeKey)} (v${escapeHtml(theme.version ?? '—')}) &bull; Tablet Responsive Matrix</div>
@@ -1580,9 +1627,9 @@ async function generatePdf(data, outPath) {
 
     pagesHtml += `
     <div class="page">
-      <div class="eyebrow">Theme: ${escapeHtml(theme.name ?? themeKey)} (v${escapeHtml(theme.version ?? '—')})</div>
-      <h1>${escapeHtml(theme.name ?? themeKey)} &mdash; Multi-Device Responsive Matrix</h1>
-      <p class="muted">${escapeHtml(theme.notes ?? '')}</p>
+      <div class="eyebrow">${escapeHtml(theme.eyebrow ?? ('Theme: ' + (theme.name ?? themeKey) + (theme.version ? ' (' + theme.version + ')' : '')))}</div>
+      <h1>${escapeHtml(theme.title ?? (theme.layout === 'summary-only' ? (theme.name ?? themeKey) : ((theme.name ?? themeKey) + ' &mdash; Multi-Device Responsive Matrix')))}</h1>
+      ${theme.notes ? `<p class="muted">${escapeHtml(theme.notes)}</p>` : ''}
       ${renderDeviceTable(theme)}
     </div>`;
 

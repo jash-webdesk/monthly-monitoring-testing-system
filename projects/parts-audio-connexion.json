@@ -80,6 +80,21 @@
         "passed": 2,
         "total": 2
       },
+      "manualCwv": {
+        "mobileLcp": "1.3 s",
+        "desktopLcp": "1.3 s",
+        "mobileCls": "< 0.1",
+        "desktopCls": "< 0.1"
+      },
+      "securityFixes": {
+        "2026-09": [
+          {
+            "layer": "sri",
+            "tools": ["GetResponse (email marketing)"]
+          }
+        ],
+        "2026-10": []
+      },
       "fixedValuesNote": "categoryScores and agenticBrowsing are the same every month and were set by the user on 2026-10-12. They are shown in the reports in place of the measured values. Update them here if the real results change."
     },
     {

@@ -274,6 +274,16 @@ export async function runCrawler(targetUrl) {
     } catch (geoErr) {
       logger.warn(`[Crawler] Pillar 4B GEO check warning: ${geoErr.message}`);
     }
+
+    // 4. Pillar 4C — Product Schema & Rich Snippets Audit
+    logger.info('[Crawler] Running Pillar 4C: Product Rich Snippets (Schema.org) checks...');
+    try {
+      const { findings: schemaFindings, metrics: schemaMetrics } = await auditProductSchema(sitemapUrls, baseUrl);
+      allFindings.push(...schemaFindings);
+      metrics.productSchema = schemaMetrics;
+    } catch (schemaErr) {
+      logger.warn(`[Crawler] Pillar 4C Product Schema check warning: ${schemaErr.message}`);
+    }
   } catch (err) {
     logger.warn(`[Crawler] Playwright viewport check warning: ${err.message}`);
   } finally {
@@ -378,6 +388,164 @@ async function auditGeoAeo(baseUrl, page) {
     }
   } catch (err) {
     // Ignore DOM inspection warnings
+  }
+
+  return { findings, metrics };
+}
+
+/**
+ * Pillar 4C — Product Rich Snippets (Schema.org) Audit for eCommerce Storefronts
+ * Inspects Product Detail Pages (PDP) for Schema.org JSON-LD microdata, verifying
+ * required Google Merchant & Search rich snippet attributes (price, currency, availability, SKU, brand).
+ */
+async function auditProductSchema(sitemapUrls, baseUrl) {
+  const findings = [];
+  const metrics = {
+    auditedUrl: null,
+    hasProductSchema: false,
+    hasBreadcrumbs: false,
+    name: null,
+    sku: null,
+    brand: null,
+    price: null,
+    currency: null,
+    availability: null,
+    richSnippetEligible: false
+  };
+
+  try {
+    // 1. Identify candidate Product Detail Pages (PDP)
+    const root = baseUrl.replace(/\/$/, '');
+    let candidateUrls = [];
+
+    // Check if store provides a dedicated product sub-sitemap (BigCommerce xmlsitemap.php?type=products or Shopify sitemap_products_1.xml)
+    const subCandidates = [
+      `${root}/xmlsitemap.php?type=products&page=1`,
+      `${root}/sitemap_products_1.xml`,
+      `${root}/sitemap-products.xml`
+    ];
+
+    for (const sub of subCandidates) {
+      try {
+        const { body, statusCode } = await fetchText(sub);
+        if (statusCode === 200 && body) {
+          const locs = extractLocs(body);
+          if (locs.length > 0) {
+            candidateUrls.push(...locs);
+            break;
+          }
+        }
+      } catch {}
+    }
+
+    if (candidateUrls.length === 0) {
+      const nonProductPattern = /\/(category|categories|shop-by|brands?|about|contact|shipping|returns|privacy|terms|news|blog|cart|checkout|account|login|xmlsitemap|sitemap)\b/i;
+      candidateUrls = (sitemapUrls || []).filter(u => !nonProductPattern.test(u) && u !== baseUrl && u !== `${root}/`);
+    }
+
+    if (candidateUrls.length === 0) {
+      logger.info('[Crawler] No product detail page URL identified for Product Schema audit.');
+      return { findings, metrics };
+    }
+
+    // Try up to 3 candidate URLs to locate and audit Product schema
+    let productObj = null;
+    let breadcrumbObj = null;
+    let pdpUrl = candidateUrls[0];
+
+    for (const candidate of candidateUrls.slice(0, 3)) {
+      try {
+        logger.info(`[Crawler] Auditing Product Schema on candidate: ${candidate}`);
+        const { body: html, statusCode } = await fetchText(candidate);
+        if (statusCode !== 200 || !html) continue;
+
+        const regex = /<script\s+type=["']application\/ld\+json["']>([\s\S]*?)<\/script>/gi;
+        const matches = [...html.matchAll(regex)];
+
+        for (const m of matches) {
+          try {
+            const data = JSON.parse(m[1].trim());
+            if (data['@type'] === 'Product' || data['@type'] === 'http://schema.org/Product') productObj = data;
+            else if (data['@type'] === 'BreadcrumbList') breadcrumbObj = data;
+            else if (Array.isArray(data['@graph'])) {
+              for (const g of data['@graph']) {
+                if (g['@type'] === 'Product') productObj = g;
+                if (g['@type'] === 'BreadcrumbList') breadcrumbObj = g;
+              }
+            }
+          } catch {}
+        }
+
+        if (productObj) {
+          pdpUrl = candidate;
+          break;
+        }
+      } catch {}
+    }
+
+    metrics.auditedUrl = pdpUrl;
+
+    if (!productObj) {
+      findings.push(createFinding({
+        id: 'seo-missing-product-schema',
+        category: CATEGORY.SEO,
+        severity: SEVERITY.HIGH,
+        title: 'Missing Schema.org Product Rich Snippets on Product Pages',
+        detail: `The candidate product detail pages (such as ${pdpUrl}) lack structured Schema.org Product JSON-LD microdata. Google requires this to display prices, in-stock badges, and ratings in search results and Google Shopping.`,
+        evidence: `0 Product JSON-LD entities found across candidate PDPs`,
+        recommendation: 'Implement Schema.org JSON-LD Product microdata with name, image, offers, brand, and SKU.'
+      }));
+      return { findings, metrics };
+    }
+
+    metrics.hasProductSchema = true;
+    metrics.name = productObj.name || null;
+    metrics.sku = productObj.sku || productObj.productID || null;
+    metrics.brand = typeof productObj.brand === 'object' ? (productObj.brand?.name || null) : (productObj.brand || null);
+    metrics.hasBreadcrumbs = Boolean(breadcrumbObj);
+
+    // Offers evaluation
+    const offer = Array.isArray(productObj.offers) ? productObj.offers[0] : (productObj.offers || {});
+    metrics.price = offer.price != null ? String(offer.price) : null;
+    metrics.currency = offer.priceCurrency || null;
+    metrics.availability = offer.availability || null;
+
+    // Check required fields for Google Rich Results
+    const hasName = Boolean(productObj.name);
+    const hasImage = Boolean(productObj.image);
+    const hasPrice = offer.price != null && !isNaN(Number(offer.price));
+    const hasCurrency = Boolean(offer.priceCurrency);
+    const hasAvailability = Boolean(offer.availability);
+    const hasIdentifier = Boolean(metrics.sku || productObj.gtin || productObj.mpn);
+
+    if (!hasPrice || !hasAvailability || !hasCurrency) {
+      findings.push(createFinding({
+        id: 'seo-product-schema-incomplete-offers',
+        category: CATEGORY.SEO,
+        severity: SEVERITY.MEDIUM,
+        title: 'Product Schema Incomplete: Missing Pricing or Stock Availability',
+        detail: `The Product schema at ${pdpUrl} is missing required offer fields (price: ${hasPrice ? 'OK' : 'MISSING'}, currency: ${hasCurrency ? 'OK' : 'MISSING'}, availability: ${hasAvailability ? 'OK' : 'MISSING'}). This prevents Google from showing price and stock badges on search results.`,
+        evidence: `Offers: ${JSON.stringify(offer)}`,
+        recommendation: 'Ensure offers object defines price (numerical), priceCurrency (e.g. USD), and availability (e.g. https://schema.org/InStock).'
+      }));
+    }
+
+    if (!hasIdentifier) {
+      findings.push(createFinding({
+        id: 'seo-product-schema-missing-identifier',
+        category: CATEGORY.SEO,
+        severity: SEVERITY.LOW,
+        title: 'Product Schema Missing Product Identifier (SKU / GTIN)',
+        detail: `The Product schema at ${pdpUrl} lacks unique product identifiers (sku, gtin, or mpn). Google Merchant Center uses identifiers to match catalog listings.`,
+        evidence: `SKU/GTIN: not defined`,
+        recommendation: 'Add sku or gtin attribute to the Product JSON-LD block.'
+      }));
+    }
+
+    metrics.richSnippetEligible = hasName && hasImage && hasPrice && hasCurrency && hasAvailability;
+    logger.info(`[Crawler] Product Schema audit complete: ${metrics.name || 'Product'} (Eligible: ${metrics.richSnippetEligible ? 'YES' : 'NO'})`);
+  } catch (err) {
+    logger.warn(`[Crawler] Product schema audit warning: ${err.message}`);
   }
 
   return { findings, metrics };

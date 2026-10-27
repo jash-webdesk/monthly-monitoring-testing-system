@@ -1,0 +1,418 @@
+{
+  "schemaVersion": 1,
+  "project": "parts-audio-connexion",
+  "month": "2026-10",
+  "generatedAt": "2026-10-16T10:03:55.559Z",
+  "scores": {
+    "partsconnexion.com": [
+      {
+        "page": "homepage",
+        "label": "Homepage",
+        "viewport": "mobile",
+        "before": 56,
+        "after": 68,
+        "delta": 12,
+        "previousAfter": null,
+        "changeVsPreviousMonth": null
+      },
+      {
+        "page": "homepage",
+        "label": "Homepage",
+        "viewport": "desktop",
+        "before": 80,
+        "after": 92,
+        "delta": 12,
+        "previousAfter": null,
+        "changeVsPreviousMonth": null
+      }
+    ],
+    "audio-connexion.com": [
+      {
+        "page": "homepage",
+        "label": "Homepage",
+        "viewport": "mobile",
+        "before": 47,
+        "after": 52,
+        "delta": 5,
+        "previousAfter": null,
+        "changeVsPreviousMonth": null
+      },
+      {
+        "page": "homepage",
+        "label": "Homepage",
+        "viewport": "desktop",
+        "before": 61,
+        "after": 83,
+        "delta": 22,
+        "previousAfter": null,
+        "changeVsPreviousMonth": null
+      }
+    ]
+  },
+  "sites": {
+    "partsconnexion.com": {
+      "url": "https://partsconnexion.com/",
+      "audits": {
+        "network": {
+          "status": "skipped",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Not selected with --only."
+        },
+        "dns": {
+          "status": "completed",
+          "durationMs": 10907,
+          "findingCount": 1
+        },
+        "ssl": {
+          "status": "skipped",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Not selected with --only."
+        },
+        "seo": {
+          "status": "completed",
+          "durationMs": 14998,
+          "findingCount": 1
+        },
+        "ai-crawlers": {
+          "status": "skipped",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Not selected with --only."
+        },
+        "performance": {
+          "status": "skipped",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Not selected with --only."
+        },
+        "security": {
+          "status": "skipped",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Not selected with --only."
+        },
+        "currency": {
+          "status": "skipped",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Not selected with --only."
+        },
+        "companion-app": {
+          "status": "skipped",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Not selected with --only."
+        },
+        "functional": {
+          "status": "skipped",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Not selected with --only."
+        },
+        "cache": {
+          "status": "skipped",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Not selected with --only."
+        }
+      },
+      "metrics": {
+        "findings.critical": 0,
+        "findings.high": 0,
+        "findings.medium": 2,
+        "findings.low": 0
+      },
+      "findings": [
+        {
+          "id": "dns-dmarc-partial-enforcement",
+          "runner": "dns",
+          "category": "security",
+          "severity": "medium",
+          "title": "DMARC enforcement is partial (pct=25)",
+          "detail": "The DMARC policy applies to only 25% of unauthenticated emails. The remaining 75% are delivered without policy enforcement, leaving the domain partially vulnerable to email spoofing.",
+          "evidence": "DMARC record contains pct=25",
+          "recommendation": "Increase pct to 100 (or remove the pct tag, which defaults to 100%) to ensure full protection.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "crawler-geo-missing-schema",
+          "runner": "crawler",
+          "category": "seo",
+          "severity": "medium",
+          "title": "Pillar 4B: Missing Structured JSON-LD Schema",
+          "detail": "The page does not declare any JSON-LD structured data (Product, Organization, or FAQPage). Generative AI search engines rely on JSON-LD to understand product pricing, specs, and attributes.",
+          "evidence": "0 JSON-LD scripts found in DOM",
+          "recommendation": "Add Schema.org JSON-LD microdata (Product, FAQPage, Organization) to enable AI citation indexing.",
+          "status": "new",
+          "openSince": "2026-10"
+        }
+      ],
+      "resolved": []
+    },
+    "audio-connexion.com": {
+      "url": "https://audio-connexion.com/",
+      "audits": {
+        "network": {
+          "status": "completed",
+          "durationMs": 2660,
+          "findingCount": 0
+        },
+        "dns": {
+          "status": "completed",
+          "durationMs": 11452,
+          "findingCount": 0
+        },
+        "ssl": {
+          "status": "completed",
+          "durationMs": 139,
+          "findingCount": 0
+        },
+        "seo": {
+          "status": "completed",
+          "durationMs": 14598,
+          "findingCount": 1
+        },
+        "ai-crawlers": {
+          "status": "completed",
+          "durationMs": 0,
+          "findingCount": 0,
+          "note": "Derived from the crawler result; these findings are also counted under seo."
+        },
+        "performance": {
+          "status": "completed",
+          "durationMs": 66744,
+          "findingCount": 3
+        },
+        "security": {
+          "status": "completed",
+          "durationMs": 17785,
+          "findingCount": 9
+        },
+        "currency": {
+          "status": "completed",
+          "durationMs": 64805,
+          "findingCount": 0
+        },
+        "companion-app": {
+          "status": "skipped",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Does not apply to audio-connexion.com."
+        },
+        "functional": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "No generic storefront-journey runner exists yet (see docs/LIMITATIONS.md)."
+        },
+        "cache": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Server/build-cache metrics are captured manually from the hosting dashboard; no API runner exists yet."
+        }
+      },
+      "metrics": {
+        "performance.homepage.desktop.measuredScore": 80,
+        "performance.homepage.mobile.measuredScore": 56,
+        "ssl.daysRemaining": 58,
+        "network.uptimePercentage": 100,
+        "network.responseTimeMs": 404,
+        "findings.critical": 0,
+        "findings.high": 3,
+        "findings.medium": 7,
+        "findings.low": 3
+      },
+      "findings": [
+        {
+          "id": "crawler-geo-missing-schema",
+          "runner": "crawler",
+          "category": "seo",
+          "severity": "medium",
+          "title": "Pillar 4B: Missing Structured JSON-LD Schema",
+          "detail": "The page does not declare any JSON-LD structured data (Product, Organization, or FAQPage). Generative AI search engines rely on JSON-LD to understand product pricing, specs, and attributes.",
+          "evidence": "0 JSON-LD scripts found in DOM",
+          "recommendation": "Add Schema.org JSON-LD microdata (Product, FAQPage, Organization) to enable AI citation indexing.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-lcp-poor-homepage",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "high",
+          "title": "[HOMEPAGE] Mobile Largest Contentful Paint (LCP) is poor (8.7 s)",
+          "detail": "LCP measures when the largest visible content element loads. It directly impacts perceived page speed and Google SEO ranking. Value of 8.7 s exceeds the poor threshold of 4000ms.",
+          "evidence": "[Page: homepage] LCP: 8659.74ms | Poor > 4000ms | Good < 2500ms",
+          "recommendation": "Optimise images with modern formats (WebP/AVIF), use a CDN, and eliminate render-blocking resources.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-tbt-needs-improvement-homepage",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "medium",
+          "title": "[HOMEPAGE] Mobile Total Blocking Time (TBT) needs improvement (210 ms)",
+          "detail": "TBT measures how long the main thread was blocked between FCP and TTI. High TBT means the page feels unresponsive to user interactions. Value of 210 ms is in the \"needs improvement\" range.",
+          "evidence": "[Page: homepage] TBT: 206ms | Range: 200ms – 600ms",
+          "recommendation": "Reduce JavaScript execution time, split long tasks, and defer third-party scripts.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "lighthouse-mobile-fcp-poor-homepage",
+          "runner": "lighthouse",
+          "category": "performance",
+          "severity": "medium",
+          "title": "[HOMEPAGE] Mobile First Contentful Paint is slow (3.2 s)",
+          "detail": "FCP marks the first time any text or image is painted. A value of 3.2 s indicates a slow server response or render-blocking resources.",
+          "evidence": "[Page: homepage] FCP: 3155.72ms | Poor threshold: 3000ms",
+          "recommendation": "Minimise render-blocking CSS/JS, use server-side caching, and reduce Time to First Byte (TTFB).",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-content-security-policy-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "high",
+          "title": "[HOMEPAGE] Missing security header: Content Security Policy (CSP)",
+          "detail": "CSP instructs the browser which content sources are trusted. Without it, any injected script — from a compromised ad, third-party CDN, or XSS payload — runs freely in your customers' browsers.",
+          "evidence": "[Page: homepage] Header \"content-security-policy\" absent from HTTP response of https://audio-connexion.com/",
+          "recommendation": "Add a Content-Security-Policy header. Start with: default-src 'self'; script-src 'self' and expand only as needed.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-referrer-policy-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[HOMEPAGE] Missing security header: Referrer-Policy",
+          "detail": "Controls how much referrer information is sent when a user navigates away. Without it, full URLs (including order IDs or search terms) may leak to third-party analytics.",
+          "evidence": "[Page: homepage] Header \"referrer-policy\" absent from HTTP response of https://audio-connexion.com/",
+          "recommendation": "Add: Referrer-Policy: strict-origin-when-cross-origin",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-permissions-policy-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[HOMEPAGE] Missing security header: Permissions-Policy",
+          "detail": "Restricts which browser APIs (camera, microphone, geolocation) scripts on the page can access. Without it, third-party scripts have unrestricted access.",
+          "evidence": "[Page: homepage] Header \"permissions-policy\" absent from HTTP response of https://audio-connexion.com/",
+          "recommendation": "Add: Permissions-Policy: geolocation=(), microphone=(), camera=()",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-missing-cross-origin-opener-policy-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[HOMEPAGE] Missing security header: Cross-Origin-Opener-Policy (COOP)",
+          "detail": "COOP isolates the browsing context, preventing cross-origin pages opened in popups from accessing the window object of this page.",
+          "evidence": "[Page: homepage] Header \"cross-origin-opener-policy\" absent from HTTP response of https://audio-connexion.com/",
+          "recommendation": "Add: Cross-Origin-Opener-Policy: same-origin",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-hsts-max-age-too-low-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[HOMEPAGE] HSTS max-age is too low (300s — recommended: 31,536,000s)",
+          "detail": "A short max-age means browsers stop enforcing HTTPS quickly after the last visit. HSTS preloading requires a minimum of 1 year.",
+          "evidence": "[Page: homepage] Strict-Transport-Security: max-age=300",
+          "recommendation": "Set: Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-hsts-missing-includesubdomains-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[HOMEPAGE] HSTS header is missing the includeSubDomains directive",
+          "detail": "Without includeSubDomains, subdomains are not covered by HSTS and could be exploited to downgrade connections to the main domain via cookies.",
+          "evidence": "[Page: homepage] Strict-Transport-Security: max-age=300",
+          "recommendation": "Add includeSubDomains to the HSTS header.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-cookies-missing-samesite-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[HOMEPAGE] 1 sensitive cookie(s) missing SameSite attribute",
+          "detail": "Without SameSite, cookies are included in cross-site requests, enabling Cross-Site Request Forgery (CSRF) attacks.",
+          "evidence": "[Page: homepage] Cookies without SameSite: SHOP_SESSION_TOKEN",
+          "recommendation": "Set SameSite=Lax or SameSite=Strict on all session cookies.",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-sri-missing-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "high",
+          "title": "[HOMEPAGE] 15 external script(s) loaded without Subresource Integrity (SRI)",
+          "detail": "External scripts without SRI hashes can be silently replaced with malicious code if the CDN or third-party host is compromised. This is an A08 supply chain risk — the most common vector for Magecart-style attacks on eCommerce sites.",
+          "evidence": "[Page: homepage] https://an.gr-wcon.com/script/48748ecb-06f9-4292-97fe-b942e7cb846d/ga.js\nhttps://www.googletagmanager.com/gtag/js?id=G-65SVY28B3L&cx=c&gtm=4e6ac1\nhttps://www.googletagmanager.com/gtm.js?id=GTM-WXTTHWTH\nhttps://cdn11.bigcommerce.com/s-g9mwmghvga/stencil/50276cd0-da77-013e-576c-62c317",
+          "recommendation": "Add integrity and crossorigin=\"anonymous\" attributes to all external scripts. Generate hashes at https://www.srihash.org/",
+          "status": "new",
+          "openSince": "2026-10"
+        },
+        {
+          "id": "devtools-guest-retire-js-vulnerable-libraries-homepage",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[HOMEPAGE] 1 known-vulnerable JavaScript library detected",
+          "detail": "One or more JavaScript libraries loaded on this page match a known-vulnerable version in the Retire.js CVE database. These are exploitable directly in the browser, independent of any server-side hardening.",
+          "evidence": "[Page: homepage] jquery@1.7.2 (medium) — https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js\n  CVE-2012-6708; CVE-2020-7656; CVE-2015-9251; jQuery 1.x and 2.x are End-of-Life and no longer receiving security updates; CVE-2019-11358; CVE-2020-11023",
+          "recommendation": "Upgrade each flagged library to a patched version — see evidence above for the specific component, version, and advisory.",
+          "status": "new",
+          "openSince": "2026-10"
+        }
+      ],
+      "resolved": []
+    }
+  },
+  "comparison": {
+    "previousMonth": null,
+    "hasPreviousData": false,
+    "sites": {
+      "partsconnexion.com": {
+        "findings": {
+          "new": 2,
+          "persisting": 0,
+          "resolved": 0,
+          "suppressed": 0
+        },
+        "changes": [],
+        "regressions": [],
+        "improvements": []
+      },
+      "audio-connexion.com": {
+        "findings": {
+          "new": 13,
+          "persisting": 0,
+          "resolved": 0,
+          "suppressed": 0
+        },
+        "changes": [],
+        "regressions": [],
+        "improvements": []
+      }
+    }
+  }
+}
