@@ -32,7 +32,7 @@ function sharesRegistrableDomain(hostA, hostB) {
 
 /**
  * Monitors a client's custom backend application (e.g. genpet.org's companion app
- * at app.genpet.org). Only runs when config/sites.json defines `customApp` for the
+ * at app.genpet.org). Only runs when projects/<project>.json defines `customApp` for the
  * site being audited — every other site is a complete no-op via the caller's guard.
  *
  * SAFETY CONTRACT — Blueprint Section 19.3 (Production Safety):
@@ -45,7 +45,7 @@ function sharesRegistrableDomain(hostA, hostB) {
  *   3. DNS record check on the app's own hostname (reuses runDns — generic/safe)
  *   4. Authenticated login + curated navigation pass — ONLY runs once credentials are
  *      configured AND config.customApp.safeNavTargets is a non-empty, human-approved
- *      list (see discoveryApprovedBy/discoveryApprovedAt in config/sites.json). Until
+ *      list (see discoveryApprovedBy/discoveryApprovedAt in projects/<project>.json). Until
  *      both conditions hold, this runner performs the unauthenticated checks above
  *      only, and emits an informational finding explaining what was skipped and why.
  *
@@ -56,7 +56,7 @@ function sharesRegistrableDomain(hostA, hostB) {
  *     POST/PUT/PATCH/DELETE after login is treated as a CRITICAL finding and aborts
  *     the remaining nav pass — see WRITE_METHODS below.
  *
- * @param {Object} siteConfig - Full site config object from config/sites.json (must include .customApp)
+ * @param {Object} siteConfig - Full site config object from projects/<project>.json (must include .customApp)
  * @param {string} hostname   - Primary site hostname (e.g. "genpet.org") — used for logging/attribution and archive path
  * @param {string|null} [month] - YYYY-MM, used for the nav pass's screenshot archive path
  * @returns {Promise<Object>} Runner result envelope
@@ -66,7 +66,7 @@ export async function runCustomApp(siteConfig, hostname, month = null) {
 
   const customApp = siteConfig?.customApp;
   if (!customApp?.enabled || !customApp?.url) {
-    // Defense in depth — monitor.js already gates on this before calling in, but this
+    // Defense in depth — the companion-app audit already gates on this before calling in, but this
     // function must never assume the caller checked correctly.
     logger.info('  Custom app not configured for this site — skipping.');
     return createRunnerResult(RUNNER_NAME, siteConfig?.hostname ?? hostname, [], { skipped: true });

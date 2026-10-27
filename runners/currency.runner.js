@@ -3,7 +3,7 @@
  *
  * Verifies that switching the storefront's active currency actually changes what
  * customers see and pay — not just a label swap. Only runs for sites that declare
- * `currencies: ["USD", "CAD"]` in config/sites.json; every other site is a no-op.
+ * `currencies: ["USD", "CAD"]` in projects/<project>.json; every other site is a no-op.
  *
  * Confirmed via manual discovery against both partsconnexion.com and
  * audio-connexion.com (same Stencil theme, same mechanism on both):

@@ -10,7 +10,7 @@ import { CUSTOM_APP_HOST, summarizeCustomApp, compareWithBaseline, loadDevRecord
  * Standalone, content-driven client report generator for the Integrity Reforestation
  * Tree Contribution Widget monthly monitoring engagement.
  *
- * Unlike monitor.js's per-runner reports, this generator does not measure anything itself —
+ * Unlike the engine's measured reports, this generator does not measure anything itself —
  * every fact on every slide comes from `config/monthly-monitoring-input.json` (Dev team
  * updates + QA/device-matrix notes + online screenshot links you paste in). See
  * `implementation_plan for Integrity Reforestation Monthly Monitoring.md` for the schema.
@@ -31,7 +31,7 @@ const COLOR_BORDER = 'E2E8F0';
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-/** Parses --flag / --flag value pairs from argv (same convention as monitor.js). */
+/** Parses --flag / --flag value pairs from argv (same convention as the engine). */
 function parseArgs(argv) {
   const out = {};
   for (let i = 0; i < argv.length; i++) {
@@ -138,7 +138,7 @@ const plainTrim = (t, n = 150) => {
 const SEV_PILL = { critical: ['Critical', 'DC2626'], high: ['High', 'DC2626'], medium: ['Medium', 'F59E0B'], low: ['Low', '64748B'] };
 
 /**
- * If a custom-app test run exists for this month (check_integrity_dashboard.js), attach its
+ * If a custom-app test run exists for this month (the companion-app audit), attach its
  * summary as data.customAppTesting and mention the checks in the executive summary, overview,
  * overall-summary table and final assessment. Numbers come from the saved results only.
  */

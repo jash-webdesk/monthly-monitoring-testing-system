@@ -54,17 +54,13 @@ test('projects: Integrity does not use performance scores; scored projects requi
   for (const p of Object.values(by)) for (const c of Object.keys(p.audits)) assert.ok(CATEGORIES.includes(c), `${p.id} configures unknown audit ${c}`);
 });
 
-test('config: every site from the legacy config/sites.json is preserved (scores aside)', () => {
-  const legacy = JSON.parse(readFileSync(new URL('../../config/sites.json', import.meta.url), 'utf8')).sites;
-  for (const old of legacy) {
-    const now = getSiteConfig(old.hostname);
-    const { scores, manualCwv, ...rest } = old; // manualCwv (old months) was removed from the project files on purpose
-    for (const [k, v] of Object.entries(rest)) assert.deepEqual(now[k], v, `${old.hostname}.${k} changed`);
-    // Project files carry no per-run performance scores; only the fixed category scores may appear.
+test('config: every project site has a hostname and name, and project files carry no hand-set performance scores', () => {
+  for (const s of loadSitesConfig().sites) {
+    assert.ok(s.hostname && s.name, `a site in ${s.project} is missing hostname or name`);
+    const now = getSiteConfig(s.hostname);
     const perf = [now.scores?.desktop?.before?.performance, now.scores?.desktop?.after?.performance, now.scores?.mobile?.before?.performance, now.scores?.mobile?.after?.performance];
-    assert.ok(perf.every((v) => v === undefined) || old.hostname === 'genpet.org', 'project files must not carry hand-set performance scores');
+    assert.ok(perf.every((v) => v === undefined), `${s.hostname}: performance scores come from the monthly prompt, not the project file`);
   }
-  assert.ok(loadSitesConfig().sites.length >= legacy.length);
 });
 
 test('config: runtime score overrides reach the generators through getSiteConfig', () => {

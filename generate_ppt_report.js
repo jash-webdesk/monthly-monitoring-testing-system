@@ -50,7 +50,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   const crawlResult = loadResults(hostname, 'crawl_audit', month);
 
   // "Before" baseline metrics — auto-detected. Priority: explicit override > this month's
-  // own pre-optimization capture (`node monitor.js --stage before`) > last month's archived
+  // own pre-optimization capture (`node engine/run-audit.js --stage before`) > last month's archived
   // audit (legacy fallback) > static project baseline.
   const prevMonth = getPreviousMonthStr(month);
   const beforeLhResult = loadResults(hostname, 'lighthouse_before', month);
@@ -95,7 +95,7 @@ export async function generatePptReport(hostname = 'www.lidstyles.com', month = 
   // Core Web Vitals (lab measurement from the Lighthouse run; shape is metrics.mobile.lcp.{value,displayValue})
   const mobileLcpRaw = lhResult?.metrics?.mobile?.lcp;
   const mobileClsRaw = lhResult?.metrics?.mobile?.cls;
-  // Manual captures (config/sites.json "manualCwv": { mobileLcp: "1.3 s", mobileCls: "< 0.1" }) win
+  // Manual captures (projects/<project>.json "manualCwv": { mobileLcp: "1.3 s", mobileCls: "< 0.1" }) win
   // over the live lab run, the same way the hand-tested performance scores do.
   const manualLcp = options.lcp ?? siteConfig?.manualCwv?.mobileLcp ?? siteConfig?.manualCwv?.lcp ?? null;
   const manualCls = options.cls ?? siteConfig?.manualCwv?.mobileCls ?? siteConfig?.manualCwv?.cls ?? null;

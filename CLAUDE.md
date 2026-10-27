@@ -95,5 +95,8 @@ Existing runners and report generators are reused, not rewritten. `lib/net.js`, 
 - Test with a fake month such as `2099-01` and delete it afterwards, so real results are never overwritten.
 - No emojis in docs or code comments.
 
+## Developer guide
+`docs/DEVELOPER_GUIDE.md` explains every folder and file, the results and reports folders, and which file to edit for each kind of change.
+
 ## Cloud notes
 See `docs/CLOUD.md` (setup, network access, environment variables, sharing) and `docs/LIMITATIONS.md`. Run `node scripts/cloud-preflight.mjs` first in a cloud session; it checks the browser, DNS, proxy and environment variables.

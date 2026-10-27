@@ -9,18 +9,15 @@
     "preflight": "node scripts/cloud-preflight.mjs",
     "ensure-browser": "node scripts/ensure-browser.mjs",
     "test": "node --test tests/unit/*.test.mjs",
-    "test:integration": "node --test tests/integration/*.test.mjs",
-    "monitor": "node monitor.js",
-    "test:dns": "node monitor.js --url https://partsconnexion.com/ --phase dns",
-    "test:ssl": "node monitor.js --url https://partsconnexion.com/ --phase ssl"
+    "test:integration": "node --test tests/integration/*.test.mjs"
   },
   "engines": {
     "node": ">=22.0.0"
   },
   "dependencies": {
     "@axe-core/playwright": "latest",
-    "docx": "^9.7.1",
     "https-proxy-agent": "^9.1.0",
+    "jszip": "^3.10.1",
     "lighthouse": "12.8.2",
     "playwright": "latest",
     "pptxgenjs": "^4.0.1",

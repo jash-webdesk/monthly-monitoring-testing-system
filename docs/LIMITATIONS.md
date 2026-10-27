@@ -3,7 +3,7 @@
 Honest list of what the system does not do yet, and what has not been proven in a real cloud session.
 
 ## Not implemented
-- **functional audit** (add to cart, cart drawer, checkout up to payment, widget capture on the Shopify Horizon theme). The engine registers it and reports `not_implemented`. The Integrity widget capture also needs the Shopify storefront password, which a person must enter.
+- **functional audit** is implemented only for projects with a `storefront` block (Our Green House). For other projects it reports `not_implemented`. The Integrity widget capture on the Shopify Horizon theme stays manual because it needs the storefront password, which a person must enter.
 - **cache audit** (server and build-cache metrics). These come from hosting dashboards; there is no API runner.
 - **Integrity client deck input.** The deck needs `config/monthly-monitoring-input-<month>.json` (theme update log, widget screenshot links, dev-team notes). The engine stops with a clear message if it is missing; it does not invent content.
 

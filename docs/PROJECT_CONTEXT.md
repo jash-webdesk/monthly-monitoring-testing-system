@@ -40,8 +40,8 @@ WebDesk Solution's monthly monitoring service for client websites and apps. Each
 - Engine, audit modules, history, reports, spreadsheet batch runner, prompt builder, delivery page and cloud scripts exist and are unit tested (`npm test`).
 - Verified locally: all eight enabled audits for Genpet end to end, month-over-month comparison, technical PDF, client deck and deck PDF, per-site scores, per-site logins with guest fallback.
 - Not verified in a real cloud session: browser install, LibreOffice install (deck PDF), the egress proxy behaviour, whether the Artifact tool exists there, and whether its Save buttons work. `docs/FIRST_CLOUD_RUN.md` is the test plan; record results in `docs/LIMITATIONS.md`.
-- Not implemented: functional (storefront journeys, widget capture) and cache audits.
-- Legacy entry points (`monitor.js`, `check_integrity_dashboard.js`, `generate_*.js`) still work and are what the engine calls. Prefer the engine.
+- Functional audit is implemented for storefront projects that have a `storefront` block (Our Green House). Widget capture on the Horizon theme stays manual. The cache audit is not implemented.
+- The old `monitor.js`, `check_integrity_dashboard.js` and one-off helper scripts were removed at handover (still in git history). `generate_*.js` are the report generators the engine calls.
 
 ## Working in the cloud
 - The session starts from a fresh clone: no `.env`, no `results/`, no earlier conversations, no local auto-memory. Everything durable must be in this repo.

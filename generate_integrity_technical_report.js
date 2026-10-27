@@ -11,7 +11,7 @@ import { CUSTOM_APP_HOST, CUSTOM_APP_AREAS as AREAS, SEV_RANK, areaOfFinding as 
  * Technical report for the Integrity Reforestation custom app (admin dashboard) testing —
  * the issue-by-issue companion to the client deck, in the same A4 PDF layout as the Parts
  * Connexion / Genpet monthly reports. Source data: integrity_dashboard_result.json written by
- * `node check_integrity_dashboard.js --month YYYY-MM`. Nothing is measured here.
+ * the companion-app audit (`--only companion-app`). Nothing is measured here.
  *
  * CLI: node generate_integrity_technical_report.js [--month YYYY-MM]
  */
@@ -43,7 +43,7 @@ function paginate(items, weigh, budget) {
  */
 export async function generateIntegrityTechnicalReport(month) {
   const result = loadResults(HOST, 'integrity_dashboard', month);
-  if (!result) throw new Error(`No integrity_dashboard_result.json for ${month}. Run: node check_integrity_dashboard.js --month ${month}`);
+  if (!result) throw new Error(`No integrity_dashboard_result.json for ${month}. Run: node engine/run-audit.js --url <dashboard url> --month ${month} --only companion-app`);
 
   const [year, mm] = month.split('-');
   const monthLabel = `${monthNames[parseInt(mm, 10) - 1]} ${year}`;

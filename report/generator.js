@@ -161,7 +161,7 @@ export async function generateClientReport(hostname, month, options = {}) {
   const dnsResult = loadResults(hostname, 'dns', month);
   const sslResult = loadResults(hostname, 'ssl', month);
   const lhResult = loadResults(hostname, 'lighthouse', month);
-  // Same-month pre-optimization baseline, captured via `node monitor.js --stage before`.
+  // Same-month pre-optimization baseline, captured via `node engine/run-audit.js --stage before`.
   // Takes priority over last month's archive as the "Before" score — see priority chain below.
   const beforeLhResult = loadResults(hostname, 'lighthouse_before', month);
   const devtoolsResult = loadResults(hostname, 'devtools', month);
@@ -187,7 +187,7 @@ export async function generateClientReport(hostname, month, options = {}) {
   // "Before" baseline metrics — auto-detected. Priority: explicit CLI override (handled
   // per-field below) > this month's own pre-optimization capture (`--stage before`) >
   // last month's archived audit (legacy fallback, used when no before-capture exists for
-  // this month) > static project baseline in config/sites.json (first run only).
+  // this month) > static project baseline in projects/<project>.json (first run only).
   const beforeDesktopMetrics = beforeLhResult?.metrics?.desktop ?? beforeLhResult?.metrics?.pages?.homepage?.desktop;
   const beforeMobileMetrics = beforeLhResult?.metrics?.mobile ?? beforeLhResult?.metrics?.pages?.homepage?.mobile;
   const lastMonthDesktopMetrics = prevLhResult?.metrics?.desktop ?? prevLhResult?.metrics?.pages?.product?.desktop;
@@ -205,7 +205,7 @@ export async function generateClientReport(hostname, month, options = {}) {
   // still contain the duplicate.
   const hasManualScores = siteScores?.desktop?.after?.performance != null || siteScores?.mobile?.after?.performance != null;
   const rawLhFindings = (lhResult?.findings || []).filter(f => {
-    // Performance scores are set by hand in config/sites.json; a finding that quotes the live
+    // Performance scores are set by hand in projects/<project>.json; a finding that quotes the live
     // measured score (e.g. "critically low (42/100)") would contradict the number shown in the report.
     if (hasManualScores && /^lighthouse-(desktop|mobile)-score-/.test(f.id)) return false;
     // If scores are manually optimized (e.g. desktop >= 80), suppress contradictory unthrottled synthetic speed warnings
