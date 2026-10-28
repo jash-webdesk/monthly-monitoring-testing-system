@@ -1,0 +1,327 @@
+{
+  "schemaVersion": 1,
+  "project": "integrity-reforestation",
+  "month": "2026-11",
+  "generatedAt": "2026-10-28T10:12:28.766Z",
+  "scores": {},
+  "sites": {
+    "integrity-dashboard-bf73ab673f4c.herokuapp.com": {
+      "url": "https://integrity-dashboard-bf73ab673f4c.herokuapp.com/",
+      "audits": {
+        "network": {
+          "status": "completed",
+          "durationMs": 1842,
+          "findingCount": 0
+        },
+        "dns": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Dashboard is on a shared herokuapp.com domain; DNS findings would not be actionable."
+        },
+        "ssl": {
+          "status": "completed",
+          "durationMs": 1399,
+          "findingCount": 0
+        },
+        "availability": {
+          "status": "skipped",
+          "durationMs": 0,
+          "findingCount": 0,
+          "reason": "Site has no storefront configuration."
+        },
+        "seo": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Admin dashboard is not a public site."
+        },
+        "ai-crawlers": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Admin dashboard is not a public site."
+        },
+        "performance": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "No scored storefront pages for this project."
+        },
+        "security": {
+          "status": "completed",
+          "durationMs": 14183,
+          "findingCount": 8
+        },
+        "functional": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Shopify widget capture (Product page / cart drawer / cart page, 8 device sizes) needs the storefront password and has no runner in the repo yet (see docs/LIMITATIONS.md)."
+        },
+        "responsive": {
+          "status": "skipped",
+          "durationMs": 0,
+          "findingCount": 0,
+          "reason": "Site has no storefront configuration."
+        },
+        "accessibility": {
+          "status": "skipped",
+          "durationMs": 0,
+          "findingCount": 0,
+          "reason": "Site has no storefront configuration."
+        },
+        "currency": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Disabled in the project configuration."
+        },
+        "companion-app": {
+          "status": "completed",
+          "durationMs": 283246,
+          "findingCount": 9
+        },
+        "cache": {
+          "status": "disabled",
+          "durationMs": null,
+          "findingCount": 0,
+          "reason": "Server/build-cache metrics are captured manually from the hosting dashboard; no API runner exists yet."
+        }
+      },
+      "metrics": {
+        "ssl.daysRemaining": 195,
+        "network.uptimePercentage": 100,
+        "network.responseTimeMs": 645,
+        "findings.critical": 0,
+        "findings.high": 2,
+        "findings.medium": 5,
+        "findings.low": 10
+      },
+      "findings": [
+        {
+          "id": "devtools-missing-content-security-policy-dashboard",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "high",
+          "title": "[DASHBOARD] Missing security header: Content Security Policy (CSP)",
+          "detail": "CSP instructs the browser which content sources are trusted. Without it, any injected script — from a compromised ad, third-party CDN, or XSS payload — runs freely in your customers' browsers.",
+          "evidence": "[Page: dashboard] Header \"content-security-policy\" absent from HTTP response of https://integrity-dashboard-bf73ab673f4c.herokuapp.com/login",
+          "recommendation": "Add a Content-Security-Policy header. Start with: default-src 'self'; script-src 'self' and expand only as needed.",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "devtools-missing-strict-transport-security-dashboard",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "high",
+          "title": "[DASHBOARD] Missing security header: HTTP Strict Transport Security (HSTS)",
+          "detail": "HSTS forces browsers to always use HTTPS for future visits. Without it, a first-time visitor can be targeted with an SSL-stripping attack that silently downgrades their connection to HTTP.",
+          "evidence": "[Page: dashboard] Header \"strict-transport-security\" absent from HTTP response of https://integrity-dashboard-bf73ab673f4c.herokuapp.com/login",
+          "recommendation": "Add: Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "devtools-missing-x-frame-options-dashboard",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[DASHBOARD] Missing security header: X-Frame-Options",
+          "detail": "Prevents the site from being embedded in iframes on other domains, blocking clickjacking attacks where an attacker tricks users into clicking hidden UI elements.",
+          "evidence": "[Page: dashboard] Header \"x-frame-options\" absent from HTTP response of https://integrity-dashboard-bf73ab673f4c.herokuapp.com/login",
+          "recommendation": "Add: X-Frame-Options: SAMEORIGIN  (or use CSP frame-ancestors 'self')",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "devtools-missing-x-content-type-options-dashboard",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[DASHBOARD] Missing security header: X-Content-Type-Options",
+          "detail": "Prevents MIME-type sniffing. Without it, browsers may interpret files as a different type than declared (e.g., running a text file as JavaScript).",
+          "evidence": "[Page: dashboard] Header \"x-content-type-options\" absent from HTTP response of https://integrity-dashboard-bf73ab673f4c.herokuapp.com/login",
+          "recommendation": "Add: X-Content-Type-Options: nosniff",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "devtools-missing-referrer-policy-dashboard",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[DASHBOARD] Missing security header: Referrer-Policy",
+          "detail": "Controls how much referrer information is sent when a user navigates away. Without it, full URLs (including order IDs or search terms) may leak to third-party analytics.",
+          "evidence": "[Page: dashboard] Header \"referrer-policy\" absent from HTTP response of https://integrity-dashboard-bf73ab673f4c.herokuapp.com/login",
+          "recommendation": "Add: Referrer-Policy: strict-origin-when-cross-origin",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "devtools-missing-permissions-policy-dashboard",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "low",
+          "title": "[DASHBOARD] Missing security header: Permissions-Policy",
+          "detail": "Restricts which browser APIs (camera, microphone, geolocation) scripts on the page can access. Without it, third-party scripts have unrestricted access.",
+          "evidence": "[Page: dashboard] Header \"permissions-policy\" absent from HTTP response of https://integrity-dashboard-bf73ab673f4c.herokuapp.com/login",
+          "recommendation": "Add: Permissions-Policy: geolocation=(), microphone=(), camera=()",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "devtools-missing-cross-origin-opener-policy-dashboard",
+          "runner": "devtools",
+          "category": "security",
+          "severity": "medium",
+          "title": "[DASHBOARD] Missing security header: Cross-Origin-Opener-Policy (COOP)",
+          "detail": "COOP isolates the browsing context, preventing cross-origin pages opened in popups from accessing the window object of this page.",
+          "evidence": "[Page: dashboard] Header \"cross-origin-opener-policy\" absent from HTTP response of https://integrity-dashboard-bf73ab673f4c.herokuapp.com/login",
+          "recommendation": "Add: Cross-Origin-Opener-Policy: same-origin",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "devtools-guest-analytics-missing-dashboard",
+          "runner": "devtools",
+          "category": "functional",
+          "severity": "medium",
+          "title": "[DASHBOARD] Pillar 9: No GTM or GA4 Analytics snippet detected on guest page",
+          "detail": "Analytics containers (Google Tag Manager or GA4) were not detected in the DOM. Without analytics snippets, conversion tracking and visitor behavior metrics cannot be measured.",
+          "evidence": "[Page: dashboard] GTM ID: None | GA4 ID: None",
+          "recommendation": "Deploy Google Tag Manager (GTM) or GA4 measurement tag to track storefront conversions.",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "integrity-stores-truncated-headers",
+          "runner": "integrity_dashboard",
+          "category": "custom_app",
+          "severity": "low",
+          "title": "Some Stores Listing column headings are cut off",
+          "detail": "A few column titles are shortened with \"...\" so users cannot read what the column is.",
+          "evidence": "Cut off: NO., PLAN, TOTAL TREES, CONTRIBUTION, SPENDING LIMIT, INSTALLED, UNINSTALLED, STATUS, ACTIONS",
+          "recommendation": "Widen the columns or allow headings to wrap.",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "integrity-dashboard-truncated-headers",
+          "runner": "integrity_dashboard",
+          "category": "custom_app",
+          "severity": "low",
+          "title": "Some Dashboard table headings are cut off",
+          "detail": "Column titles such as \"Contribution\", \"Transaction ID\" and \"Status\" are shortened with \"...\" so users cannot read them.",
+          "evidence": "Cut off: NO., RANK, CONTRIBUTION AMOUNT, NO., TRANSACTION ID, CONTRIBUTION TYPE, TREES, AMOUNT (CAD), STATUS",
+          "recommendation": "Widen the columns or let headings wrap.",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "integrity-stores-numbering-restarts",
+          "runner": "integrity_dashboard",
+          "category": "custom_app",
+          "severity": "low",
+          "title": "Stores Listing row numbers restart on every page",
+          "detail": "On page 2 the \"NO.\" column starts again at 1 instead of continuing from 6, so two different stores can both be \"No. 1\".",
+          "evidence": "Page 2 starts at 1",
+          "recommendation": "Number rows continuously across pages: (page − 1) × page size + row.",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "integrity-stores-datepicker-escape",
+          "runner": "integrity_dashboard",
+          "category": "custom_app",
+          "severity": "low",
+          "title": "The date filter on Stores cannot be closed with the keyboard",
+          "detail": "After opening the date calendar, pressing Escape leaves it open. Clicking outside it does close it, so only keyboard users are affected: they have no way to dismiss the calendar.",
+          "evidence": "Still open after pressing Escape",
+          "recommendation": "Close the calendar on the Escape key as well as on an outside click.",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "integrity-stores-view-button-clipped",
+          "runner": "integrity_dashboard",
+          "category": "custom_app",
+          "severity": "medium",
+          "title": "The \"View\" button on Stores Listing is cut off on some screen widths (1024, 1280, 1440px)",
+          "detail": "On a 1024 / 1280 / 1440px-wide screen the Actions column runs off the right side of the table, so the \"View\" button is clipped or needs sideways scrolling. This is the only way to open a store's details.",
+          "evidence": "390px: needs sideways scroll, 9 cut heading(s) | 768px: needs sideways scroll, 9 cut heading(s) | 1024px: needs sideways scroll, 9 cut heading(s) | 1280px: needs sideways scroll, 9 cut heading(s) | 1440px: needs sideways scroll, 9 cut heading(s) | 1920px: ok, 3 cut heading(s)",
+          "recommendation": "Let the table fit its container: reduce column padding, allow headings and the Spending Limit to wrap, or give the Actions column a fixed minimum width.",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "integrity-storeDetail-datepicker-escape",
+          "runner": "integrity_dashboard",
+          "category": "custom_app",
+          "severity": "low",
+          "title": "The date filter on Store Detail cannot be closed with the keyboard",
+          "detail": "After opening the date calendar, pressing Escape leaves it open. Clicking outside it does close it, so only keyboard users are affected: they have no way to dismiss the calendar.",
+          "evidence": "Still open after pressing Escape",
+          "recommendation": "Close the calendar on the Escape key as well as on an outside click.",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "integrity-detail-duplicate-events",
+          "runner": "integrity_dashboard",
+          "category": "custom_app",
+          "severity": "low",
+          "title": "Install History lists the same event twice",
+          "detail": "The same install/uninstall event is recorded twice within the same minute: Integrity Reforestation: Uninstalled on 10/5/2026 08:03 PM; chillymoose.ca: Uninstalled on 10/2/2026 09:02 PM; app-review-4c002598-r119306-a0-primary: Uninstalled on 9/26/2026 09:37 PM. This usually means the app received the same Shopify notification twice, and it inflates the uninstall count.",
+          "evidence": "Integrity Reforestation: Uninstalled on 10/5/2026 08:03 PM | chillymoose.ca: Uninstalled on 10/2/2026 09:02 PM | app-review-4c002598-r119306-a0-primary: Uninstalled on 9/26/2026 09:37 PM",
+          "recommendation": "Ignore a repeated install/uninstall notification for the same store and timestamp.",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "integrity-emailLogs-datepicker-escape",
+          "runner": "integrity_dashboard",
+          "category": "custom_app",
+          "severity": "low",
+          "title": "The date filter on Email Logs cannot be closed with the keyboard",
+          "detail": "After opening the date calendar, pressing Escape leaves it open. Clicking outside it does close it, so only keyboard users are affected: they have no way to dismiss the calendar.",
+          "evidence": "Still open after pressing Escape",
+          "recommendation": "Close the calendar on the Escape key as well as on an outside click.",
+          "status": "new",
+          "openSince": "2026-11"
+        },
+        {
+          "id": "integrity-logs-view-escape",
+          "runner": "integrity_dashboard",
+          "category": "custom_app",
+          "severity": "low",
+          "title": "The e-mail details window cannot be closed with the keyboard",
+          "detail": "Pressing Escape leaves the e-mail details window open.",
+          "evidence": "Still open after Escape",
+          "recommendation": "Close the window on Escape.",
+          "status": "new",
+          "openSince": "2026-11"
+        }
+      ],
+      "resolved": []
+    }
+  },
+  "comparison": {
+    "previousMonth": null,
+    "hasPreviousData": false,
+    "sites": {
+      "integrity-dashboard-bf73ab673f4c.herokuapp.com": {
+        "findings": {
+          "new": 17,
+          "persisting": 0,
+          "resolved": 0,
+          "suppressed": 0
+        },
+        "changes": [],
+        "regressions": [],
+        "improvements": []
+      }
+    }
+  }
+}

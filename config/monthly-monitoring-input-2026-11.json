@@ -1,0 +1,169 @@
+{
+  "reportTitle": "Monthly Storefront Monitoring & Maintenance Report",
+  "clientName": "Integrity Reforestation",
+  "storeUrl": "https://test-demo-store-801srwej.myshopify.com",
+  "month": "2026-11",
+  "preparedBy": "WebDesk Solution Maintenance & QA Team",
+  "executiveSummary": "During the November 2026 monthly monitoring cycle, we reviewed App and Dashboard server performance, performed build cache maintenance on both environments, and reviewed operational metrics for the past 30 days. We audited Craft (v16.1.0), which is currently active on this store. We also completed end-to-end read-only testing of the Custom Admin Dashboard. The development team added a Resend Email option for failed emails in the Email Logs module.",
+  "themeUpdateLog": {
+    "sectionTitle": "Shopify Theme Updates",
+    "summary": "Shopify released a free theme update from v16.0.0 to v16.1.0. We audited Craft (v16.1.0), which is currently active on this store.",
+    "updateGroups": [
+      {
+        "version": "16.1.0",
+        "whatChanged": "Customer account experience changes",
+        "themes": ["Craft"],
+        "fromVersion": "16.0.0"
+      }
+    ],
+    "testedThemes": ["Craft"],
+    "testedNote": "Craft (v16.1.0) is the theme tested this cycle. All other themes in the update list are pending."
+  },
+  "opsMonitoringSection": {
+    "sectionTitle": "Monthly App & Server Monitoring",
+    "overview": {
+      "optimizationsReviewed": [
+        "Reviewed server performance and resource utilization for the App and Dashboard environments",
+        "Reviewed and performed build cache maintenance for both environments",
+        "Monitored application response times, throughput, and memory usage",
+        "Reviewed application usage and performance data for the past 30 days",
+        "Checked the overall application stability and operational status"
+      ],
+      "objectives": [
+        "Maintain application stability and performance",
+        "Monitor server resource utilization and identify potential performance issues",
+        "Clear build cache data and verify application behavior after maintenance",
+        "Identify errors or operational issues requiring follow-up"
+      ]
+    },
+    "performanceMetrics": {
+      "app": {
+        "label": "App Server",
+        "responseTime": "9 ms",
+        "throughput": "< 1 RPS",
+        "memoryUsage": "17%",
+        "referenceUrl": "https://dashboard.heroku.com/apps/integrity-app/metrics/web?ending=0-hours-ago&starting=24-hours-ago",
+        "assessment": [
+          "The App server recorded a response time of 9 ms in the provided monitoring data.",
+          "Throughput remained below 1 RPS.",
+          "Memory utilization was 17%.",
+          "No application errors were reported in the provided monitoring findings."
+        ]
+      },
+      "dashboard": {
+        "label": "Dashboard Server",
+        "responseTime": "1 second (1,000 ms)",
+        "throughput": "< 1 RPS",
+        "memoryUsage": "15%",
+        "referenceUrl": "https://dashboard.heroku.com/apps/integrity-dashboard/metrics/web?ending=0-hours-ago&starting=24-hours-ago",
+        "assessment": [
+          "The Dashboard server recorded a response time of 1 second in the provided monitoring data.",
+          "Throughput remained below 1 RPS.",
+          "Memory utilization was 15%.",
+          "No application errors were reported in the provided monitoring findings."
+        ]
+      },
+      "conclusion": "Both environments showed low memory utilization and throughput below 1 RPS. The App server response time was 9 ms, while the Dashboard server response time was 1 second. Dashboard response time should continue to be monitored during future checks."
+    },
+    "sslSecurity": {
+      "commonName": "*.herokuapp.com",
+      "issuer": "Amazon RSA 2048 M01",
+      "issuedOn": "2026-10-26",
+      "expiresOn": "2027-05-11",
+      "coverageNote": "Read live from the dashboard host during this audit run (not from the dev team text). The wildcard certificate covers the herokuapp.com domain."
+    },
+    "buildCacheAnalysis": {
+      "app": {
+        "label": "App Server",
+        "beforeUrl": "https://app.screencast.com/tngYnmsKRo4Gs",
+        "afterUrl": "https://app.screencast.com/APUPtmv9yPKyC"
+      },
+      "dashboard": {
+        "label": "Dashboard Server",
+        "beforeUrl": "https://app.screencast.com/CK2NKXTPDgCsQ",
+        "afterUrl": "https://app.screencast.com/3bJOAd0UAv3jq"
+      },
+      "findings": [
+        "Reviewed the build cache status for both App and Dashboard environments.",
+        "Performed cache maintenance and reviewed the results using the before-and-after screenshots.",
+        "No cache-related issues were reported during the current review.",
+        "Application behavior after cache maintenance should continue to be monitored during subsequent deployments."
+      ],
+      "conclusion": "Build cache maintenance was performed for both environments, with no issues reported during verification."
+    },
+    "last24HoursUsage": {
+      "title": "Last 30 Days Usage",
+      "app": {
+        "label": "App Server",
+        "evidenceUrl": "https://dashboard.heroku.com/apps/integrity-app/metrics/web?ending=0-hours-ago&starting=24-hours-ago"
+      },
+      "dashboard": {
+        "label": "Dashboard Server",
+        "evidenceUrl": "https://dashboard.heroku.com/apps/integrity-dashboard/metrics/web?ending=0-hours-ago&starting=24-hours-ago"
+      },
+      "findings": [
+        "Reviewed the provided App and Dashboard performance screenshots covering the past 30 days.",
+        "The App server recorded a response time of 9 ms.",
+        "The Dashboard server recorded a response time of 1 second.",
+        "Throughput was below 1 RPS for both environments.",
+        "App memory utilization was 17%, while Dashboard memory utilization was 15%.",
+        "No errors were reported in the provided monitoring findings."
+      ],
+      "conclusion": "The 30-day monitoring review showed low memory utilization and throughput below 1 RPS in both environments. Continue monitoring Dashboard response time and overall application performance."
+    },
+    "incidents": [],
+    "overallSummary": [
+      { "area": "App Server Response Time", "status": "Monitored", "remarks": "9 ms" },
+      { "area": "Dashboard Response Time", "status": "Monitored", "remarks": "1 second" },
+      { "area": "App Memory Usage", "status": "Monitored", "remarks": "17%" },
+      { "area": "Dashboard Memory Usage", "status": "Monitored", "remarks": "15%" },
+      { "area": "App Throughput", "status": "Monitored", "remarks": "< 1 RPS" },
+      { "area": "Dashboard Throughput", "status": "Monitored", "remarks": "< 1 RPS" },
+      { "area": "App Build Cache", "status": "Reviewed", "remarks": "Maintenance performed; no issues reported" },
+      { "area": "Dashboard Build Cache", "status": "Reviewed", "remarks": "Maintenance performed; no issues reported" },
+      { "area": "Application Errors", "status": "No Errors Reported", "remarks": "Based on the provided monitoring findings" },
+      { "area": "Monitoring Period", "status": "Reviewed", "remarks": "Past 30 days" }
+    ],
+    "finalAssessment": {
+      "successfulOutcomes": [
+        "Reviewed performance metrics for both App and Dashboard environments.",
+        "Reviewed the available 30-day monitoring data.",
+        "Recorded App response time of 9 ms and Dashboard response time of 1 second.",
+        "Observed memory utilization of 17% for the App and 15% for the Dashboard.",
+        "Reviewed build cache maintenance for both environments, with no issues reported.",
+        "No application errors were reported in the provided findings."
+      ],
+      "continuedMonitoring": [
+        "Continue monitoring response times, particularly for the Dashboard server.",
+        "Review application performance and resource utilization during future monthly cycles.",
+        "Continue monitoring build cache behavior after deployments.",
+        "Investigate any errors or unusual performance changes if they arise."
+      ]
+    }
+  },
+  "devTeamSection": {
+    "sectionTitle": "Development & Storefront Maintenance Updates",
+    "summary": "Development work completed this month, as reported by the development team.",
+    "categories": [
+      {
+        "categoryName": "Custom App Dashboard",
+        "items": [
+          {
+            "title": "Resend Email option for failed emails",
+            "description": "Added a Resend Email option for failed emails in the Email Logs module. The resending was implemented and verified, and a test email confirmed it works as expected.",
+            "impact": "Failed notification emails can be sent again from the dashboard."
+          }
+        ]
+      }
+    ]
+  },
+  "qaTestingSection": {
+    "sectionTitle": "Multi-Device Storefront & Widget Audit",
+    "widgetName": "Integrity Reforestation Tree Contribution Widget (.tdw-card)",
+    "functionalStatus": "Not captured this cycle",
+    "functionalChecks": [],
+    "touchpoints": [],
+    "themes": {}
+  },
+  "recommendations": []
+}
