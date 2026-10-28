@@ -26,7 +26,7 @@ need(data.month === month, `"month" is "${data.month}", expected "${month}"`);
 for (const k of ['reportTitle', 'clientName', 'storeUrl', 'executiveSummary', 'opsMonitoringSection', 'qaTestingSection']) need(data[k], `missing "${k}"`);
 
 const o = data.opsMonitoringSection ?? {};
-for (const k of ['overview', 'performanceMetrics', 'sslSecurity', 'buildCacheAnalysis', 'last24HoursUsage', 'incidents', 'overallSummary', 'finalAssessment']) need(o[k], `opsMonitoringSection.${k} is missing`);
+for (const k of ['overview', 'performanceMetrics', 'buildCacheAnalysis', 'last24HoursUsage', 'incidents', 'overallSummary', 'finalAssessment']) need(o[k], `opsMonitoringSection.${k} is missing`);
 for (const env of ['app', 'dashboard']) {
   const pm = o.performanceMetrics?.[env];
   need(pm?.responseTime && pm?.memoryUsage && pm?.throughput, `performanceMetrics.${env} needs responseTime, memoryUsage and throughput`);
@@ -35,9 +35,9 @@ for (const env of ['app', 'dashboard']) {
   need(isUrl(o.last24HoursUsage?.[env]?.evidenceUrl), `last24HoursUsage.${env}.evidenceUrl must be an https URL`);
 }
 const ssl = o.sslSecurity ?? {};
-need(ssl.commonName && ssl.issuer && /^\d{4}-\d{2}-\d{2}$/.test(ssl.issuedOn ?? '') && /^\d{4}-\d{2}-\d{2}$/.test(ssl.expiresOn ?? ''), 'sslSecurity needs commonName, issuer, issuedOn and expiresOn (YYYY-MM-DD)');
-if (ssl.expiresOn && new Date(ssl.expiresOn) < new Date()) errors.push(`SSL certificate expiry ${ssl.expiresOn} is in the past`);
-if (ssl.screenshot && !existsSync(join(root, 'results', 'integrity-reforestation', month, ssl.screenshot)) && !existsSync(join(root, ssl.screenshot))) warnings.push(`SSL screenshot "${ssl.screenshot}" not found; the slide will render without the image`);
+if (o.sslSecurity) need(ssl.commonName && ssl.issuer && /^\d{4}-\d{2}-\d{2}$/.test(ssl.issuedOn ?? '') && /^\d{4}-\d{2}-\d{2}$/.test(ssl.expiresOn ?? ''), 'sslSecurity needs commonName, issuer, issuedOn and expiresOn (YYYY-MM-DD)');
+if (o.sslSecurity && ssl.expiresOn && new Date(ssl.expiresOn) < new Date()) errors.push(`SSL certificate expiry ${ssl.expiresOn} is in the past`);
+if (o.sslSecurity && ssl.screenshot && !existsSync(join(root, 'results', 'integrity-reforestation', month, ssl.screenshot)) && !existsSync(join(root, ssl.screenshot))) warnings.push(`SSL screenshot "${ssl.screenshot}" not found; the slide will render without the image`);
 for (const [n, inc] of (o.incidents ?? []).entries()) need(inc.title && inc.issue && inc.rootCause && inc.resolutionSteps?.length, `incidents[${n}] needs title, issue, rootCause and resolutionSteps`);
 
 // Stale carry-over check: evidence URLs and metrics identical to the previous month's file are suspicious.

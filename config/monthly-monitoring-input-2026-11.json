@@ -12,11 +12,15 @@
       {
         "version": "16.1.0",
         "whatChanged": "Customer account experience changes",
-        "themes": ["Craft"],
+        "themes": [
+          "Craft"
+        ],
         "fromVersion": "16.0.0"
       }
     ],
-    "testedThemes": ["Craft"],
+    "testedThemes": [
+      "Craft"
+    ],
     "testedNote": "Craft (v16.1.0) is the theme tested this cycle. All other themes in the update list are pending."
   },
   "opsMonitoringSection": {
@@ -65,13 +69,6 @@
       },
       "conclusion": "Both environments showed low memory utilization and throughput below 1 RPS. The App server response time was 9 ms, while the Dashboard server response time was 1 second. Dashboard response time should continue to be monitored during future checks."
     },
-    "sslSecurity": {
-      "commonName": "*.herokuapp.com",
-      "issuer": "Amazon RSA 2048 M01",
-      "issuedOn": "2026-10-26",
-      "expiresOn": "2027-05-11",
-      "coverageNote": "Read live from the dashboard host during this audit run (not from the dev team text). The wildcard certificate covers the herokuapp.com domain."
-    },
     "buildCacheAnalysis": {
       "app": {
         "label": "App Server",
@@ -113,16 +110,56 @@
     },
     "incidents": [],
     "overallSummary": [
-      { "area": "App Server Response Time", "status": "Monitored", "remarks": "9 ms" },
-      { "area": "Dashboard Response Time", "status": "Monitored", "remarks": "1 second" },
-      { "area": "App Memory Usage", "status": "Monitored", "remarks": "17%" },
-      { "area": "Dashboard Memory Usage", "status": "Monitored", "remarks": "15%" },
-      { "area": "App Throughput", "status": "Monitored", "remarks": "< 1 RPS" },
-      { "area": "Dashboard Throughput", "status": "Monitored", "remarks": "< 1 RPS" },
-      { "area": "App Build Cache", "status": "Reviewed", "remarks": "Maintenance performed; no issues reported" },
-      { "area": "Dashboard Build Cache", "status": "Reviewed", "remarks": "Maintenance performed; no issues reported" },
-      { "area": "Application Errors", "status": "No Errors Reported", "remarks": "Based on the provided monitoring findings" },
-      { "area": "Monitoring Period", "status": "Reviewed", "remarks": "Past 30 days" }
+      {
+        "area": "App Server Response Time",
+        "status": "Monitored",
+        "remarks": "9 ms"
+      },
+      {
+        "area": "Dashboard Response Time",
+        "status": "Monitored",
+        "remarks": "1 second"
+      },
+      {
+        "area": "App Memory Usage",
+        "status": "Monitored",
+        "remarks": "17%"
+      },
+      {
+        "area": "Dashboard Memory Usage",
+        "status": "Monitored",
+        "remarks": "15%"
+      },
+      {
+        "area": "App Throughput",
+        "status": "Monitored",
+        "remarks": "< 1 RPS"
+      },
+      {
+        "area": "Dashboard Throughput",
+        "status": "Monitored",
+        "remarks": "< 1 RPS"
+      },
+      {
+        "area": "App Build Cache",
+        "status": "Reviewed",
+        "remarks": "Maintenance performed; no issues reported"
+      },
+      {
+        "area": "Dashboard Build Cache",
+        "status": "Reviewed",
+        "remarks": "Maintenance performed; no issues reported"
+      },
+      {
+        "area": "Application Errors",
+        "status": "No Errors Reported",
+        "remarks": "Based on the provided monitoring findings"
+      },
+      {
+        "area": "Monitoring Period",
+        "status": "Reviewed",
+        "remarks": "Past 30 days"
+      }
     ],
     "finalAssessment": {
       "successfulOutcomes": [
@@ -160,10 +197,104 @@
   "qaTestingSection": {
     "sectionTitle": "Multi-Device Storefront & Widget Audit",
     "widgetName": "Integrity Reforestation Tree Contribution Widget (.tdw-card)",
-    "functionalStatus": "Not captured this cycle",
-    "functionalChecks": [],
-    "touchpoints": [],
-    "themes": {}
+    "functionalStatus": "Passed on Craft (v16.1.0) across 7 device sizes",
+    "functionalChecks": [
+      {
+        "label": "Dropdown selection (1 Tree / $1.44, 2 Trees / $2.88, 5 Trees / $7.20)",
+        "passed": true
+      },
+      {
+        "label": "Contribute button label and amount update with the selected number of trees",
+        "passed": true
+      },
+      {
+        "label": "Contribution added to the cart as a single line item (Integrity Reforestation - Tree Contribution, $1.44 for 1 tree)",
+        "passed": true
+      },
+      {
+        "label": "Cart drawer (opened from the header cart icon) and cart page show the contribution line item and estimated total",
+        "passed": true
+      }
+    ],
+    "touchpoints": [
+      {
+        "name": "Product Page (PDP)",
+        "note": "Widget renders on the product page below the product details."
+      },
+      {
+        "name": "Cart Drawer",
+        "note": "Drawer shows the Tree Contribution line item and the estimated total. The widget card itself is not shown in the drawer."
+      },
+      {
+        "name": "Cart Page",
+        "note": "Cart page shows the Tree Contribution line item and the estimated total. The widget card itself is not shown on the cart page."
+      }
+    ],
+    "themes": {
+      "craft": {
+        "name": "Craft",
+        "eyebrow": "Theme: Craft (16.1.0)",
+        "version": "16.1.0",
+        "hideVisualShowcase": false,
+        "screenshots": {
+          "mobile": {
+            "galaxy_s24_360x780": {
+              "device": "Samsung Galaxy S24",
+              "dimensions": "360 x 780",
+              "pdp": "screenshots/craft/product-page/mobile/craft_pdp_fullpage_mobile_360x780.png",
+              "cart": "screenshots/craft/cart-page/mobile/craft_cart_fullpage_mobile_360x780.png",
+              "drawer": "screenshots/craft/cart-drawer/mobile/craft_drawer_viewport_mobile_360x780.png"
+            },
+            "iphone_13_14_15_390x844": {
+              "device": "iPhone 13 / 14 / 15",
+              "dimensions": "390 x 844",
+              "pdp": "screenshots/craft/product-page/mobile/craft_pdp_fullpage_mobile_390x844.png",
+              "cart": "screenshots/craft/cart-page/mobile/craft_cart_fullpage_mobile_390x844.png",
+              "drawer": "screenshots/craft/cart-drawer/mobile/craft_drawer_viewport_mobile_390x844.png"
+            },
+            "iphone_15_pro_max_430x932": {
+              "device": "iPhone 15 Pro Max",
+              "dimensions": "430 x 932",
+              "pdp": "screenshots/craft/product-page/mobile/craft_pdp_fullpage_mobile_430x932.png",
+              "cart": "screenshots/craft/cart-page/mobile/craft_cart_fullpage_mobile_430x932.png",
+              "drawer": "screenshots/craft/cart-drawer/mobile/craft_drawer_viewport_mobile_430x932.png"
+            }
+          },
+          "tablet": {
+            "ipad_portrait_768x1024": {
+              "device": "iPad Portrait",
+              "dimensions": "768 x 1024",
+              "pdp": "screenshots/craft/product-page/tablet/craft_pdp_fullpage_tablet_768x1024.png",
+              "cart": "screenshots/craft/cart-page/tablet/craft_cart_fullpage_tablet_768x1024.png",
+              "drawer": "screenshots/craft/cart-drawer/tablet/craft_drawer_viewport_tablet_768x1024.png"
+            },
+            "ipad_air_820x1180": {
+              "device": "iPad Air / Pro",
+              "dimensions": "820 x 1180",
+              "pdp": "screenshots/craft/product-page/tablet/craft_pdp_fullpage_tablet_820x1180.png",
+              "cart": "screenshots/craft/cart-page/tablet/craft_cart_fullpage_tablet_820x1180.png",
+              "drawer": "screenshots/craft/cart-drawer/tablet/craft_drawer_viewport_tablet_820x1180.png"
+            },
+            "ipad_landscape_1024x768": {
+              "device": "iPad Landscape",
+              "dimensions": "1024 x 768",
+              "pdp": "screenshots/craft/product-page/tablet/craft_pdp_fullpage_tablet_1024x768.png",
+              "cart": "screenshots/craft/cart-page/tablet/craft_cart_fullpage_tablet_1024x768.png",
+              "drawer": "screenshots/craft/cart-drawer/tablet/craft_drawer_viewport_tablet_1024x768.png"
+            }
+          },
+          "desktop": {
+            "desktop_1280x800": {
+              "device": "Desktop Display",
+              "dimensions": "1280 x 800",
+              "pdp": "screenshots/craft/product-page/desktop/craft_pdp_fullpage_desktop_1280x800.png",
+              "cart": "screenshots/craft/cart-page/desktop/craft_cart_fullpage_desktop_1280x800.png",
+              "drawer": "screenshots/craft/cart-drawer/desktop/craft_drawer_viewport_desktop_1280x800.png"
+            }
+          }
+        }
+      }
+    }
   },
   "recommendations": []
 }

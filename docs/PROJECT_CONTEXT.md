@@ -68,3 +68,10 @@ The account owner's rule: count only the items in the dev team's response. The r
 - The UptimeRobot runner auto-creates a monitor for a new host. This happened for this site in October 2026; a brand-new monitor has no history, so its uptime figure is not reported.
 - The existing devtools, retire.js and DNS runners grade more strictly than the September report did (October: jQuery 1.7.2 critical, missing CSP/SRI high, no DMARC high). Month-over-month counts are therefore not directly comparable with September.
 - The gift basket builder page has a small script error in the page's own code ("reading 'top'"), seen in September as well.
+
+## Integrity widget capture on Craft (learned 2026-10-28)
+- The storefront password is in `.env` as `INTEGRITY_PREVIEW_CODE`; a script reads it, never type it into a browser tool. Unlock at `/password`.
+- On Craft the "Contribute" button adds the tree silently; the cart drawer opens only from the header cart icon (`#cart-icon-bubble`). With the tree already in the cart, the widget card is not visible in the drawer or on the cart page, so do not claim it is.
+- Widget is `.tdw-card` (dropdown `[data-tdw-toggle]`, options 1/2/5 trees, CTA `.tdw-cta`). November 2026 prices: $1.44 / $2.88 / $7.20.
+- Screenshots go to `results/integrity-reforestation/<month>/screenshots/craft/{product-page,cart-page,cart-drawer}/{mobile,tablet,desktop}/` (7 viewports, git-ignored); the deck embeds them when `hideVisualShowcase` is false.
+- `sslSecurity` is optional in the monthly input (validator updated); omit it when the user says to ignore SSL details.
